@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Player } from '../modelli/player.model';
+import { Train } from '../modelli/train.model'
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
@@ -10,7 +11,7 @@ export class PlayerService {
     private teamsUrl: string= "http://localhost:3000/api/teams";
 
     //Solo in fase di test
-    private dummy_players: Player[]= [
+    public static dummy_players: Player[]= [
         {
             id_player: 1,    
             nome: "Nome 1",
@@ -43,42 +44,70 @@ export class PlayerService {
         }
     ];
 
+    //Solo in fase di test
+    public static dummy_trains: Train[]= [
+        {
+            id_player: 1,
+            idx_train: 1,
+            percenutale_tiri: 89.56,
+            tempo_corsa: 17.22
+        },
+        {
+            id_player: 1,
+            idx_train: 2,
+            percenutale_tiri: 91.48,
+            tempo_corsa: 15.97
+        },
+        {
+            id_player: 2,
+            idx_train: 1,
+            percenutale_tiri: 97.03,
+            tempo_corsa: 16.34
+        },
+        {
+            id_player: 3,
+            idx_train: 1,
+            percenutale_tiri: 93.81,
+            tempo_corsa: 14.59
+        },
+    ];
+
     constructor(private http: HttpClient) {}
 
-    //getPlayerById(id: number): Observable<Player>
-    getPlayerById(id: number): Player | null {
-        const player: Player | undefined= this.dummy_players.find(player => player.id_player === id);
+    //getPlayerById(id: number): Observable<Player | null>
+    public static getPlayerById(id: number): Player | null {
+        const player: Player | undefined= PlayerService.dummy_players.find(player => player.id_player === id);
         if(player) {
             return player;
         } else {
             return null;
         }
         /*
-        return this.http.get<Player>(`${this.playersUrl}/${id}`);
+        return this.http.get<Player | null>(`${this.playersUrl}/${id}`);
         */
     }
 
-    //createPlayer(player: Omit<Player, "id_player">): Observable<Player>
-    createPlayer(player: Omit<Player, "id_player">): void {
-        const ids: number[]= this.dummy_players.map(player => player.id_player);
+    //createPlayer(player: Omit<Player, "id_player">): Observable<void>
+    public static createPlayer(player: Omit<Player, "id_player">): void {
+        const ids: number[]= PlayerService.dummy_players.map(player => player.id_player);
         const maxId: number= Math.max(...ids);
         const id: number= maxId + 1;
         const newPlayer: Player= {
             id_player: id,
             ...player
         };
-        this.dummy_players.push(newPlayer);
+        PlayerService.dummy_players.push(newPlayer);
         /*
-        return this.http.post<Player>(this.playersUrl, {...player});
+        return this.http.post<void>(this.playersUrl, {...player});
         //L'ID del player viene gestito dal backend (auto increment sul DB)
         */
     }
 
-    //editPlayerById(id: number, editedPlayer: Omit<Player, "id_player">): Observable<Player>
-    editPlayerById(id: number, editedPlayer: Omit<Player, "id_player">): boolean {
-        const index= this.dummy_players.findIndex(player => player.id_player === id);
+    //editPlayerById(id: number, editedPlayer: Omit<Player, "id_player">): Observable<boolean>
+    public static editPlayerById(id: number, editedPlayer: Omit<Player, "id_player">): boolean {
+        const index= PlayerService.dummy_players.findIndex(player => player.id_player === id);
         if(index !== -1) {
-            this.dummy_players[index]= {
+            PlayerService.dummy_players[index]= {
                 id_player: id,
                 ...editedPlayer
             };
@@ -87,27 +116,27 @@ export class PlayerService {
             return false;
         }
         /*
-        return this.http.put<Player>(`${this.playersUrl}/${id}`, {...editedPlayer});
+        return this.http.put<boolean>(`${this.playersUrl}/${id}`, {...editedPlayer});
         //L'ID del player viene gestito dal backend (auto increment sul DB)
         */
     }
 
-    //deletePlayerById(id: number): Observable<void>
-    deletePlayerById(id: number): boolean {
-        const index= this.dummy_players.findIndex(player => player.id_player === id);
+    //deletePlayerById(id: number): Observable<boolean>
+    public static deletePlayerById(id: number): boolean {
+        const index= PlayerService.dummy_players.findIndex(player => player.id_player === id);
         if(index !== -1) {
-            this.dummy_players.splice(index, 1);
+            PlayerService.dummy_players.splice(index, 1);
             return true;
         } else {
             return false;
         }
         /*
-        return this.http.delete<void>(`${this.playersUrl}/${id}`);
+        return this.http.delete<boolean>(`${this.playersUrl}/${id}`);
         */
     }
 
-    //getPlayersByTeamId(id: number): Observable<Player[]>
-    getPlayersByTeamId(id: number): Player[] | null {
+    //getPlayersByTeamId(id: number): Observable<Player[] | null>
+    public static getPlayersByTeamId(id: number): Player[] | null {
         const teamExists: boolean= this.dummy_players.some(player => player.id_team === id);
         if(teamExists) {
             return this.dummy_players.filter(player => player.id_team === id);
@@ -115,7 +144,40 @@ export class PlayerService {
             return null;
         }
         /*
-        return this.http.get<void>(`${this.teamsUrl}/${id}/players`)
+        return this.http.get<Player[] | null>(`${this.teamsUrl}/${id}/players`);
+        */
+    }
+
+    //getTrainsByPlayerId(id: number): Observable<Train[] | null>
+    public static getTrainsByPlayerId(id: number): Train[] | null {
+        const playerExists: boolean= PlayerService.dummy_players.some(player => player.id_team === id);
+        if(playerExists) {
+            return PlayerService.dummy_trains.filter(train => train.id_player === id);
+        } else {
+            return null;
+        }
+        /*
+        return this.http.get<Train[] | null>(`${this.playersUrl}/${id}/train`);
+        */
+    }
+
+    //trainPlayerById(id: number): Observable<boolean>
+    public static trainPlayerById(id: number, train: Omit<Train, "id_player">): boolean {
+        const playerExists: boolean= PlayerService.dummy_players.some(player => player.id_team === id);
+        if(playerExists) {
+            PlayerService.dummy_trains.push({
+                id_player: id,
+                ...train
+            });
+            return true;
+        } else {
+            return false;
+        }
+        /*
+        return this.http.post<boolean>(`${this.playersUrl}/${id}/train`, {
+            id_player: id,
+            ...train
+        });
         */
     }
 
