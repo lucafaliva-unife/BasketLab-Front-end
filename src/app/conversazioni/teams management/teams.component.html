@@ -1,0 +1,24 @@
+<section>
+    <article *ngFor="let team of teams">
+        <label [for]="'teamName_' + team.id_team">Nome:</label>
+        <input type="text" [id]="'teamName_' + team.id_team" [disabled]="!modifyState[team.id_team]" [(ngModel)]="team.nome">
+        <br/>
+        <label [for]="'teamCity_' + team.id_team">Città:</label>
+        <input type="text" [id]="'teamCity_' + team.id_team" [disabled]="!modifyState[team.id_team]" [(ngModel)]="team.citta">
+        <br/>
+        <button *ngIf="modifyState[team.id_team]" (click)="editTeam(team)">Conferma</button>
+        <button (click)="deleteTeam(team.id_team)">Elimina Team</button>
+        <button (click)="setModifyState(team.id_team)">Modifica Team</button>
+    </article>
+</section>
+<button (click)="showForm= true">Aggiungi team</button>
+<form #form="ngForm" *ngIf="showForm" (ngSubmit)="createTeam(newTeam)">
+    <label for="teamName">Nome:</label>
+    <input type="text" id="teamName" name="teamName" [(ngModel)]="newTeam.nome" required>
+    <br/>
+    <label for="teamCity">Città:</label>
+    <input type="text" id="teamCity" name="teamCity" [(ngModel)]="newTeam.citta" required>
+    <br/>
+    <button type="submit" [disabled]="form.invalid">Conferma</button>
+</form>
+<button (click)="showForm= false" *ngIf="showForm">Annulla</button>

@@ -3,10 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Team } from '../modelli/team.model';
 import { Train } from '../modelli/train.model';
-import { Player } from '../modelli/player.model'
 
 //Solo in fase di test
-import { PlayerService } from './player.service';
+import { TeamService } from './team.service';
 
 @Injectable({ providedIn: 'root' })
 export class PredictionService {
@@ -15,10 +14,29 @@ export class PredictionService {
 
     constructor(private http: HttpClient) {}
 
-    //predict(idTeam_1: number, idTeam_2: number): Observable<Omit<Team, "id_team">>
-    predict(idTeam_1: number, idTeam_2: number): Omit<Team, "id_team"> {
+    //predict(idTeam_1: number, idTeam_2: number): Observable<Team> | null
+    // Ritorno null se uno dei due team non esiste o non ha uno storico allenamenti
+    predict(idTeam_1: number, idTeam_2: number): Team | null {
+        const teamAnalytics_1: Omit<Train, "id_player" | "idx_train"> | null= TeamService.getAnalyticsByTeamId(idTeam_1);
+        if(teamAnalytics_1 === null || Object.keys(teamAnalytics_1).length === 0) {
+            return null;
+        }
+        const teamAnalytics_2: Omit<Train, "id_player" | "idx_train"> | null= TeamService.getAnalyticsByTeamId(idTeam_2);
+        if(teamAnalytics_2 === null || Object.keys(teamAnalytics_2).length === 0) {
+            return null;
+        }
+        teamAnalytics_1.tempo_corsa= 1 / teamAnalytics_1.tempo_corsa;
+        teamAnalytics_2.tempo_corsa= 1 / teamAnalytics_2.tempo_corsa;
+        const teamScore_1: number= (teamAnalytics_1.percenutale_tiri + teamAnalytics_1.tempo_corsa) / 2;
+        const teamScore_2: number= (teamAnalytics_2.percenutale_tiri + teamAnalytics_2.tempo_corsa) / 2;
+        if(teamScore_1 >= teamScore_2) {
+            //Favorisco chi gioca in casa
+            return TeamService.getTeamById(idTeam_1);
+        } else {
+            return TeamService.getTeamById(idTeam_2);
+        }
         /*
-        return this.http.post<Omit<Team, "id_team">>(predictionUrl, {
+        return this.http.post<Team>(predictionUrl, {
             idTeam_1: this.idTeam_1,
             idTeam_2: this.idTeam_2
         });

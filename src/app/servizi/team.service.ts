@@ -14,7 +14,7 @@ export class TeamService {
     private teamsUrl: string= 'http://localhost:3000/api/teams';
 
     //Solo in fase di test
-    private dummy_teams: Team[]= [
+    public static dummy_teams: Team[]= [
         {
             id_team: 1,
             nome: "Team 1",
@@ -35,18 +35,18 @@ export class TeamService {
     constructor(private http: HttpClient) {}
 
     //getTeams(): Observable<Team[]>
-    getTeams(): Team[] {
-        return this.dummy_teams;
+    public static getTeams(): Team[] {
+        return structuredClone(TeamService.dummy_teams);
         /*
         return this.http.get<Team[]>(this.teamsUrl);
         */
     }
 
     //getTeamById(id: number): Observable<Team | null>
-    getTeamById(id: number): Team | null {
-        const team: Team | undefined= this.dummy_teams.find(team => team.id_team === id);
+    public static getTeamById(id: number): Team | null {
+        const team: Team | undefined= TeamService.dummy_teams.find(team => team.id_team === id);
         if(team) {
-            return team;
+            return structuredClone(team);
         } else {
             return null;
         }
@@ -56,15 +56,15 @@ export class TeamService {
     }
 
     //createTeam(team: Omit<Team, "id_team">): Observable<void>
-    createTeam(team: Omit<Team, "id_team">): void {
-        const ids: number[]= this.dummy_teams.map(team => team.id_team);
+    public static createTeam(team: Omit<Team, "id_team">): void {
+        const ids: number[]= TeamService.dummy_teams.map(team => team.id_team);
         const maxId: number= Math.max(...ids);
         const id: number= maxId + 1;
         const newTeam: Team= {
             id_team: id,
             ...team
         };
-        this.dummy_teams.push(newTeam);
+        TeamService.dummy_teams.push(newTeam);
         /*
         return this.http.post<void>(this.teamsUrl, {...team});
         //L'ID del team viene gestito dal backend (auto increment sul DB)
@@ -72,10 +72,10 @@ export class TeamService {
     }
 
     //editTeamById(id: number, editedTeam: Omit<Team, "id_team">): Observable<boolean>
-    editTeamById(id: number, editedTeam: Omit<Team, "id_team">): boolean {
-        const index= this.dummy_teams.findIndex(team => team.id_team === id);
+    public static editTeamById(id: number, editedTeam: Omit<Team, "id_team">): boolean {
+        const index= TeamService.dummy_teams.findIndex(team => team.id_team === id);
         if(index !== -1) {
-            this.dummy_teams[index]= {
+            TeamService.dummy_teams[index]= {
                 id_team: id,
                 ...editedTeam
             };
@@ -90,10 +90,10 @@ export class TeamService {
     }
 
     //deleteTeamById(id: number): Observable<boolean>
-    deleteTeamById(id: number): boolean {
-        const index= this.dummy_teams.findIndex(team => team.id_team === id);
+    public static deleteTeamById(id: number): boolean {
+        const index= TeamService.dummy_teams.findIndex(team => team.id_team === id);
         if(index !== -1) {
-            this.dummy_teams.splice(index, 1);
+            TeamService.dummy_teams.splice(index, 1);
             return true;
         } else {
             return false;
@@ -104,7 +104,7 @@ export class TeamService {
     }
 
     //getAnalyticsByTeamId(id: number): Observable<Omit<Train, "id_player" | "idx_train"> | null>
-    getAnalyticsByTeamId(id: number): Omit<Train, "id_player" | "idx_train"> | null {
+    public static getAnalyticsByTeamId(id: number): Omit<Train, "id_player" | "idx_train"> | null {
         const teamPlayers: Player[] | null= PlayerService.getPlayersByTeamId(id);
         if(teamPlayers === null) {
             return null;
@@ -135,7 +135,7 @@ export class TeamService {
 
     //getRankingByTeamId(id: number): Observable<Omit<Player, "id_player">[] | null>
     //Ritorno null se il team non esiste, [] se il team non ha giocatori, [] se almeno un giocatore non ha allenamenti
-    getRankingByTeamId(id: number): Omit<Player, "id_player">[] | null {
+    public static getRankingByTeamId(id: number): Omit<Player, "id_player">[] | null {
         const teamPlayers: Player[] | null = PlayerService.getPlayersByTeamId(id);
         if(teamPlayers === null) {
             return null;

@@ -78,7 +78,7 @@ export class PlayerService {
     public static getPlayerById(id: number): Player | null {
         const player: Player | undefined= PlayerService.dummy_players.find(player => player.id_player === id);
         if(player) {
-            return player;
+            return structuredClone(player);
         } else {
             return null;
         }
@@ -139,7 +139,7 @@ export class PlayerService {
     public static getPlayersByTeamId(id: number): Player[] | null {
         const teamExists: boolean= this.dummy_players.some(player => player.id_team === id);
         if(teamExists) {
-            return this.dummy_players.filter(player => player.id_team === id);
+            return structuredClone(this.dummy_players.filter(player => player.id_team === id));
         } else {
             return null;
         }
@@ -152,7 +152,7 @@ export class PlayerService {
     public static getTrainsByPlayerId(id: number): Train[] | null {
         const playerExists: boolean= PlayerService.dummy_players.some(player => player.id_team === id);
         if(playerExists) {
-            return PlayerService.dummy_trains.filter(train => train.id_player === id);
+            return structuredClone(PlayerService.dummy_trains.filter(train => train.id_player === id));
         } else {
             return null;
         }

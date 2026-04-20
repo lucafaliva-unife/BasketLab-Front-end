@@ -1,0 +1,109 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Team } from '../../modelli/team.model';
+import { TeamService } from '../../servizi/team.service';
+
+@Component({
+  standalone: true,
+  selector: 'app-teams',
+  imports: [CommonModule, RouterLink, FormsModule],
+  templateUrl: './teams.component.html',
+  styleUrls: ['./teams.component.css']
+})
+export class TeamsComponent implements OnInit {
+    newTeam: Partial<Omit<Team, "id_team">>= {};
+    teams: Team[]= [];
+    modifyState: boolean[]= [];
+    showForm: boolean= false;
+
+    constructor(private teamService: TeamService) {}
+
+    private resetModifyState(): void {
+        this.teams.forEach(team => {
+            this.modifyState[team.id_team]= false;
+        });
+    }
+
+    private resetTeamsAndModifyState(): void {
+        this.teams= TeamService.getTeams();
+        this.resetModifyState();
+        /*
+        this.teamService.getTeams().subscribe(teams => {
+            this.teams= teams;
+            this.resetModifyState();
+        });
+        */
+    }
+
+    setModifyState(id: number): void {
+        this.resetModifyState();
+        this.modifyState[id]= true;
+    }
+
+    ngOnInit() {
+        this.resetTeamsAndModifyState();
+    }
+
+    deleteTeam(id: number): void {
+        const result: boolean= TeamService.deleteTeamById(id);
+        if(!result) {
+            alert("Errore: team non esistente");
+        }
+        this.resetTeamsAndModifyState();
+        /*
+        this.teamService.deleteTeamById(id).subscribe(result = > {
+            this.teamService.getTeams().subscribe(teams => {
+                this.teams= teams;
+                this.resetTeamsAndModifyState();
+            });
+        });
+        */
+    }
+
+    editTeam(team: Team): void {
+        const editedTeamData: Omit<Team, "id_team">= team as Omit<Team, "id_team">;
+        if(editedTeamData.nome.trim() !== "" && editedTeamData.citta.trim() !== "") {
+            TeamService.editTeamById(team.id_team, editedTeamData);
+            this.resetTeamsAndModifyState();
+        } else {
+            alert("I campi non possono essere vuoti");
+        }
+        /*
+        const editedTeamData: Omit<Team, "id_team">= team as Omit<Team, "id_team">;
+        if(editedTeamData.nome.trim() !== "" && editedTeamData.citta.trim() !== "") {
+            this.teamService.editTeamById(team.id_team).subscribe(result = > {
+                this.teamService.getTeams().subscribe(teams => {
+                    this.teams= teams;
+                    this.resetTeamsAndModifyState();
+                });
+            });
+        }
+        */
+    }
+
+    createTeam(newTeamData: Partial<Omit<Team, "id_team">>): void {
+        if(newTeamData.nome && newTeamData.citta && newTeamData.nome.trim() !== "" && newTeamData.citta.trim() !== "") {
+            const tempNewTeam: Omit<Team, "id_team">= newTeamData as Omit<Team, "id_team">;
+            TeamService.createTeam(tempNewTeam);
+            this.resetTeamsAndModifyState();
+            this.newTeam= {};
+            this.showForm= false;
+        } else {
+            alert("I campi non possono essere vuoti");
+        }
+        /*
+        if(newTeamData.nome.trim() !== "" && newTeamData.citta.trim() !== "") {
+            this.teamService.createTeam(newTeamData).subscribe(() => {
+                this.resetTeamsAndModifyState();
+                this.newTeam= {};
+                this.showForm= false;
+            });
+        } else {
+            alert("I campi non possono essere vuoti");
+        }
+        */
+    }
+
+}

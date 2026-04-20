@@ -1,2 +1,19 @@
-<a routerLink="/test_link">Test Link</a>
-<router-outlet></router-outlet>
+<header class="clearfix">
+    <h1>BasketLab</h1>
+    <nav class="clearfix">
+        <a routerLink="/teams">Teams</a>
+        <a routerLink="/predict">Predici esito match</a>
+    </nav>
+</header>
+
+<main class="clearfix">
+    <router-outlet></router-outlet>
+</main>
+
+<footer class="clearfix">
+    <section id="privacy">
+        Vittorio Bernardi &copy; 2026
+        <br/>
+        Luca Faliva &copy; 2026
+    </section>
+</footer>
