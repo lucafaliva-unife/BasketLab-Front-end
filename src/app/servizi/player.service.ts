@@ -74,16 +74,16 @@ export class PlayerService {
 
     constructor(private http: HttpClient) {}
 
-    //getPlayerById(id: number): Observable<Player | null>
-    public static getPlayerById(id: number): Player | null {
+    //getPlayerById(id: number): Observable<Player>
+    public static getPlayerById(id: number): Player {
         const player: Player | undefined= PlayerService.dummy_players.find(player => player.id_player === id);
         if(player) {
             return structuredClone(player);
         } else {
-            return null;
+            return {} as Player;
         }
         /*
-        return this.http.get<Player | null>(`${this.playersUrl}/${id}`);
+        return this.http.get<Player>(`${this.playersUrl}/${id}`);
         */
     }
 
@@ -103,78 +103,78 @@ export class PlayerService {
         */
     }
 
-    //editPlayerById(id: number, editedPlayer: Omit<Player, "id_player">): Observable<boolean>
-    public static editPlayerById(id: number, editedPlayer: Omit<Player, "id_player">): boolean {
+    //editPlayerById(id: number, editedPlayer: Omit<Player, "id_player">): Observable<{ result: boolean }>
+    public static editPlayerById(id: number, editedPlayer: Omit<Player, "id_player">): { result: boolean } {
         const index= PlayerService.dummy_players.findIndex(player => player.id_player === id);
         if(index !== -1) {
             PlayerService.dummy_players[index]= {
                 id_player: id,
                 ...editedPlayer
             };
-            return true;
+            return { result: true };
         } else {
-            return false;
+            return { result: false };
         }
         /*
-        return this.http.put<boolean>(`${this.playersUrl}/${id}`, {...editedPlayer});
+        return this.http.put<{ result: boolean }>(`${this.playersUrl}/${id}`, {...editedPlayer});
         //L'ID del player viene gestito dal backend (auto increment sul DB)
         */
     }
 
-    //deletePlayerById(id: number): Observable<boolean>
-    public static deletePlayerById(id: number): boolean {
+    //deletePlayerById(id: number): Observable<{ result: boolean }>
+    public static deletePlayerById(id: number): { result: boolean} {
         const index= PlayerService.dummy_players.findIndex(player => player.id_player === id);
         if(index !== -1) {
             PlayerService.dummy_players.splice(index, 1);
-            return true;
+            return { result: true };
         } else {
-            return false;
+            return { result: false };
         }
         /*
-        return this.http.delete<boolean>(`${this.playersUrl}/${id}`);
+        return this.http.delete<{ result: boolean }>(`${this.playersUrl}/${id}`);
         */
     }
 
-    //getPlayersByTeamId(id: number): Observable<Player[] | null>
-    public static getPlayersByTeamId(id: number): Player[] | null {
+    //getPlayersByTeamId(id: number): Observable<Player[]>
+    public static getPlayersByTeamId(id: number): Player[] {
         const teamExists: boolean= this.dummy_players.some(player => player.id_team === id);
         if(teamExists) {
             return structuredClone(this.dummy_players.filter(player => player.id_team === id));
         } else {
-            return null;
+            return [] as Player[];
         }
         /*
-        return this.http.get<Player[] | null>(`${this.teamsUrl}/${id}/players`);
+        return this.http.get<Player[]>(`${this.teamsUrl}/${id}/players`);
         */
     }
 
-    //getTrainsByPlayerId(id: number): Observable<Train[] | null>
-    public static getTrainsByPlayerId(id: number): Train[] | null {
+    //getTrainsByPlayerId(id: number): Observable<Train[]>
+    public static getTrainsByPlayerId(id: number): Train[] {
         const playerExists: boolean= PlayerService.dummy_players.some(player => player.id_team === id);
         if(playerExists) {
             return structuredClone(PlayerService.dummy_trains.filter(train => train.id_player === id));
         } else {
-            return null;
+            return [] as Train[];
         }
         /*
-        return this.http.get<Train[] | null>(`${this.playersUrl}/${id}/train`);
+        return this.http.get<Train[]>(`${this.playersUrl}/${id}/train`);
         */
     }
 
-    //trainPlayerById(id: number): Observable<boolean>
-    public static trainPlayerById(id: number, train: Omit<Train, "id_player">): boolean {
+    //trainPlayerById(id: number): Observable<{ result: boolean }>
+    public static trainPlayerById(id: number, train: Omit<Train, "id_player">): { result: boolean } {
         const playerExists: boolean= PlayerService.dummy_players.some(player => player.id_team === id);
         if(playerExists) {
             PlayerService.dummy_trains.push({
                 id_player: id,
                 ...train
             });
-            return true;
+            return { result: true };
         } else {
-            return false;
+            return { result: false };
         }
         /*
-        return this.http.post<boolean>(`${this.playersUrl}/${id}/train`, {
+        return this.http.post<{ result: boolean }>(`${this.playersUrl}/${id}/train`, {
             id_player: id,
             ...train
         });

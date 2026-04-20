@@ -42,16 +42,16 @@ export class TeamService {
         */
     }
 
-    //getTeamById(id: number): Observable<Team | null>
-    public static getTeamById(id: number): Team | null {
+    //getTeamById(id: number): Observable<Team>
+    public static getTeamById(id: number): Team {
         const team: Team | undefined= TeamService.dummy_teams.find(team => team.id_team === id);
         if(team) {
             return structuredClone(team);
         } else {
-            return null;
+            return {} as Team;
         }
         /*
-        return this.http.get<Team | null>(`${this.teamsUrl}/${id}`);
+        return this.http.get<Team>(`${this.teamsUrl}/${id}`);
         */
     }
 
@@ -71,43 +71,43 @@ export class TeamService {
         */
     }
 
-    //editTeamById(id: number, editedTeam: Omit<Team, "id_team">): Observable<boolean>
-    public static editTeamById(id: number, editedTeam: Omit<Team, "id_team">): boolean {
+    //editTeamById(id: number, editedTeam: Omit<Team, "id_team">): Observable<{ result: boolean }>
+    public static editTeamById(id: number, editedTeam: Omit<Team, "id_team">): { result: boolean } {
         const index= TeamService.dummy_teams.findIndex(team => team.id_team === id);
         if(index !== -1) {
             TeamService.dummy_teams[index]= {
                 id_team: id,
                 ...editedTeam
             };
-            return true;
+            return { result: true };
         } else {
-            return false;
+            return { result: false };
         }
         /*
-        return this.http.put<boolean>(`${this.teamsUrl}/${id}`, {...editedTeam});
+        return this.http.put<{ result: boolean }>(`${this.teamsUrl}/${id}`, {...editedTeam});
         //L'ID del team viene gestito dal backend (auto increment sul DB)
         */
     }
 
-    //deleteTeamById(id: number): Observable<boolean>
-    public static deleteTeamById(id: number): boolean {
+    //deleteTeamById(id: number): Observable<{ result: boolean }>
+    public static deleteTeamById(id: number): { result: boolean } {
         const index= TeamService.dummy_teams.findIndex(team => team.id_team === id);
         if(index !== -1) {
             TeamService.dummy_teams.splice(index, 1);
-            return true;
+            return { result: true };
         } else {
-            return false;
+            return { result: false };
         }
         /*
-        return this.http.delete<boolean>(`${this.teamsUrl}/${id}`);
+        return this.http.delete<{ result: boolean }>(`${this.teamsUrl}/${id}`);
         */
     }
 
-    //getAnalyticsByTeamId(id: number): Observable<Omit<Train, "id_player" | "idx_train"> | null>
-    public static getAnalyticsByTeamId(id: number): Omit<Train, "id_player" | "idx_train"> | null {
+    //getAnalyticsByTeamId(id: number): Observable<Omit<Train, "id_player" | "idx_train">>
+    public static getAnalyticsByTeamId(id: number): Omit<Train, "id_player" | "idx_train"> {
         const teamPlayers: Player[] | null= PlayerService.getPlayersByTeamId(id);
         if(teamPlayers === null) {
-            return null;
+            return {} as Omit<Train, "id_player" | "idx_train">;
         }
         const teamPlayersId: number[]= teamPlayers.map(player => player.id_player);
         const teamTrain: Train[]= [];
@@ -129,17 +129,13 @@ export class TeamService {
         });
         return result as Omit<Train, "id_player" | "idx_train">;
         /*
-        return this.http.get<Omit<Train, "id_player" | "idx_train"> | null>(`${this.teamsUrl}/${id}/analytics`);
+        return this.http.get<Omit<Train, "id_player" | "idx_train">>(`${this.teamsUrl}/${id}/analytics`);
         */
     }
 
-    //getRankingByTeamId(id: number): Observable<Omit<Player, "id_player">[] | null>
-    //Ritorno null se il team non esiste, [] se il team non ha giocatori, [] se almeno un giocatore non ha allenamenti
-    public static getRankingByTeamId(id: number): Omit<Player, "id_player">[] | null {
-        const teamPlayers: Player[] | null = PlayerService.getPlayersByTeamId(id);
-        if(teamPlayers === null) {
-            return null;
-        }
+    //getRankingByTeamId(id: number): Observable<Omit<Player, "id_player">[]>
+    public static getRankingByTeamId(id: number): Omit<Player, "id_player">[] {
+        const teamPlayers: Player[]= PlayerService.getPlayersByTeamId(id);
         if(teamPlayers.length === 0) {
             return [] as Omit<Player, "id_player">[];
         }
@@ -183,7 +179,7 @@ export class TeamService {
         });
         return ranking.sort((a: any, b: any) => b.performance - a.performance);
         /*
-        return this.http.get<Omit<Player, "id_player">[] | null>(`${this.teamsUrl}/${id}/ranking`);
+        return this.http.get<Omit<Player, "id_player">[]>(`${this.teamsUrl}/${id}/ranking`);
         */
     }
 

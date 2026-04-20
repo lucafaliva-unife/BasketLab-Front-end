@@ -14,16 +14,15 @@ export class PredictionService {
 
     constructor(private http: HttpClient) {}
 
-    //predict(idTeam_1: number, idTeam_2: number): Observable<Team> | null
-    // Ritorno null se uno dei due team non esiste o non ha uno storico allenamenti
-    predict(idTeam_1: number, idTeam_2: number): Team | null {
+    //predict(idTeam_1: number, idTeam_2: number): Observable<Team>
+    predict(idTeam_1: number, idTeam_2: number): Team {
         const teamAnalytics_1: Omit<Train, "id_player" | "idx_train"> | null= TeamService.getAnalyticsByTeamId(idTeam_1);
         if(teamAnalytics_1 === null || Object.keys(teamAnalytics_1).length === 0) {
-            return null;
+            return {} as Team;
         }
         const teamAnalytics_2: Omit<Train, "id_player" | "idx_train"> | null= TeamService.getAnalyticsByTeamId(idTeam_2);
         if(teamAnalytics_2 === null || Object.keys(teamAnalytics_2).length === 0) {
-            return null;
+            return {} as Team;
         }
         teamAnalytics_1.tempo_corsa= 1 / teamAnalytics_1.tempo_corsa;
         teamAnalytics_2.tempo_corsa= 1 / teamAnalytics_2.tempo_corsa;

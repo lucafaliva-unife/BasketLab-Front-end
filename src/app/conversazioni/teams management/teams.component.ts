@@ -47,7 +47,7 @@ export class TeamsComponent implements OnInit {
     }
 
     deleteTeam(id: number): void {
-        const result: boolean= TeamService.deleteTeamById(id);
+        const result: boolean= TeamService.deleteTeamById(id).result;
         if(!result) {
             alert("Errore: team non esistente");
         }
@@ -65,7 +65,10 @@ export class TeamsComponent implements OnInit {
     editTeam(team: Team): void {
         const editedTeamData: Omit<Team, "id_team">= team as Omit<Team, "id_team">;
         if(editedTeamData.nome.trim() !== "" && editedTeamData.citta.trim() !== "") {
-            TeamService.editTeamById(team.id_team, editedTeamData);
+            const result: boolean= TeamService.editTeamById(team.id_team, editedTeamData).result;
+            if(!result) {
+                alert("Errore: team non esistente");
+            }
             this.resetTeamsAndModifyState();
         } else {
             alert("I campi non possono essere vuoti");
