@@ -47,13 +47,24 @@ export class TeamsComponent implements OnInit {
     }
 
     deleteTeam(id: number): void {
+        const conferma: boolean= confirm("Sicuro di voler eliminare il team?");
+        if(!conferma) {
+            return;
+        }
         const result: boolean= TeamService.deleteTeamById(id).result;
         if(!result) {
             alert("Errore: team non esistente");
         }
         this.resetTeamsAndModifyState();
         /*
-        this.teamService.deleteTeamById(id).subscribe(result = > {
+        const conferma: boolean= confirm("Sicuro di voler eliminare il team?");
+        if(!conferma) {
+            return;
+        }
+        this.teamService.deleteTeamById(id).subscribe(success => {
+            if(!success.result) {
+                alert("Errore: team non esistente");
+            }
             this.teamService.getTeams().subscribe(teams => {
                 this.teams= teams;
                 this.resetTeamsAndModifyState();
@@ -76,7 +87,10 @@ export class TeamsComponent implements OnInit {
         /*
         const editedTeamData: Omit<Team, "id_team">= team as Omit<Team, "id_team">;
         if(editedTeamData.nome.trim() !== "" && editedTeamData.citta.trim() !== "") {
-            this.teamService.editTeamById(team.id_team).subscribe(result = > {
+            this.teamService.editTeamById(team.id_team).subscribe(success => {
+                if(!success.result) {
+                    alert("Errore: team non esistente");
+                }
                 this.teamService.getTeams().subscribe(teams => {
                     this.teams= teams;
                     this.resetTeamsAndModifyState();
@@ -89,23 +103,31 @@ export class TeamsComponent implements OnInit {
     createTeam(newTeamData: Partial<Omit<Team, "id_team">>): void {
         if(newTeamData.nome && newTeamData.citta && newTeamData.nome.trim() !== "" && newTeamData.citta.trim() !== "") {
             const tempNewTeam: Omit<Team, "id_team">= newTeamData as Omit<Team, "id_team">;
-            TeamService.createTeam(tempNewTeam);
-            this.resetTeamsAndModifyState();
-            this.newTeam= {};
-            this.showForm= false;
+            const result: boolean= TeamService.createTeam(tempNewTeam).result;
+            if(result) {
+                this.newTeam= {};
+                this.showForm= false;
+            } else {
+                alert("Errore: impossibile creare il nuovo team");
+            }
         } else {
             alert("I campi non possono essere vuoti");
         }
+        this.resetTeamsAndModifyState();
         /*
         if(newTeamData.nome.trim() !== "" && newTeamData.citta.trim() !== "") {
-            this.teamService.createTeam(newTeamData).subscribe(() => {
-                this.resetTeamsAndModifyState();
-                this.newTeam= {};
-                this.showForm= false;
+            this.teamService.createTeam(newTeamData).subscribe(success => {
+                if(success.result) {
+                    this.newTeam= {};
+                    this.showForm= false;
+                } else {
+                    alert("Errore: impossibile creare il nuovo team");
+                }
             });
         } else {
             alert("I campi non possono essere vuoti");
         }
+        this.resetTeamsAndModifyState();
         */
     }
 

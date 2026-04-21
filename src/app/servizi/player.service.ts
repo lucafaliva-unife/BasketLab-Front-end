@@ -87,8 +87,8 @@ export class PlayerService {
         */
     }
 
-    //createPlayer(player: Omit<Player, "id_player">): Observable<void>
-    public static createPlayer(player: Omit<Player, "id_player">): void {
+    //createPlayer(player: Omit<Player, "id_player">): Observable<{ result: boolean }>
+    public static createPlayer(player: Omit<Player, "id_player">): { result: boolean } {
         const ids: number[]= PlayerService.dummy_players.map(player => player.id_player);
         const maxId: number= Math.max(...ids);
         const id: number= maxId + 1;
@@ -97,8 +97,9 @@ export class PlayerService {
             ...player
         };
         PlayerService.dummy_players.push(newPlayer);
+        return { result: true }
         /*
-        return this.http.post<void>(this.playersUrl, {...player});
+        return this.http.post<{ result: boolean }>(this.playersUrl, {...player});
         //L'ID del player viene gestito dal backend (auto increment sul DB)
         */
     }

@@ -46,7 +46,7 @@ export class TeamService {
     public static getTeamById(id: number): Team {
         const team: Team | undefined= TeamService.dummy_teams.find(team => team.id_team === id);
         if(team) {
-            return structuredClone(team);
+            return team;
         } else {
             return {} as Team;
         }
@@ -55,8 +55,8 @@ export class TeamService {
         */
     }
 
-    //createTeam(team: Omit<Team, "id_team">): Observable<void>
-    public static createTeam(team: Omit<Team, "id_team">): void {
+    //createTeam(team: Omit<Team, "id_team">): Observable<{ result: boolean }>
+    public static createTeam(team: Omit<Team, "id_team">): { result: boolean } {
         const ids: number[]= TeamService.dummy_teams.map(team => team.id_team);
         const maxId: number= Math.max(...ids);
         const id: number= maxId + 1;
@@ -65,8 +65,9 @@ export class TeamService {
             ...team
         };
         TeamService.dummy_teams.push(newTeam);
+        return { result: true };
         /*
-        return this.http.post<void>(this.teamsUrl, {...team});
+        return this.http.post<{ result: boolean }>(this.teamsUrl, {...team});
         //L'ID del team viene gestito dal backend (auto increment sul DB)
         */
     }

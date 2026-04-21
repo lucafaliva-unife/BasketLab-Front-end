@@ -9,9 +9,12 @@
         <button *ngIf="modifyState[team.id_team]" (click)="editTeam(team)">Conferma</button>
         <button (click)="deleteTeam(team.id_team)">Elimina Team</button>
         <button (click)="setModifyState(team.id_team)">Modifica Team</button>
+        <a [routerLink]="['/teams', team.id_team]">
+            <button>Vai al Team</button>
+        </a>
     </article>
 </section>
-<button (click)="showForm= true">Aggiungi team</button>
+<button (click)="showForm= true">Aggiungi Team</button>
 <form #form="ngForm" *ngIf="showForm" (ngSubmit)="createTeam(newTeam)">
     <label for="teamName">Nome:</label>
     <input type="text" id="teamName" name="teamName" [(ngModel)]="newTeam.nome" required>
