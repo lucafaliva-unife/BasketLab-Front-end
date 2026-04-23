@@ -29,6 +29,11 @@ export class TeamService {
             id_team: 3,
             nome: "Team 3",
             citta: "Parma"
+        },
+        {
+            id_team: 4,
+            nome: "Team Vuoto",
+            citta: "Modena"
         }
     ];
 
@@ -106,8 +111,8 @@ export class TeamService {
 
     //getAnalyticsByTeamId(id: number): Observable<Omit<Train, "id_player" | "idx_train">>
     public static getAnalyticsByTeamId(id: number): Omit<Train, "id_player" | "idx_train"> {
-        const teamPlayers: Player[] | null= PlayerService.getPlayersByTeamId(id);
-        if(teamPlayers === null) {
+        const teamPlayers: Player[]= PlayerService.getPlayersByTeamId(id);
+        if(teamPlayers.length === 0) {
             return {} as Omit<Train, "id_player" | "idx_train">;
         }
         const teamPlayersId: number[]= teamPlayers.map(player => player.id_player);
@@ -162,7 +167,7 @@ export class TeamService {
                 scoreCorsa: 0,
                 count: 0
             };
-            current.tiri+= train.percenutale_tiri;
+            current.tiri+= train.percentuale_tiri;
             current.scoreCorsa+= (1 / train.tempo_corsa);
             current.count+= 1;
             statsMap.set(train.id_player, current);

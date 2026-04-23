@@ -1,0 +1,76 @@
+<section class="container">
+    <article class="card">
+        <h1 class="title">Dati Player</h1>
+        <div class="field">
+            <label for="playerName">Nome:</label>
+            <input type="text" id="teamName" [disabled]="!modifyState" [(ngModel)]="selectedPlayer.nome">
+        </div>
+        <div class="field">
+            <label for="playerCognome">Cognome:</label>
+            <input type="text" id="playerCognome" [disabled]="!modifyState" [(ngModel)]="selectedPlayer.cognome">
+        </div>
+        <div class="field">
+            <label for="dataNascitaPlayer">Data Nascita:</label>
+            <input type="date" id="dataNascitaPlayer" [disabled]="!modifyState" [(ngModel)]="selectedPlayer.data_nascita">
+        </div>
+        <div class="field">
+            <label for="ruoloPlayer">Ruolo:</label>
+            <select id="ruoloPlayer" [(ngModel)]="selectedPlayer.ruolo" *ngIf="modifyState; else playerRuolo">
+                <option value="ruolo_1">Ruolo 1</option>
+                <option value="ruolo_2">Ruolo 2</option>
+                <option value="ruolo_3">Ruolo 3</option>
+            </select>
+        </div>
+        <ng-template #playerRuolo>
+            <input type="text" id="ruoloPlayer" disabled="true" [value]="selectedPlayer.ruolo">
+        </ng-template>
+        <div class="field">
+            <label for="pesoPlayer">Peso:</label>
+            <input type="number" id="pesoPlayer" [disabled]="!modifyState" [(ngModel)]="selectedPlayer.peso">
+        </div>
+        <div class="field">
+            <label for="altezzaPlayer">Altezza:</label>
+            <input type="number" step="0.1" id="altezzaPlayer" [disabled]="!modifyState" [(ngModel)]="selectedPlayer.altezza">
+        </div>
+        <div class="field">
+            <label for="teamPlayer">Team:</label>
+            <select id="teamPlayer" [(ngModel)]="selectedPlayer.id_team" *ngIf="modifyState; else playerTeam">
+                <option *ngFor="let team of teams" [value]="team.id_team">{{ team.nome }}</option>
+            </select>
+        </div>
+        <ng-template #playerTeam>
+            <input type="text" id="teamPlayer" disabled="true" [value]="teamName">
+        </ng-template>
+        <div class="actions">
+            <button class="btn primary" *ngIf="modifyState" (click)="editPlayer()">Conferma</button>
+            <button class="btn danger" (click)="deletePlayer()">Elimina Player</button>
+            <button class="btn secondary" (click)="modifyState= true" [disabled]="modifyState">Modifica Player</button>
+        </div>
+    </article>
+</section>
+<section class="container">
+    <h1 class="title">Dati di allenamento del Player</h1>
+    <table *ngIf="!trainIsVoid; else trainIsVoidMessage" class="table">
+        <thead>
+            <tr>
+                <th>Percentuale tiri</th>
+                <th>Tempo corsa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let train of trains">
+                <td>{{ train.percentuale_tiri }}</td>
+                <td>{{ train.tempo_corsa }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <ng-template #trainIsVoidMessage>
+        <h2 class="message">Nessun allenamento disponibile per questo Player</h2>
+    </ng-template>
+    <a [routerLink]="['/players', selectedPlayerId, 'train']">
+        <button class="btn add">Nuovo allenamento</button>
+    </a>
+</section>
+<a [routerLink]="['/teams', selectedPlayer.id_team]">
+    <button class="btn back">Torna al Team</button>
+</a>

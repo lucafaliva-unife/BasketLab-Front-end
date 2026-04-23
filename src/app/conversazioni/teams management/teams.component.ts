@@ -15,6 +15,7 @@ import { TeamService } from '../../servizi/team.service';
 export class TeamsComponent implements OnInit {
     newTeam: Partial<Omit<Team, "id_team">>= {};
     teams: Team[]= [];
+    noTeams: boolean= false;
     modifyState: boolean[]= [];
     showForm: boolean= false;
 
@@ -28,11 +29,21 @@ export class TeamsComponent implements OnInit {
 
     private resetTeamsAndModifyState(): void {
         this.teams= TeamService.getTeams();
-        this.resetModifyState();
+        if(this.teams.length === 0) {
+            this.noTeams= true;
+        } else {
+            this.noTeams= false;
+            this.resetModifyState();
+        }
         /*
         this.teamService.getTeams().subscribe(teams => {
             this.teams= teams;
-            this.resetModifyState();
+            if(this.teams.length === 0) {
+                this.noTeams= true;
+            } else {
+                this.noTeams= false;
+                this.resetModifyState();
+            }
         });
         */
     }
@@ -65,17 +76,14 @@ export class TeamsComponent implements OnInit {
             if(!success.result) {
                 alert("Errore: team non esistente");
             }
-            this.teamService.getTeams().subscribe(teams => {
-                this.teams= teams;
-                this.resetTeamsAndModifyState();
-            });
+            this.resetTeamsAndModifyState();
         });
         */
     }
 
     editTeam(team: Team): void {
         const editedTeamData: Omit<Team, "id_team">= team as Omit<Team, "id_team">;
-        if(editedTeamData.nome.trim() !== "" && editedTeamData.citta.trim() !== "") {
+        if(editedTeamData.nome && editedTeamData.nome.trim() !== "" && editedTeamData.citta && editedTeamData.citta.trim() !== "") {
             const result: boolean= TeamService.editTeamById(team.id_team, editedTeamData).result;
             if(!result) {
                 alert("Errore: team non esistente");
@@ -86,15 +94,12 @@ export class TeamsComponent implements OnInit {
         }
         /*
         const editedTeamData: Omit<Team, "id_team">= team as Omit<Team, "id_team">;
-        if(editedTeamData.nome.trim() !== "" && editedTeamData.citta.trim() !== "") {
-            this.teamService.editTeamById(team.id_team).subscribe(success => {
+        if(editedTeamData.nome && editedTeamData.nome.trim() !== "" && editedTeamData.citta && editedTeamData.citta.trim() !== "") {
+            this.teamService.editTeamById(team.id_team, editedTeamData).subscribe(success => {
                 if(!success.result) {
                     alert("Errore: team non esistente");
                 }
-                this.teamService.getTeams().subscribe(teams => {
-                    this.teams= teams;
-                    this.resetTeamsAndModifyState();
-                });
+                this.resetTeamsAndModifyState();
             });
         }
         */
@@ -115,8 +120,9 @@ export class TeamsComponent implements OnInit {
         }
         this.resetTeamsAndModifyState();
         /*
-        if(newTeamData.nome.trim() !== "" && newTeamData.citta.trim() !== "") {
-            this.teamService.createTeam(newTeamData).subscribe(success => {
+        if(newTeamData.nome && newTeamData.citta && newTeamData.nome.trim() !== "" && newTeamData.citta.trim() !== "") {
+            const tempNewTeam: Omit<Team, "id_team">= newTeamData as Omit<Team, "id_team">;
+            this.teamService.createTeam(tempNewTeam).subscribe(success => {
                 if(success.result) {
                     this.newTeam= {};
                     this.showForm= false;

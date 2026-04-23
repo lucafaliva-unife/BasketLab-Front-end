@@ -16,7 +16,7 @@ export class PlayerService {
             id_player: 1,    
             nome: "Nome 1",
             cognome: "Cognome 1",
-            data_nascita: new Date("01/01/2000"),
+            data_nascita: "2000-01-01",
             ruolo: "ruolo_1",
             peso: 70,
             altezza: 190,
@@ -26,7 +26,7 @@ export class PlayerService {
             id_player: 2,    
             nome: "Nome 2",
             cognome: "Cognome 2",
-            data_nascita: new Date("01/10/2000"),
+            data_nascita: "2000-10-01",
             ruolo: "ruolo_3",
             peso: 60,
             altezza: 170,
@@ -36,7 +36,7 @@ export class PlayerService {
             id_player: 3,    
             nome: "Nome 3",
             cognome: "Cognome 3",
-            data_nascita: new Date("10/01/2000"),
+            data_nascita: "2000-01-10",
             ruolo: "ruolo_2",
             peso: 80,
             altezza: 190,
@@ -49,25 +49,25 @@ export class PlayerService {
         {
             id_player: 1,
             idx_train: 1,
-            percenutale_tiri: 89.56,
+            percentuale_tiri: 89.56,
             tempo_corsa: 17.22
         },
         {
             id_player: 1,
             idx_train: 2,
-            percenutale_tiri: 91.48,
+            percentuale_tiri: 91.48,
             tempo_corsa: 15.97
         },
         {
             id_player: 2,
             idx_train: 1,
-            percenutale_tiri: 97.03,
+            percentuale_tiri: 97.03,
             tempo_corsa: 16.34
         },
         {
             id_player: 3,
             idx_train: 1,
-            percenutale_tiri: 93.81,
+            percentuale_tiri: 93.81,
             tempo_corsa: 14.59
         },
     ];
