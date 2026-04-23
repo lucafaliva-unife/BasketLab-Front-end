@@ -3,7 +3,7 @@
         <h1 class="title">Dati Player</h1>
         <div class="field">
             <label for="playerName">Nome:</label>
-            <input type="text" id="teamName" [disabled]="!modifyState" [(ngModel)]="selectedPlayer.nome">
+            <input type="text" id="playerName" [disabled]="!modifyState" [(ngModel)]="selectedPlayer.nome">
         </div>
         <div class="field">
             <label for="playerCognome">Cognome:</label>
@@ -35,7 +35,7 @@
         <div class="field">
             <label for="teamPlayer">Team:</label>
             <select id="teamPlayer" [(ngModel)]="selectedPlayer.id_team" *ngIf="modifyState; else playerTeam">
-                <option *ngFor="let team of teams" [value]="team.id_team">{{ team.nome }}</option>
+                <option *ngFor="let team of teams" [ngValue]="team.id_team">{{ team.nome }}</option>
             </select>
         </div>
         <ng-template #playerTeam>
@@ -72,5 +72,5 @@
     </a>
 </section>
 <a [routerLink]="['/teams', selectedPlayer.id_team]">
-    <button class="btn back">Torna al Team</button>
+    <button class="btn back">Vai al Team del Player</button>
 </a>

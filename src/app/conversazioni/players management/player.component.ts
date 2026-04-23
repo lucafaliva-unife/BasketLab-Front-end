@@ -55,7 +55,62 @@ export class PlayerComponent implements OnInit {
             this.router.navigate(["/teams"]);
         }
         /*
-
+        if(this.selectedPlayerId) {
+            this.playerService.getPlayerById(this.selectedPlayerId).subscribe({
+                next: (player) => {
+                    this.selectedPlayer= player;
+                },
+                error: (err) => {
+                    if(err.status === 404) {
+                        alert("Errore: player non esistente");
+                    } else {
+                        alert("Errore " + err.status);
+                    }
+                    this.router.navigate(["/teams"]);
+                }
+            });
+            this.teamService.getTeams().subscribe(teams => {
+                this.teams= teams;
+                if(Object.keys(this.teams).length === 0) {
+                    alert("Errore: nessun team non esistente");
+                    this.router.navigate(["/teams"]);
+                }
+            });
+            this.teamService.getTeamById((this.selectedPlayer as Player).id_team).subscribe({
+                next: (team) => {
+                    this.teamName= team.nome;
+                },
+                error: (err) => {
+                    if(err.status === 404) {
+                        alert("Errore: il team del player selezionato non esiste");
+                    } else {
+                        alert("Errore " + err.status);
+                    }
+                    this.router.navigate(["/teams"]);
+                }
+            });
+            this.playerService.getTrainsByPlayerId(this.selectedPlayerId).subscribe({
+                next: (trains) => {
+                    this.trains= trains;
+                    if(this.trains.length === 0) {
+                        this.trainIsVoid= true;
+                    } else {
+                        this.trainIsVoid= false;
+                    }
+                },
+                error: (err) => {
+                    if(err.status === 404) {
+                        alert("Errore: player non esiste");
+                    } else {
+                        alert("Errore " + err.status);
+                    }
+                    this.router.navigate(["/teams"]);
+                }
+            });
+        } else {
+            alert("Nessun player selezionato");
+            this.router.navigate(["/teams"]);
+        }
         */
     }
 
@@ -69,16 +124,95 @@ export class PlayerComponent implements OnInit {
             this.router.navigate(["/teams"]);
         }
 
-        //Carico i dati del player, i suoi allenamenti ed i team
+        //Carico i dati del player, i suoi allenamenti, i team ed il nome del team del player
         this.resetAllData();
     }
 
     editPlayer(): void {
-
+        if(this.selectedPlayerId) {
+            const editedPlayerData: Omit<Player, "id_player">= this.selectedPlayer as Omit<Player, "id_player">;
+            if(
+                editedPlayerData.nome && editedPlayerData.nome.trim() !== "" &&
+                editedPlayerData.cognome && editedPlayerData.cognome.trim() !== "" &&
+                editedPlayerData.data_nascita &&
+                editedPlayerData.altezza &&
+                editedPlayerData.peso &&
+                editedPlayerData.ruolo &&
+                editedPlayerData.id_team
+            ) {
+                const result: boolean= PlayerService.editPlayerById(this.selectedPlayerId, editedPlayerData).result;
+                if(!result) {
+                    alert("Errore: player non esistente");
+                }
+                this.resetAllData();
+                this.modifyState= false;
+            } else {
+                alert("I campi non possono essere vuoti");
+            }
+        } else {
+            alert("Errore: nessun player selezionato");
+            this.router.navigate(["/teams"]);
+        }
+        /*
+        if(this.selectedPlayerId) {
+            const editedPlayerData: Omit<Player, "id_player">= this.selectedPlayer as Omit<Player, "id_player">;
+            if(
+                editedPlayerData.nome && editedPlayerData.nome.trim() !== "" &&
+                editedPlayerData.cognome && editedPlayerData.cognome.trim() !== "" &&
+                editedPlayerData.data_nascita &&
+                editedPlayerData.altezza &&
+                editedPlayerData.peso &&
+                editedPlayerData.ruolo &&
+                editedPlayerData.id_team
+            ) {
+                this.playerService.editPlayerById(this.selectedPlayerId, editedPlayerData).subscribe(success => {
+                    if(!success.result) {
+                        alert("Errore: player non esistente");
+                    }
+                    this.resetAllData();
+                    this.modifyState= false;
+                });
+            } else {
+                alert("I campi non possono essere vuoti");
+            }
+        }
+        */
     }
 
     deletePlayer(): void {
-
+        if(this.selectedPlayerId) {
+            const conferma: boolean= confirm("Sicuro di voler eliminare il player?");
+            if(!conferma) {
+                return;
+            }
+            const result: boolean= PlayerService.deletePlayerById(this.selectedPlayerId).result;
+            if(!result) {
+                alert("Errore: player non esistente");
+            }
+            if(this.selectedPlayer.id_team) {
+                this.router.navigate(["/teams", this.selectedPlayer.id_team]);
+            } else {
+                this.router.navigate(["/teams"]);
+            }
+        }
+        /*
+        if(this.selectedPlayerId) {
+            const conferma: boolean= confirm("Sicuro di voler eliminare il player?");
+            if(!conferma) {
+                return;
+            }
+            this.playerService.deletePlayerById(this.selectedPlayerId).subscribe(success => {
+                if(!success.result) {
+                    alert("Errore: player non esistente");
+                }
+                if(this.selectedPlayer.id_team) {
+                    this.router.navigate(["/teams", this.selectedPlayer.id_team]);
+                } else {
+                    this.router.navigate(["/teams"]);
+                }
+            });
+        }
+        */
     }
 
 }

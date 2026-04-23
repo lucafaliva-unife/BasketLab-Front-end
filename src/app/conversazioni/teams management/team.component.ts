@@ -58,25 +58,25 @@ export class TeamComponent implements OnInit {
             this.teamService.getTeamById(this.selectedTeamId).subscribe({
                 next: (team) => {
                     this.selectedTeam= team;
-                    this.playerService.getPlayersByTeamId(this.selectedTeamId).subscribe({
-                        next: (players) => {
-                            this.players= players;
-                            if(this.players.length === 0) {
-                                this.teamIsVoid= true;
-                            } else {
-                                this.teamIsVoid= false;
-                                this.resetPlayersModifyState();
-                            }
-                        },
-                        error: (err) => {
-                            if(err.status === 404) {
-                                alert("Errore: team non esistente");
-                            } else {
-                                alert("Errore " + err.status);
-                            }
-                            this.router.navigate(["/teams"]);
-                        }
-                    });
+                },
+                error: (err) => {
+                    if(err.status === 404) {
+                        alert("Errore: team non esistente");
+                    } else {
+                        alert("Errore " + err.status);
+                    }
+                    this.router.navigate(["/teams"]);
+                }
+            });
+            this.playerService.getPlayersByTeamId(this.selectedTeamId).subscribe({
+                next: (players) => {
+                    this.players= players;
+                    if(this.players.length === 0) {
+                        this.teamIsVoid= true;
+                    } else {
+                        this.teamIsVoid= false;
+                        this.resetPlayersModifyState();
+                    }
                 },
                 error: (err) => {
                     if(err.status === 404) {
