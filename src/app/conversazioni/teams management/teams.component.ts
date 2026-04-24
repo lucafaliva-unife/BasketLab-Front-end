@@ -6,11 +6,11 @@ import { Team } from '../../modelli/team.model';
 import { TeamService } from '../../servizi/team.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-teams',
-  imports: [CommonModule, RouterLink, FormsModule],
-  templateUrl: './teams.component.html',
-  styleUrls: ['./teams.component.css']
+    standalone: true,
+    selector: 'app-teams',
+    imports: [CommonModule, RouterLink, FormsModule],
+    templateUrl: './teams.component.html',
+    styleUrls: ['./teams.component.css']
 })
 export class TeamsComponent implements OnInit {
     newTeam: Partial<Omit<Team, "id_team">>= {};

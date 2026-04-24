@@ -1,0 +1,27 @@
+<section class="container">
+    <h1 class="title centered">Predizione Team vincitore</h1>
+    <form #form="ngForm" (ngSubmit)="predict()" *ngIf="!noTeams; else noTeamsMessage">
+        <div class="fieldPredict">
+            <select id="team1" name="team1" [(ngModel)]="selectedTeamId_1" required>
+                <option *ngFor="let team of teams" [ngValue]="team.id_team">{{ team.nome }}</option>
+            </select>
+        </div>
+        <span>-</span>
+        <div class="fieldPredict">
+            <select id="team2" name="team2" [(ngModel)]="selectedTeamId_2" required>
+                <option *ngFor="let team of teams" [ngValue]="team.id_team">{{ team.nome }}</option>
+            </select>
+        </div>
+        <button class="btn primary" type="submit" [disabled]="form.invalid">Predici</button>
+    </form>
+    <ng-template #noTeamsMessage>
+        <h2 class="message centered">Nessun Team presente</h2>
+    </ng-template>
+    <div class="guessedTeam" *ngIf="guessedTeamOk">
+        <h2 class="message">Team vincitore</h2>
+        <div class="guessedTeam__result">
+            <span class="guessedTeam__name">{{ guessedTeam }}</span>
+        </div>
+        <button class="btn cancel guessedTeam__button" (click)="reset()">Reset</button>
+    </div>
+</section>

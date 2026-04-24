@@ -63,8 +63,11 @@ export class TeamService {
     //createTeam(team: Omit<Team, "id_team">): Observable<{ result: boolean }>
     public static createTeam(team: Omit<Team, "id_team">): { result: boolean } {
         const ids: number[]= TeamService.dummy_teams.map(team => team.id_team);
-        const maxId: number= Math.max(...ids);
-        const id: number= maxId + 1;
+        let id: number= 1;
+        if(ids.length !== 0) {
+            const maxId: number= Math.max(...ids);
+            id= maxId + 1;
+        }
         const newTeam: Team= {
             id_team: id,
             ...team
@@ -139,23 +142,16 @@ export class TeamService {
         */
     }
 
-    //getRankingByTeamId(id: number): Observable<Omit<Player, "id_player">[]>
-    public static getRankingByTeamId(id: number): Omit<Player, "id_player">[] {
-        const teamPlayers: Player[]= PlayerService.getPlayersByTeamId(id);
+    //getRankingByTeamId(id: number): Observable<Player[]>
+    public static getRankingByTeamId(id: number): Player[] {
+        const teamPlayers: Player[]= PlayerService.dummy_players.filter(player => player.id_team === id);
         if(teamPlayers.length === 0) {
-            return [] as Omit<Player, "id_player">[];
+            return [] as Player[];
         }
         const teamPlayersId: number[]= teamPlayers.map(player => player.id_player);
         const trains= PlayerService.dummy_trains.filter(train =>
             teamPlayersId.includes(train.id_player)
         );
-        const playersWithTrain= new Set(trains.map(t => t.id_player));
-        const allPlayersHaveTrain= teamPlayersId.every(id =>
-            playersWithTrain.has(id)
-        );
-        if(!allPlayersHaveTrain) {
-            return [] as Omit<Player, "id_player">[];
-        }
         const statsMap= new Map<number, {
             tiri: number;
             scoreCorsa: number;
@@ -172,20 +168,23 @@ export class TeamService {
             current.count+= 1;
             statsMap.set(train.id_player, current);
         });
-        const ranking= Array.from(statsMap.entries()).map(([id_player, stats]) => {
+        const rankedPlayers= Array.from(statsMap.entries()).map(([id_player, stats]) => {
             const avgTiri= stats.tiri / stats.count;
             const avgCorsa= stats.scoreCorsa / stats.count;
-            const performance= (avgTiri + avgCorsa) / 2;
-            const player= teamPlayers.find(p => p.id_player === id_player)!;
-            const { id_player: _, ...rest }= player;
             return {
-                ...rest,
-                performance
+                player: teamPlayers.find(p => p.id_player === id_player)!,
+                performance: (avgTiri + avgCorsa) / 2
             };
         });
-        return ranking.sort((a: any, b: any) => b.performance - a.performance);
+        const orderedPlayers= rankedPlayers
+            .sort((a, b) => b.performance - a.performance)
+            .map(item => item.player);
+        const playersWithoutTrains= teamPlayers.filter(player =>
+            !statsMap.has(player.id_player)
+        );
+        return [...orderedPlayers, ...playersWithoutTrains];
         /*
-        return this.http.get<Omit<Player, "id_player">[]>(`${this.teamsUrl}/${id}/ranking`);
+        return this.http.get<Player[]>(`${this.teamsUrl}/${id}/ranking`);
         */
     }
 

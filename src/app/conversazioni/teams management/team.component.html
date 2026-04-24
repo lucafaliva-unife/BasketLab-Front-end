@@ -37,7 +37,7 @@
     </ng-template>
 </section>
 <section *ngIf="!teamIsVoid; else teamIsVoidMessage" class="container">
-    <h1 class="title">Elenco Players</h1>
+    <h1 class="title">Elenco Players ordinati decrescentemente per peformance</h1>
     <article *ngFor="let player of players" class="card">
         <div class="field">
             <label [for]="'nomePlayer_' + player.id_player">Nome:</label>

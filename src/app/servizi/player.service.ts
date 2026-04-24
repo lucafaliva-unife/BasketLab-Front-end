@@ -90,8 +90,11 @@ export class PlayerService {
     //createPlayer(player: Omit<Player, "id_player">): Observable<{ result: boolean }>
     public static createPlayer(player: Omit<Player, "id_player">): { result: boolean } {
         const ids: number[]= PlayerService.dummy_players.map(player => player.id_player);
-        const maxId: number= Math.max(...ids);
-        const id: number= maxId + 1;
+        let id: number= 1;
+        if(ids.length !== 0) {
+            const maxId: number= Math.max(...ids);
+            id= maxId + 1;
+        }
         const newPlayer: Player= {
             id_player: id,
             ...player
@@ -151,7 +154,7 @@ export class PlayerService {
 
     //getTrainsByPlayerId(id: number): Observable<Train[]>
     public static getTrainsByPlayerId(id: number): Train[] {
-        const playerExists: boolean= PlayerService.dummy_players.some(player => player.id_team === id);
+        const playerExists: boolean= PlayerService.dummy_players.some(player => player.id_player === id);
         if(playerExists) {
             return structuredClone(PlayerService.dummy_trains.filter(train => train.id_player === id));
         } else {
@@ -162,12 +165,20 @@ export class PlayerService {
         */
     }
 
-    //trainPlayerById(id: number): Observable<{ result: boolean }>
-    public static trainPlayerById(id: number, train: Omit<Train, "id_player">): { result: boolean } {
-        const playerExists: boolean= PlayerService.dummy_players.some(player => player.id_team === id);
+    //trainPlayerById(id: number, train: Omit<Train, "idx_train" | "id_player">): Observable<{ result: boolean }>
+    public static trainPlayerById(id: number, train: Omit<Train, "idx_train" | "id_player">): { result: boolean } {
+        const playerExists: boolean= PlayerService.dummy_players.some(player => player.id_player === id);
         if(playerExists) {
+            const playerTrains: Train[]= PlayerService.dummy_trains.filter(train => train.id_player === id);
+            const idxs: number[]= playerTrains.map(train => train.idx_train);
+            let idx: number= 1;
+            if(idxs.length !== 0) {
+                const maxIdx: number= Math.max(...idxs);
+                idx= maxIdx + 1;
+            }
             PlayerService.dummy_trains.push({
                 id_player: id,
+                idx_train: idx,
                 ...train
             });
             return { result: true };

@@ -100,6 +100,29 @@ select option {
     background-color: #fff;
 }
 
+/* CSS per i field con di fianco un bottone */
+
+.fieldWithButton {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    margin-bottom: 12px;
+}
+
+.fieldWithButton label {
+    width: 100%;
+    font-size: 14px;
+    color: #555;
+}
+
+.fieldWithButton input {
+    flex: 1;
+}
+
+.fieldWithButton .btn {
+    align-self: flex-end;
+}
+
 /* CSS per i bottoni */
 
 .btn {
@@ -156,7 +179,7 @@ select option {
 }
 
 .cancel {
-    background-color: #2196f3;
+    background-color: #085594;
     color: white;
     margin-left: 20px;
     margin-bottom: 20px;
@@ -186,6 +209,10 @@ select option {
     color: #7b9dd1;
     margin-bottom: 20px;
     letter-spacing: 0.2px;
+}
+
+.centered {
+    text-align: center;
 }
 
 /* CSS per le tabelle */

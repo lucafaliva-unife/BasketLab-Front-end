@@ -9,11 +9,11 @@ import { TeamService } from '../../servizi/team.service';
 import { PlayerService } from '../../servizi/player.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-team',
-  imports: [CommonModule, RouterLink, FormsModule],
-  templateUrl: './team.component.html',
-  styleUrls: ['./team.component.css']
+    standalone: true,
+    selector: 'app-team',
+    imports: [CommonModule, RouterLink, FormsModule],
+    templateUrl: './team.component.html',
+    styleUrls: ['./team.component.css']
 })
 export class TeamComponent implements OnInit {
     selectedTeamId: number | null= null;
@@ -41,8 +41,9 @@ export class TeamComponent implements OnInit {
             if(Object.keys(this.selectedTeam).length === 0) {
                 alert("Errore: team non esistente");
                 this.router.navigate(["/teams"]);
+                return;
             }
-            this.players= PlayerService.getPlayersByTeamId(this.selectedTeamId);
+            this.players= TeamService.getRankingByTeamId(this.selectedTeamId);
             if(this.players.length === 0) {
                 this.teamIsVoid= true;
             } else {
@@ -52,6 +53,7 @@ export class TeamComponent implements OnInit {
         } else {
             alert("Nessun team selezionato");
             this.router.navigate(["/teams"]);
+            return;
         }
         /*
         if(this.selectedTeamId) {
@@ -66,9 +68,10 @@ export class TeamComponent implements OnInit {
                         alert("Errore " + err.status);
                     }
                     this.router.navigate(["/teams"]);
+                    return;
                 }
             });
-            this.playerService.getPlayersByTeamId(this.selectedTeamId).subscribe({
+            this.teamService.getRankingByTeamId(this.selectedTeamId).subscribe({
                 next: (players) => {
                     this.players= players;
                     if(this.players.length === 0) {
@@ -85,11 +88,13 @@ export class TeamComponent implements OnInit {
                         alert("Errore " + err.status);
                     }
                     this.router.navigate(["/teams"]);
+                    return;
                 }
             });
         } else {
             alert("Nessun team selezionato");
             this.router.navigate(["/teams"]);
+            return;
         }
         */
     }
@@ -110,6 +115,7 @@ export class TeamComponent implements OnInit {
         } else {
             alert("Nessun team selezionato");
             this.router.navigate(["/teams"]);
+            return;
         }
         /*
         if(this.selectedTeamId) {
@@ -129,6 +135,7 @@ export class TeamComponent implements OnInit {
                         alert("Errore " + err.status);
                     }
                     this.router.navigate(["/teams"]);
+                    return;
                 }
             });
         }
@@ -143,6 +150,7 @@ export class TeamComponent implements OnInit {
         } else {
             alert("ID non valido");
             this.router.navigate(["/teams"]);
+            return;
         }
 
         //Carico i dati dei player del team selezionato
@@ -192,6 +200,7 @@ export class TeamComponent implements OnInit {
                 if(!result) {
                     alert("Errore: team non esistente");
                     this.router.navigate(["/teams"]);
+                    return;
                 }
                 this.resetAllDataAndModifyState();
                 this.teamModifyState= false;
@@ -201,6 +210,7 @@ export class TeamComponent implements OnInit {
         } else {
             alert("Nessun team selezionato");
             this.router.navigate(["/teams"]);
+            return;
         }
         /*
         if(this.selectedTeamId) {
@@ -247,6 +257,7 @@ export class TeamComponent implements OnInit {
         } else {
             alert("Nessun team selezionato");
             this.router.navigate(["/teams"]);
+            return;
         }
         /*
         if(this.selectedTeamId) {
@@ -275,6 +286,7 @@ export class TeamComponent implements OnInit {
             } else {
                 alert("Nessun team selezionato");
                 this.router.navigate(["/teams"]);
+                return;
             }
         */
     }

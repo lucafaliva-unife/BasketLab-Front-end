@@ -1,0 +1,44 @@
+<section class="container">
+    <h1 class="title centered">Nuovo allenamento</h1>
+    <article class="card">
+        <h2 class="message">Player selezionato</h2>
+        <div class="field">
+            <span>Nome: {{ selectedPlayer.nome }}</span>
+        </div>
+        <div class="field">
+            <span>Cognome: {{ selectedPlayer.cognome }}</span>
+        </div>
+    </article>
+    <article>
+        <h2 class="message centered">Dati allenamento</h2>
+        <form #form="ngForm" (ngSubmit)="trainPlayer()">
+            <div class="fieldWithButton">
+                <label for="canestriTentati">Canestri tentati:</label>
+                <input type="number" step="1" id="canestriTentati" name="canestriTentati" [(ngModel)]="canestriTentati" required>
+                <button class="btn secondary" type="button"(click)="addCanestroTentato()">Incrementa canestri tentati</button>
+            </div>
+            <div class="fieldWithButton">
+                <label for="canestriRiusciti">Canestri riusciti:</label>
+                <input type="number" step="1" id="canestriRiusciti" name="canestriRiusciti" [(ngModel)]="canestriRiusciti" required>
+                <button class="btn secondary" type="button" (click)="addCanestroRiuscito()">Incrementa canestri riusciti</button>
+            </div>
+            <div class="tempoCorsaField">
+                <label class="tempo-label">Tempo corsa:</label>
+                <fieldset>
+                    <input type="number" step="0.1" id="tempoCorsaMinuti" name="tempoCorsaMinuti" [(ngModel)]="tempoCorsaMinuti" [disabled]="clockMode" required>
+                    <span>:</span>
+                    <input type="number" step="0.1" id="tempoCorsaSecondi" name="tempoCorsaSecondi" [(ngModel)]="tempoCorsaSecondi" [disabled]="clockMode" required>
+                    <span>:</span>
+                    <input type="number" step="0.1" id="tempoCorsaCentisecondi" name="tempoCorsaCentisecondi" [(ngModel)]="tempoCorsaCentisecondi" [disabled]="clockMode" required>
+                    <button class="btn secondary" type="button" [disabled]="clockMode" (click)="start()">Start</button>
+                    <button class="btn danger" type="button" [disabled]="!clockMode" (click)="stop()">Stop</button>
+                    <button class="btn reset" type="button" *ngIf="!clockMode" (click)="reset()">Reset</button>
+                </fieldset>
+            </div>
+            <button class="btn primary" type="submit" [disabled]="form.invalid">Conferma</button>
+        </form>
+        <a [routerLink]="['/players', selectedPlayerId]">
+            <button class="btn cancel">Annulla e torna al Player</button>
+        </a>
+    </article>
+</section>
