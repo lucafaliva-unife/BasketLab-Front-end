@@ -27,8 +27,8 @@
         </thead>
         <tbody>
             <tr>
-                <td>{{ teamAnalytics.percentuale_tiri }}</td>
-                <td>{{ teamAnalytics.tempo_corsa }}</td>
+                <td>{{ teamAnalytics.percentuale_tiri }} %</td>
+                <td>{{ teamAnalytics.tempo_corsa }} sec.</td>
             </tr>
         </tbody>
     </table>
@@ -54,9 +54,11 @@
         <div class="field">
             <label [for]="'ruoloPlayer_' + player.id_player">Ruolo:</label>
             <select [id]="'ruoloPlayer_' + player.id_player" [(ngModel)]="player.ruolo" *ngIf="playerModifyState[player.id_player]; else playerRuolo">
-                <option value="ruolo_1">Ruolo 1</option>
-                <option value="ruolo_2">Ruolo 2</option>
-                <option value="ruolo_3">Ruolo 3</option>
+                <option value="Playmaker">Playmaker</option>
+                <option value="Guardia">Guardia</option>
+                <option value="Ala grande">Ala grande</option>
+                <option value="Ala piccola">Ala piccola</option>
+                <option value="Centro">Centro</option>
             </select>
         </div>
         <ng-template #playerRuolo>
@@ -103,9 +105,11 @@
     <div class="field">
         <label for="ruoloPlayer">Ruolo:</label>
         <select name="ruoloPlayer" id="ruoloPlayer" [(ngModel)]="newPlayer.ruolo" required>
-            <option value="ruolo_1">Ruolo 1</option>
-            <option value="ruolo_2">Ruolo 2</option>
-            <option value="ruolo_3">Ruolo 3</option>
+            <option value="Playmaker">Playmaker</option>
+            <option value="Guardia">Guardia</option>
+            <option value="Ala grande">Ala grande</option>
+            <option value="Ala piccola">Ala piccola</option>
+            <option value="Centro">Centro</option>
         </select>
     </div>
     <div class="field">

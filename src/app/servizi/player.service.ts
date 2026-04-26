@@ -17,7 +17,7 @@ export class PlayerService {
             nome: "Nome 1",
             cognome: "Cognome 1",
             data_nascita: "2000-01-01",
-            ruolo: "ruolo_1",
+            ruolo: "Playmaker",
             peso: 70,
             altezza: 190,
             id_team: 3
@@ -27,7 +27,7 @@ export class PlayerService {
             nome: "Nome 2",
             cognome: "Cognome 2",
             data_nascita: "2000-10-01",
-            ruolo: "ruolo_3",
+            ruolo: "Centro",
             peso: 60,
             altezza: 170,
             id_team: 1
@@ -37,7 +37,7 @@ export class PlayerService {
             nome: "Nome 3",
             cognome: "Cognome 3",
             data_nascita: "2000-01-10",
-            ruolo: "ruolo_2",
+            ruolo: "Ala grande",
             peso: 80,
             altezza: 190,
             id_team: 2

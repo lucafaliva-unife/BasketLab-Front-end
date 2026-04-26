@@ -3,7 +3,7 @@ export interface Player {
     nome: string,
     cognome: string,
     data_nascita: string,
-    ruolo: "ruolo_1" | "ruolo_2" | "ruolo_3",
+    ruolo: "Playmaker" | "Guardia" | "Ala piccola" | "Ala grande" | "Centro",
     peso: number,
     altezza: number,
     id_team: number

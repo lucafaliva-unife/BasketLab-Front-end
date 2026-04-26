@@ -16,9 +16,11 @@
         <div class="field">
             <label for="ruoloPlayer">Ruolo:</label>
             <select id="ruoloPlayer" [(ngModel)]="selectedPlayer.ruolo" *ngIf="modifyState; else playerRuolo">
-                <option value="ruolo_1">Ruolo 1</option>
-                <option value="ruolo_2">Ruolo 2</option>
-                <option value="ruolo_3">Ruolo 3</option>
+                <option value="Playmaker">Playmaker</option>
+                <option value="Guardia">Guardia</option>
+                <option value="Ala grande">Ala grande</option>
+                <option value="Ala piccola">Ala piccola</option>
+                <option value="Centro">Centro</option>
             </select>
         </div>
         <ng-template #playerRuolo>
@@ -53,14 +55,14 @@
     <table *ngIf="!trainIsVoid; else trainIsVoidMessage" class="table">
         <thead>
             <tr>
-                <th>Percentuale tiri (%)</th>
-                <th>Tempo corsa (secondi)</th>
+                <th>Percentuale tiri</th>
+                <th>Tempo corsa</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let train of trains">
-                <td>{{ train.percentuale_tiri }}</td>
-                <td>{{ train.tempo_corsa }}</td>
+                <td>{{ train.percentuale_tiri }} %</td>
+                <td>{{ train.tempo_corsa }} sec.</td>
             </tr>
         </tbody>
     </table>
