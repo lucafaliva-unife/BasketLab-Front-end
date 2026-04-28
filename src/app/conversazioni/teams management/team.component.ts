@@ -99,12 +99,34 @@ export class TeamComponent implements OnInit {
         */
     }
 
+    private validateHeightWeight(height: number | null | undefined, weight: number | null | undefined): boolean {
+        const parsedHeight: number= Number(height);
+        const parsedWeight: number= Number(weight);
+        if(isNaN(parsedHeight) || isNaN(parsedWeight)) {
+            alert("Altezza e peso devono essere valori numerici validi");
+            return false;
+        }
+        if((parsedHeight < 100 || parsedHeight > 250) && (parsedWeight < 30 || parsedWeight > 300)) {
+            alert("Altezza e peso non validi: l'altezza deve essere compresa tra 100 e 250 cm, il peso tra 30 e 300 kg");
+            return false;
+        }
+        if(parsedHeight < 100 || parsedHeight > 250) {
+            alert("Altezza non valida: deve essere compresa tra 100 e 250 cm");
+            return false;
+        }
+        if(parsedWeight < 30 || parsedWeight > 300) {
+            alert("Peso non valido: deve essere compreso tra 30 e 300 kg");
+            return false;
+        }
+        return true;
+    }
+
     setModifyState(id: number): void {
         this.resetPlayersModifyState();
         this.playerModifyState[id]= true;
     }
 
-    loadTeamAnalytics(): void {
+    private loadTeamAnalytics(): void {
         if(this.selectedTeamId) {
             this.teamAnalytics= TeamService.getAnalyticsByTeamId(this.selectedTeamId);
             if(Object.keys(this.teamAnalytics).length == 0) {
@@ -241,6 +263,9 @@ export class TeamComponent implements OnInit {
                 newPlayerData.peso &&
                 newPlayerData.ruolo
             ) {
+                if(!this.validateHeightWeight(newPlayerData.altezza, newPlayerData.peso)) {
+                    return;
+                }
                 const tempNewPlayer: Omit<Player, "id_player">= newPlayerData as Omit<Player, "id_player">;
                 tempNewPlayer.id_team= this.selectedTeamId;
                 const result: boolean= PlayerService.createPlayer(tempNewPlayer).result;
@@ -301,6 +326,9 @@ export class TeamComponent implements OnInit {
             editedPlayerData.peso &&
             editedPlayerData.ruolo
         ) {
+            if(!this.validateHeightWeight(editedPlayerData.altezza, editedPlayerData.peso)) {
+                return;
+            }
             const result: boolean= PlayerService.editPlayerById(player.id_player, editedPlayerData).result;
             if(!result) {
                 alert("Errore: player non esistente");

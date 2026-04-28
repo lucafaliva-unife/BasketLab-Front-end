@@ -28,11 +28,11 @@
         </ng-template>
         <div class="field">
             <label for="pesoPlayer">Peso:</label>
-            <input type="number" id="pesoPlayer" [disabled]="!modifyState" [(ngModel)]="selectedPlayer.peso">
+            <input type="number" id="pesoPlayer" [disabled]="!modifyState" min="30" max="300" [(ngModel)]="selectedPlayer.peso">
         </div>
         <div class="field">
             <label for="altezzaPlayer">Altezza:</label>
-            <input type="number" step="0.1" id="altezzaPlayer" [disabled]="!modifyState" [(ngModel)]="selectedPlayer.altezza">
+            <input type="number" step="0.1" id="altezzaPlayer" [disabled]="!modifyState" min="100" max="250" [(ngModel)]="selectedPlayer.altezza">
         </div>
         <div class="field">
             <label for="teamPlayer">Team:</label>

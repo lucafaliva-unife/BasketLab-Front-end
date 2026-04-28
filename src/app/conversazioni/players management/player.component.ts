@@ -26,7 +26,7 @@ export class PlayerComponent implements OnInit {
 
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
 
-    resetAllData(): void {
+    private resetAllData(): void {
         if(this.selectedPlayerId) {
             this.selectedPlayer= PlayerService.getPlayerById(this.selectedPlayerId);
             if(Object.keys(this.selectedPlayer).length === 0) {
@@ -123,6 +123,28 @@ export class PlayerComponent implements OnInit {
         */
     }
 
+    private validateHeightWeight(height: number | null | undefined, weight: number | null | undefined): boolean {
+        const parsedHeight: number= Number(height);
+        const parsedWeight: number= Number(weight);
+        if(isNaN(parsedHeight) || isNaN(parsedWeight)) {
+            alert("Altezza e peso devono essere valori numerici validi");
+            return false;
+        }
+        if((parsedHeight < 100 || parsedHeight > 250) && (parsedWeight < 30 || parsedWeight > 300)) {
+            alert("Altezza e peso non validi: l'altezza deve essere compresa tra 100 e 250 cm, il peso tra 30 e 300 kg");
+            return false;
+        }
+        if(parsedHeight < 100 || parsedHeight > 250) {
+            alert("Altezza non valida: deve essere compresa tra 100 e 250 cm");
+            return false;
+        }
+        if(parsedWeight < 30 || parsedWeight > 300) {
+            alert("Peso non valido: deve essere compreso tra 30 e 300 kg");
+            return false;
+        }
+        return true;
+    }
+
     ngOnInit(): void {
         //Estraggo l'ID del player selezionato
         const id: string | null= this.route.snapshot.paramMap.get('id');
@@ -150,6 +172,9 @@ export class PlayerComponent implements OnInit {
                 editedPlayerData.ruolo &&
                 editedPlayerData.id_team
             ) {
+                if(!this.validateHeightWeight(editedPlayerData.altezza, editedPlayerData.peso)) {
+                    return;
+                }
                 const result: boolean= PlayerService.editPlayerById(this.selectedPlayerId, editedPlayerData).result;
                 if(!result) {
                     alert("Errore: player non esistente");
