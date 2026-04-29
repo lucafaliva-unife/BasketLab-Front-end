@@ -28,14 +28,6 @@ export class TeamsComponent implements OnInit {
     }
 
     private resetTeamsAndModifyState(): void {
-        this.teams= TeamService.getTeams();
-        if(this.teams.length === 0) {
-            this.noTeams= true;
-        } else {
-            this.noTeams= false;
-            this.resetModifyState();
-        }
-        /*
         this.teamService.getTeams().subscribe(teams => {
             this.teams= teams;
             if(this.teams.length === 0) {
@@ -45,7 +37,6 @@ export class TeamsComponent implements OnInit {
                 this.resetModifyState();
             }
         });
-        */
     }
 
     setModifyState(id: number): void {
@@ -62,23 +53,17 @@ export class TeamsComponent implements OnInit {
         if(!conferma) {
             return;
         }
-        const result: boolean= TeamService.deleteTeamById(id).result;
-        if(!result) {
-            alert("Errore: team non esistente");
-        }
-        this.resetTeamsAndModifyState();
-        /*
-        const conferma: boolean= confirm("Sicuro di voler eliminare il team?");
-        if(!conferma) {
-            return;
-        }
-        this.teamService.deleteTeamById(id).subscribe(success => {
-            if(!success.result) {
-                alert("Errore: team non esistente");
+        this.teamService.deleteTeamById(id).subscribe({
+            next: () => {
+                this.resetTeamsAndModifyState();
+            },
+            error: (err) => {
+                if(err.status === 404) {
+                    alert("Errore: team non esistente");
+                }
+                this.resetTeamsAndModifyState();
             }
-            this.resetTeamsAndModifyState();
         });
-        */
     }
 
     editTeam(team: Team): void {
