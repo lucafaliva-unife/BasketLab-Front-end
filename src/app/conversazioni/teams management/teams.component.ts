@@ -60,6 +60,10 @@ export class TeamsComponent implements OnInit {
             error: (err) => {
                 if(err.status === 404) {
                     alert("Errore: team non esistente");
+                } else if(err.status === 409) {
+                    alert("Errore: non puoi cancellare gli svincolati");
+                } else {
+                    alert("Errore: " + err.error);
                 }
                 this.resetTeamsAndModifyState();
             }
@@ -69,57 +73,47 @@ export class TeamsComponent implements OnInit {
     editTeam(team: Team): void {
         const editedTeamData: Omit<Team, "id_team">= team as Omit<Team, "id_team">;
         if(editedTeamData.nome && editedTeamData.nome.trim() !== "" && editedTeamData.citta && editedTeamData.citta.trim() !== "") {
-            const result: boolean= TeamService.editTeamById(team.id_team, editedTeamData).result;
-            if(!result) {
-                alert("Errore: team non esistente");
-            }
-            this.resetTeamsAndModifyState();
+            this.teamService.editTeamById(team.id_team, editedTeamData).subscribe({
+                next: () => {
+                    this.resetTeamsAndModifyState();
+                },
+                error: (err) => {
+                    if(err.status === 404) {
+                        alert("Errore: team non esistente");
+                    } else if(err.status === 409) {
+                        alert("Errore: il server ha rifiutato i dati inviati");
+                    } else {
+                        alert("Errore: " + err.error);
+                    }
+                    this.resetTeamsAndModifyState();
+                }
+            });
         } else {
             alert("I campi non possono essere vuoti");
         }
-        /*
-        const editedTeamData: Omit<Team, "id_team">= team as Omit<Team, "id_team">;
-        if(editedTeamData.nome && editedTeamData.nome.trim() !== "" && editedTeamData.citta && editedTeamData.citta.trim() !== "") {
-            this.teamService.editTeamById(team.id_team, editedTeamData).subscribe(success => {
-                if(!success.result) {
-                    alert("Errore: team non esistente");
-                }
-                this.resetTeamsAndModifyState();
-            });
-        }
-        */
     }
 
     createTeam(newTeamData: Partial<Omit<Team, "id_team">>): void {
         if(newTeamData.nome && newTeamData.citta && newTeamData.nome.trim() !== "" && newTeamData.citta.trim() !== "") {
             const tempNewTeam: Omit<Team, "id_team">= newTeamData as Omit<Team, "id_team">;
-            const result: boolean= TeamService.createTeam(tempNewTeam).result;
-            if(result) {
-                this.newTeam= {};
-                this.showForm= false;
-            } else {
-                alert("Errore: impossibile creare il nuovo team");
-            }
-        } else {
-            alert("I campi non possono essere vuoti");
-        }
-        this.resetTeamsAndModifyState();
-        /*
-        if(newTeamData.nome && newTeamData.citta && newTeamData.nome.trim() !== "" && newTeamData.citta.trim() !== "") {
-            const tempNewTeam: Omit<Team, "id_team">= newTeamData as Omit<Team, "id_team">;
-            this.teamService.createTeam(tempNewTeam).subscribe(success => {
-                if(success.result) {
+            this.teamService.createTeam(tempNewTeam).subscribe({
+                next: () => {
                     this.newTeam= {};
                     this.showForm= false;
-                } else {
-                    alert("Errore: impossibile creare il nuovo team");
+                    this.resetTeamsAndModifyState();
+                },
+                error: (err) => {
+                    if(err.status === 409) {
+                        alert("Errore: il server ha rifiutato i dati inviati");
+                    } else {
+                        alert("Errore: " + err.error);
+                    }
+                    this.resetTeamsAndModifyState();
                 }
             });
         } else {
             alert("I campi non possono essere vuoti");
         }
-        this.resetTeamsAndModifyState();
-        */
     }
 
 }
