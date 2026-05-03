@@ -26,6 +26,7 @@ export class TeamComponent implements OnInit {
     teamModifyState: boolean= false;
     playerModifyState: boolean[]= [];
     showForm: boolean= false;
+    svincolati: boolean= false;
 
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
 
@@ -37,26 +38,6 @@ export class TeamComponent implements OnInit {
 
     private resetAllDataAndModifyState(): void {
         if(this.selectedTeamId) {
-            this.selectedTeam= TeamService.getTeamById(this.selectedTeamId);
-            if(Object.keys(this.selectedTeam).length === 0) {
-                alert("Errore: team non esistente");
-                this.router.navigate(["/teams"]);
-                return;
-            }
-            this.players= TeamService.getRankingByTeamId(this.selectedTeamId);
-            if(this.players.length === 0) {
-                this.teamIsVoid= true;
-            } else {
-                this.teamIsVoid= false;
-                this.resetPlayersModifyState();
-            }
-        } else {
-            alert("Nessun team selezionato");
-            this.router.navigate(["/teams"]);
-            return;
-        }
-        /*
-        if(this.selectedTeamId) {
             this.teamService.getTeamById(this.selectedTeamId).subscribe({
                 next: (team) => {
                     this.selectedTeam= team;
@@ -65,38 +46,64 @@ export class TeamComponent implements OnInit {
                     if(err.status === 404) {
                         alert("Errore: team non esistente");
                     } else {
-                        alert("Errore " + err.status);
+                        alert("Errore: " + err.error);
                     }
                     this.router.navigate(["/teams"]);
                     return;
                 }
             });
-            this.teamService.getRankingByTeamId(this.selectedTeamId).subscribe({
-                next: (players) => {
-                    this.players= players;
-                    if(this.players.length === 0) {
-                        this.teamIsVoid= true;
-                    } else {
-                        this.teamIsVoid= false;
-                        this.resetPlayersModifyState();
+            if(this.selectedTeam.nome === "Svincolati") {
+                this.svincolati= true;
+                this.playerService.getPlayersByTeamId(this.selectedTeamId).subscribe({
+                    next: (players) => {
+                        this.players= players;
+                        if(this.players.length === 0) {
+                            this.teamIsVoid= true;
+                        } else {
+                            this.teamIsVoid= false;
+                            this.resetPlayersModifyState();
+                        }
+                    },
+                    error: (err) => {
+                        if(err.status === 404) {
+                            alert("Errore: team non esistente");
+                        } else {
+                            alert("Errore: " + err.error);
+                        }
+                        this.router.navigate(["/teams"]);
+                        return;
                     }
-                },
-                error: (err) => {
-                    if(err.status === 404) {
-                        alert("Errore: team non esistente");
-                    } else {
-                        alert("Errore " + err.status);
+                });
+            } else {
+                this.svincolati= false;
+                this.teamService.getRankingByTeamId(this.selectedTeamId).subscribe({
+                    next: (players) => {
+                        this.players= players;
+                        if(this.players.length === 0) {
+                            this.teamIsVoid= true;
+                        } else {
+                            this.teamIsVoid= false;
+                            this.resetPlayersModifyState();
+                        }
+                    },
+                    error: (err) => {
+                        if(err.status === 404) {
+                            alert("Errore: team non esistente");
+                        } else if(err.status === 409) {
+                            alert("Errore: non puoi chiedere la classifica dei giocatori svincolati");
+                        } else {
+                            alert("Errore: " + err.error);
+                        }
+                        this.router.navigate(["/teams"]);
+                        return;
                     }
-                    this.router.navigate(["/teams"]);
-                    return;
-                }
-            });
+                });
+            }
         } else {
             alert("Nessun team selezionato");
             this.router.navigate(["/teams"]);
             return;
         }
-        */
     }
 
     private validateHeightWeight(height: number | null | undefined, weight: number | null | undefined): boolean {
@@ -128,40 +135,37 @@ export class TeamComponent implements OnInit {
 
     private loadTeamAnalytics(): void {
         if(this.selectedTeamId) {
-            this.teamAnalytics= TeamService.getAnalyticsByTeamId(this.selectedTeamId);
-            if(Object.keys(this.teamAnalytics).length == 0) {
+            if(this.selectedTeam.nome === "Svincolati") {
+                this.teamAnalytics= {};
                 this.analyticsIsVoid= true;
+                this.svincolati= true;
             } else {
-                this.analyticsIsVoid= false;
+                this.svincolati= false;
+                this.teamService.getAnalyticsByTeamId(this.selectedTeamId).subscribe({
+                    next: (analytics) => {
+                        this.teamAnalytics= analytics;
+                        if(this.teamAnalytics.percentuale_tiri === null && this.teamAnalytics.tempo_corsa === null) {
+                            this.analyticsIsVoid= true;
+                        } else {
+                            this.analyticsIsVoid= false;
+                        }
+                    },
+                    error: (err) => {
+                        if(err.status === 404) {
+                            alert("Errore: team non esistente");
+                        } else {
+                            alert("Errore " + err.status);
+                        }
+                        this.router.navigate(["/teams"]);
+                        return;
+                    }
+                });
             }
         } else {
             alert("Nessun team selezionato");
             this.router.navigate(["/teams"]);
             return;
         }
-        /*
-        if(this.selectedTeamId) {
-            this.teamService.getAnalyticsByTeamId(this.selectedTeamId).subscribe({
-                next: (analytics) => {
-                    this.teamAnalytics= analytics;
-                    if(Object.keys(analytics).length === 0) {
-                        this.analyticsIsVoid= true;
-                    } else {
-                        this.analyticsIsVoid= false;
-                    }
-                },
-                error: (err) => {
-                    if(err.status === 404) {
-                        alert("Errore: team non esistente");
-                    } else {
-                        alert("Errore " + err.status);
-                    }
-                    this.router.navigate(["/teams"]);
-                    return;
-                }
-            });
-        }
-        */
     }
 
     ngOnInit() {

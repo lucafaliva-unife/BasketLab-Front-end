@@ -80,8 +80,10 @@ export class TeamsComponent implements OnInit {
                 error: (err) => {
                     if(err.status === 404) {
                         alert("Errore: team non esistente");
-                    } else if(err.status === 409) {
+                    } else if(err.status === 400) {
                         alert("Errore: il server ha rifiutato i dati inviati");
+                    } else if(err.status === 409) {
+                        alert("Errore: non puoi modificare il team degli svincolati");
                     } else {
                         alert("Errore: " + err.error);
                     }
@@ -104,6 +106,8 @@ export class TeamsComponent implements OnInit {
                 },
                 error: (err) => {
                     if(err.status === 409) {
+                        alert("Errore: non puoi creare un team con un nome che esiste già o con il nome 'Svincolati'");
+                    } else if(err.status === 400) {
                         alert("Errore: il server ha rifiutato i dati inviati");
                     } else {
                         alert("Errore: " + err.error);
