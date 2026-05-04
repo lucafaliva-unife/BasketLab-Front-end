@@ -73,7 +73,7 @@ export class TeamComponent implements OnInit {
         if(this.selectedTeamId) {
             if(this.selectedTeam.nome === "Svincolati") {
                 this.svincolati= true;
-                this.playerService.getPlayersByTeamId(this.selectedTeamId).subscribe({
+                this.teamService.getPlayersByTeamId(this.selectedTeamId).subscribe({
                     next: (players) => {
                         this.players= players;
                         if(this.players.length === 0) {

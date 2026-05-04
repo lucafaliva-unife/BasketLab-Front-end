@@ -9,10 +9,8 @@ export class PlayerService {
 
     /*
     private playersUrl: string= "http://localhost:8080/api/players";
-    private teamsUrl: string= "http://localhost:8080/api/teams";
     */
     private playersUrl: string= "api/players";
-    private teamsUrl: string= "api/teams";
 
     constructor(private http: HttpClient) {}
 
@@ -26,16 +24,11 @@ export class PlayerService {
     }
 
     public editPlayerById(id: string, editedPlayer: Omit<Player, "id_player">): Observable<void> {
-        //L'ID del player viene gestito dal backend (auto increment sul DB)
         return this.http.put<void>(`${this.playersUrl}/${id}`, {...editedPlayer});
     }
 
     public deletePlayerById(id: string): Observable<void> {
         return this.http.delete<void>(`${this.playersUrl}/${id}`);
-    }
-
-    public getPlayersByTeamId(id: string): Observable<Player[]> {
-        return this.http.get<Player[]>(`${this.teamsUrl}/${id}/players`);
     }
 
     public getTrainsByPlayerId(id: string): Observable<Train[]> {
