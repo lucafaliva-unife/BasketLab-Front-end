@@ -5,14 +5,14 @@
             <label [for]="'teamName_' + team.id_team">Nome:</label>
             <input type="text" [id]="'teamName_' + team.id_team" [disabled]="!modifyState[team.id_team]" [(ngModel)]="team.nome">
         </div>
-        <div class="field">
+        <div class="field" *ngIf="!isSvincolati(team.id_team)">
             <label [for]="'teamCity_' + team.id_team">Città:</label>
             <input type="text" [id]="'teamCity_' + team.id_team" [disabled]="!modifyState[team.id_team]" [(ngModel)]="team.citta">
         </div>
         <div class="actions">
             <button class="btn primary" *ngIf="modifyState[team.id_team]" (click)="editTeam(team)">Conferma</button>
-            <button class="btn danger" (click)="deleteTeam(team.id_team)">Elimina Team</button>
-            <button class="btn secondary" (click)="setModifyState(team.id_team)" [disabled]="modifyState[team.id_team]">Modifica Team</button>
+            <button class="btn danger" (click)="deleteTeam(team.id_team)" *ngIf="!isSvincolati(team.id_team)">Elimina Team</button>
+            <button class="btn secondary" (click)="setModifyState(team.id_team)" [disabled]="modifyState[team.id_team]" *ngIf="!isSvincolati(team.id_team)">Modifica Team</button>
             <a [routerLink]="['/teams', team.id_team]">
                 <button class="btn link">Vai al Team</button>
             </a>

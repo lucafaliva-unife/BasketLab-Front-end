@@ -5,7 +5,7 @@
             <label for="teamName">Nome:</label>
             <input type="text" id="teamName" [disabled]="!teamModifyState" [(ngModel)]="selectedTeam.nome">
         </div>
-        <div class="field">
+        <div class="field" *ngIf="!svincolati">
             <label for="teamCity">Città:</label>
             <input type="text" id="teamCity" [disabled]="!teamModifyState" [(ngModel)]="selectedTeam.citta">
         </div>

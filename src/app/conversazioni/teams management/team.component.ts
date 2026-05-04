@@ -47,7 +47,7 @@ export class TeamComponent implements OnInit {
                 this.teamService.getAnalyticsByTeamId(this.selectedTeamId).subscribe({
                     next: (analytics) => {
                         this.teamAnalytics= analytics;
-                        if(this.teamAnalytics.percentuale_tiri === null && this.teamAnalytics.tempo_corsa === null) {
+                        if(Object.keys(this.teamAnalytics).length === 0) {
                             this.analyticsIsVoid= true;
                         } else {
                             this.analyticsIsVoid= false;
@@ -69,22 +69,8 @@ export class TeamComponent implements OnInit {
         }
     }
 
-    private resetAllDataAndModifyState(): void {
+    private resetRankingAndModifyState(): void {
         if(this.selectedTeamId) {
-            this.teamService.getTeamById(this.selectedTeamId).subscribe({
-                next: (team) => {
-                    this.selectedTeam= team;
-                },
-                error: (err) => {
-                    if(err.status === 404) {
-                        alert("Errore: team non esistente");
-                    } else {
-                        alert("Errore: " + err.error);
-                    }
-                    this.router.navigate(["/teams"]);
-                    return;
-                }
-            });
             if(this.selectedTeam.nome === "Svincolati") {
                 this.svincolati= true;
                 this.playerService.getPlayersByTeamId(this.selectedTeamId).subscribe({
@@ -104,7 +90,6 @@ export class TeamComponent implements OnInit {
                             alert("Errore: " + err.error);
                         }
                         this.router.navigate(["/teams"]);
-                        return;
                     }
                 });
             } else {
@@ -134,9 +119,30 @@ export class TeamComponent implements OnInit {
         } else {
             alert("Nessun team selezionato");
             this.router.navigate(["/teams"]);
-            return;
         }
-        this.loadTeamAnalytics();
+    }
+
+    private resetAllDataAndModifyState(): void {
+        if(this.selectedTeamId) {
+            this.teamService.getTeamById(this.selectedTeamId).subscribe({
+                next: (team) => {
+                    this.selectedTeam= team;
+                    this.resetRankingAndModifyState();
+                    this.loadTeamAnalytics();
+                },
+                error: (err) => {
+                    if(err.status === 404) {
+                        alert("Errore: team non esistente");
+                    } else {
+                        alert("Errore: " + err.error);
+                    }
+                    this.router.navigate(["/teams"]);
+                }
+            });
+        } else {
+            alert("Nessun team selezionato");
+            this.router.navigate(["/teams"]);
+        }
     }
 
     private validateHeightWeight(height: number | null | undefined, weight: number | null | undefined): boolean {
@@ -188,10 +194,13 @@ export class TeamComponent implements OnInit {
                 return;
             }
             this.teamService.deleteTeamById(this.selectedTeamId).subscribe({
-                next: () => {},
+                next: () => {
+                    this.router.navigate(["/teams"]);
+                },
                 error: (err) => {
                     if(err.status === 404) {
                         alert("Errore: team non esistente");
+                        this.router.navigate(["/teams"]);
                     } else if(err.status === 409) {
                         alert("Errore: non puoi eliminare gli svincolati");
                     } else {
@@ -201,8 +210,8 @@ export class TeamComponent implements OnInit {
             });
         } else {
             alert("Nessun team selezionato");
+            this.router.navigate(["/teams"]);
         }
-        this.router.navigate(["/teams"]);
     }
 
     editTeam(): void {
@@ -211,6 +220,7 @@ export class TeamComponent implements OnInit {
             if(editedTeamData.nome.trim() !== "" && editedTeamData.citta.trim() !== "") {
                 this.teamService.editTeamById(this.selectedTeamId, editedTeamData).subscribe({
                     next: () => {
+                        this.teamModifyState= false;
                         this.resetAllDataAndModifyState();
                     },
                     error: (err) => {

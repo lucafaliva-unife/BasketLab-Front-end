@@ -48,6 +48,18 @@ export class TeamsComponent implements OnInit {
         this.resetTeamsAndModifyState();
     }
 
+    isSvincolati(id: string): boolean {
+        const index: number= this.teams.findIndex(team => team.nome === "Svincolati");
+        if(index === -1) {
+            return false;
+        }
+        if(this.teams[index].id_team === id) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     deleteTeam(id: string): void {
         const conferma: boolean= confirm("Sicuro di voler eliminare il team?");
         if(!conferma) {
@@ -83,7 +95,7 @@ export class TeamsComponent implements OnInit {
                     } else if(err.status === 400) {
                         alert("Errore: il server ha rifiutato i dati inviati");
                     } else if(err.status === 409) {
-                        alert("Errore: non puoi modificare il team degli svincolati");
+                        alert("Errore: non puoi modificare il team degli svincolati e non puoi rinominare un team in 'Svincolati'");
                     } else {
                         alert("Errore: " + err.error);
                     }
