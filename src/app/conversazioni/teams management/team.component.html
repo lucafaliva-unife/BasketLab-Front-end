@@ -10,7 +10,7 @@
             <input type="text" id="teamCity" [disabled]="!teamModifyState" [(ngModel)]="selectedTeam.citta">
         </div>
         <div class="actions">
-            <button class="btn primary" *ngIf="teamModifyState" (click)="editTeam()" *ngIf="!svincolati">Conferma</button>
+            <button class="btn primary" *ngIf="teamModifyState" (click)="editTeam()">Conferma</button>
             <button class="btn danger" (click)="deleteTeam()" *ngIf="!svincolati">Elimina Team</button>
             <button class="btn secondary" (click)="teamModifyState= true" [disabled]="teamModifyState" *ngIf="!svincolati">Modifica Team</button>
         </div>
