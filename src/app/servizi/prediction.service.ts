@@ -6,7 +6,10 @@ import { Team } from '../modelli/team.model';
 @Injectable({ providedIn: 'root' })
 export class PredictService {
 
+    /*
     private predictionUrl: string= 'http://localhost:8080/api/prediction';
+    */
+    private predictionUrl: string= 'api/prediction';
 
     constructor(private http: HttpClient) {}
 

@@ -8,7 +8,10 @@ import { Player } from '../modelli/player.model'
 @Injectable({ providedIn: 'root' })
 export class TeamService {
 
+    /*
     private teamsUrl: string= 'http://localhost:8080/api/teams';
+    */
+    private teamsUrl: string= 'api/teams';
 
     constructor(private http: HttpClient) {}
 

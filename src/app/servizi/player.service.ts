@@ -7,8 +7,12 @@ import { Train } from '../modelli/train.model'
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
 
+    /*
     private playersUrl: string= "http://localhost:8080/api/players";
     private teamsUrl: string= "http://localhost:8080/api/teams";
+    */
+    private playersUrl: string= "api/players";
+    private teamsUrl: string= "api/teams";
 
     constructor(private http: HttpClient) {}
 
