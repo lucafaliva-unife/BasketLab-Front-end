@@ -29,19 +29,6 @@ export class TrainComponent implements OnInit {
 
     resetPlayer(): void {
         if(this.selectedPlayerId) {
-            this.selectedPlayer= PlayerService.getPlayerById(this.selectedPlayerId);
-            if(Object.keys(this.selectedPlayer).length === 0) {
-                alert("Errore: player non esistente");
-                this.router.navigate(["/teams"]);
-                return;
-            }
-        } else {
-            alert("Errore: nessun player selezionato");
-            this.router.navigate(["/teams"]);
-            return;
-        }
-        /*
-        if(this.selectedPlayerId) {
             this.playerService.getPlayerById(this.selectedPlayerId).subscribe({
                 next: (player) => {
                     this.selectedPlayer= player;
@@ -53,24 +40,21 @@ export class TrainComponent implements OnInit {
                         alert("Errore " + err.status);
                     }
                     this.router.navigate(["/teams"]);
-                    return;
                 }
             });
         } else {
             alert("Nessun player selezionato");
             this.router.navigate(["/teams"]);
-            return;
         }
-        */
     }
 
     ngOnInit(): void {
         //Estraggo l'ID del player selezionato
         const id: string | null= this.route.snapshot.paramMap.get('id');
-        if(id && !isNaN(Number(id))) {
-            this.selectedPlayerId= Number(id);
+        if(id) {
+            this.selectedPlayerId= id;
         } else {
-            alert("ID non valido");
+            alert("Errore: ID non inserito");
             this.router.navigate(["/teams"]);
             return;
         }
@@ -141,59 +125,25 @@ export class TrainComponent implements OnInit {
             if(!conferma) {
                 return;
             }
-            const result: boolean= PlayerService.trainPlayerById(this.selectedPlayerId, this.train as Omit<Train, "idx_train" | "id_player">).result;
-            if(!result) {
-                alert("Errore: player non esistente");
-                this.router.navigate(["/teams"]);
-                return;
-            }
-            this.reset();
-            this.canestriTentati= 0;
-            this.canestriRiusciti= 0;
-        } else {
-            alert("Nessun player selezionato");
-            this.router.navigate(["/teams"]);
-            return;
-        }
-        /*
-        if(this.selectedPlayerId) {
-            if(this.clockMode) {
-                clearInterval(this.interval);
-                this.clockMode= false;
-            }
-            const conferma: boolean= confirm("Sicuro di voler confermare l'allenamento?");
-            if(!conferma) {
-                return;
-            }
-            if(
-                this.canestriRiusciti && this.canestriRiusciti >= 0 &&
-                this.canestriTentati && this.canestriTentati > 0 &&
-                this.tempoCorsaCentisecondi && this.tempoCorsaCentisecondi > 0 && this.tempoCorsaCentisecondi <= 999 &&
-                this.tempoCorsaSecondi && this.tempoCorsaSecondi >= 0 && this.tempoCorsaSecondi <= 59 &&
-                this.tempoCorsaMinuti && this.tempoCorsaMinuti >= 0
-            ) {
-                this.train.percentuale_tiri= (this.canestriRiusciti / this.canestriTentati) * 100;
-                this.train.tempo_corsa= this.tempoCorsaMinuti * 60 + this.tempoCorsaSecondi + this.tempoCorsaCentisecondi / 100;
-            } else {
-                alert("Dati non validi");
-                return;
-            }
-            this.playerService.trainPlayerById(this.selectedPlayerId, this.train as Omit<Train, "idx_train" | "id_player">).subscribe(success => {
-                if(!success.result) {
-                    alert("Errore: player non esistente");
-                    this.router.navigate(["/teams"]);
-                    return;
+            this.playerService.trainPlayerById(this.selectedPlayerId, this.train as Omit<Train, "idx_train" | "id_player">).subscribe({
+                next: () => {
+                    this.reset();
+                    this.canestriTentati= 0;
+                    this.canestriRiusciti= 0;
+                },
+                error: (err) => {
+                    if(err.status === 404) {
+                        alert("Errore: player non esistente");
+                        this.router.navigate(["/teams"]);
+                    } else {
+                        alert("Errore: " + err.status);
+                    }
                 }
-                this.reset();
-                this.canestriTentati= 0;
-                this.canestriRiusciti= 0;
             });
         } else {
             alert("Nessun player selezionato");
             this.router.navigate(["/teams"]);
-            return;
         }
-        */
     }
 
 }

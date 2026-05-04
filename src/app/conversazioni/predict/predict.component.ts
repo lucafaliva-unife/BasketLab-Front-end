@@ -13,8 +13,8 @@ import { Team } from '../../modelli/team.model';
     styleUrls: ['./predict.component.css']
 })
 export class PredictComponent implements OnInit {
-    selectedTeamId_1: number | null= null;
-    selectedTeamId_2: number | null= null;
+    selectedTeamId_1: string | null= null;
+    selectedTeamId_2: string | null= null;
     noTeams: boolean= false;
     teams: Team[]= [];
     guessedTeam: string | null= null;
@@ -23,22 +23,15 @@ export class PredictComponent implements OnInit {
     constructor(private teamService: TeamService, private predictService: PredictService) {}
 
     resetTeams(): void {
-        this.teams= TeamService.getTeams();
-        if(this.teams.length === 0) {
-            this.noTeams= true;
-        } else {
-            this.noTeams= false;
-        }
-        /*
         this.teamService.getTeams().subscribe(teams => {
             this.teams= teams;
             if(this.teams.length === 0) {
                 this.noTeams= true;
             } else {
                 this.noTeams= false;
+                this.teams= this.teams.filter(team => team.nome !== "Svincolati");
             }
         });
-        */
     }
 
     ngOnInit(): void {
@@ -56,33 +49,9 @@ export class PredictComponent implements OnInit {
     predict(): void {
         if(this.selectedTeamId_1 && this.selectedTeamId_2) {
             if(this.selectedTeamId_1 !== this.selectedTeamId_2) {
-                const guessedTeamTemp: Team= this.predictService.predict(this.selectedTeamId_1, this.selectedTeamId_2);
-                if(Object.keys(guessedTeamTemp).length === 0) {
-                    alert("Almeno uno dei due team selezionati non esiste o non ha allenamenti");
-                    this.resetTeams();
-                    this.reset();
-                    this.guessedTeam= null;
-                    this.guessedTeamOk= false;
-                } else {
-                    this.guessedTeam= guessedTeamTemp.nome;
-                    this.guessedTeamOk= true;
-                }
-            } else {
-                alert("Selezionare due team diversi");
-                this.guessedTeam= null;
-                this.guessedTeamOk= false;
-            }
-        } else {
-            alert("Errore: selezionare entrambi i team");
-            this.guessedTeam= null;
-            this.guessedTeamOk= false;
-        }
-        /*
-        if(this.selectedTeamId_1 && this.selectedTeamId_2) {
-            if(this.selectedTeamId_1 !== this.selectedTeamId_2) {
                 this.predictService.predict(this.selectedTeamId_1, this.selectedTeamId_2).subscribe({
                     next: (team) => {
-                        if(Object.keys(team).length === 0) {
+                        if(team.nome === "" && team.citta === "" && team.id_team === "") {
                             alert("Almeno uno dei due team selezionati non possiede allenamenti");
                             this.guessedTeam= null;
                             this.guessedTeamOk= false;
@@ -94,8 +63,10 @@ export class PredictComponent implements OnInit {
                     error: (err) => {
                         if(err.status === 404) {
                             alert("Almeno uno dei due team selezionati non esiste");
+                        } else if(err.status === 409) {
+                            alert("Errore: non puoi confrontare un team con gli svincolati");
                         } else {
-                            alert("Errore " + err.status);
+                            alert("Errore: " + err.status);
                         }
                         this.resetTeams();
                         this.reset();
@@ -111,7 +82,6 @@ export class PredictComponent implements OnInit {
             this.guessedTeam= null;
             this.guessedTeamOk= false;
         }
-        */
     }
 
 }
