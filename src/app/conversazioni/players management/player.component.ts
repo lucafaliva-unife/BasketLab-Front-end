@@ -18,7 +18,7 @@ import { PlayerService } from '../../servizi/player.service';
 export class PlayerComponent implements OnInit {
     modifyState: boolean= false;
     selectedPlayer: Partial<Player>= {};
-    selectedPlayerId: number | null= null;
+    selectedPlayerId: string | null= null;
     trains: Partial<Train>[]= [];
     trainIsVoid: boolean= false;
     teams: Team[]= [];
@@ -27,38 +27,6 @@ export class PlayerComponent implements OnInit {
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
 
     private resetAllData(): void {
-        if(this.selectedPlayerId) {
-            this.selectedPlayer= PlayerService.getPlayerById(this.selectedPlayerId);
-            if(Object.keys(this.selectedPlayer).length === 0) {
-                alert("Errore: player non esistente");
-                this.router.navigate(["/teams"]);
-                return;
-            }
-            this.teams= TeamService.getTeams();
-            if(Object.keys(this.teams).length === 0) {
-                alert("Errore: nessun team non esistente");
-                this.router.navigate(["/teams"]);
-                return;
-            }
-            const playerTeam: Team= TeamService.getTeamById((this.selectedPlayer as Player).id_team);
-            if(Object.keys(playerTeam).length === 0) {
-                alert("Errore: il team del player selezionato non esiste");
-                this.router.navigate(["/teams"]);
-                return;
-            }
-            this.teamName= playerTeam.nome;
-            this.trains= PlayerService.getTrainsByPlayerId(this.selectedPlayerId);
-            if(this.trains.length === 0) {
-                this.trainIsVoid= true;
-            } else {
-                this.trainIsVoid= false;
-            }
-        } else {
-            alert("Errore: nessun player selezionato");
-            this.router.navigate(["/teams"]);
-            return;
-        }
-        /*
         if(this.selectedPlayerId) {
             this.playerService.getPlayerById(this.selectedPlayerId).subscribe({
                 next: (player) => {
@@ -76,8 +44,8 @@ export class PlayerComponent implements OnInit {
             });
             this.teamService.getTeams().subscribe(teams => {
                 this.teams= teams;
-                if(Object.keys(this.teams).length === 0) {
-                    alert("Errore: nessun team non esistente");
+                if(this.teams.length === 0) {
+                    alert("Errore: nessun team esistente");
                     this.router.navigate(["/teams"]);
                     return;
                 }
@@ -107,7 +75,7 @@ export class PlayerComponent implements OnInit {
                 },
                 error: (err) => {
                     if(err.status === 404) {
-                        alert("Errore: player non esiste");
+                        alert("Errore: player non esistente");
                     } else {
                         alert("Errore " + err.status);
                     }
@@ -118,9 +86,7 @@ export class PlayerComponent implements OnInit {
         } else {
             alert("Nessun player selezionato");
             this.router.navigate(["/teams"]);
-            return;
         }
-        */
     }
 
     private validateHeightWeight(height: number | null | undefined, weight: number | null | undefined): boolean {
@@ -148,10 +114,10 @@ export class PlayerComponent implements OnInit {
     ngOnInit(): void {
         //Estraggo l'ID del player selezionato
         const id: string | null= this.route.snapshot.paramMap.get('id');
-        if(id && !isNaN(Number(id))) {
-            this.selectedPlayerId= Number(id);
+        if(id) {
+            this.selectedPlayerId= id;
         } else {
-            alert("ID non valido");
+            alert("Errore: ID non inserito");
             this.router.navigate(["/teams"]);
             return;
         }
@@ -175,42 +141,24 @@ export class PlayerComponent implements OnInit {
                 if(!this.validateHeightWeight(editedPlayerData.altezza, editedPlayerData.peso)) {
                     return;
                 }
-                const result: boolean= PlayerService.editPlayerById(this.selectedPlayerId, editedPlayerData).result;
-                if(!result) {
-                    alert("Errore: player non esistente");
-                    this.router.navigate(["/teams"]);
-                    return;
-                }
-                this.resetAllData();
-                this.modifyState= false;
-            } else {
-                alert("I campi non possono essere vuoti");
-            }
-        } else {
-            alert("Errore: nessun player selezionato");
-            this.router.navigate(["/teams"]);
-            return;
-        }
-        /*
-        if(this.selectedPlayerId) {
-            const editedPlayerData: Omit<Player, "id_player">= this.selectedPlayer as Omit<Player, "id_player">;
-            if(
-                editedPlayerData.nome && editedPlayerData.nome.trim() !== "" &&
-                editedPlayerData.cognome && editedPlayerData.cognome.trim() !== "" &&
-                editedPlayerData.data_nascita &&
-                editedPlayerData.altezza &&
-                editedPlayerData.peso &&
-                editedPlayerData.ruolo &&
-                editedPlayerData.id_team
-            ) {
-                this.playerService.editPlayerById(this.selectedPlayerId, editedPlayerData).subscribe(success => {
-                    if(!success.result) {
-                        alert("Errore: player non esistente");
-                        this.router.navigate(["/teams"]);
-                        return;
+                this.playerService.editPlayerById(this.selectedPlayerId, editedPlayerData).subscribe({
+                    next: () => {
+                        this.resetAllData();
+                        this.modifyState= false;
+                    },
+                    error: (err) => {
+                        if(err.status === 400) {
+                            alert("Errore: il server ha rifiutato i dati inviati");
+                        } else if(err.status === 404) {
+                            alert("Errore: player non esistente");
+                            this.router.navigate(["/teams"]);
+                        } else if(err.status === 409) {
+                            alert("Errore: team selezionato per il player non esistente");
+                            this.resetAllData();
+                        } else {
+                            alert("Errore " + err.status);
+                        }
                     }
-                    this.resetAllData();
-                    this.modifyState= false;
                 });
             } else {
                 alert("I campi non possono essere vuoti");
@@ -218,9 +166,7 @@ export class PlayerComponent implements OnInit {
         } else {
             alert("Errore: nessun player selezionato");
             this.router.navigate(["/teams"]);
-            return;
         }
-        */
     }
 
     deletePlayer(): void {
@@ -229,34 +175,31 @@ export class PlayerComponent implements OnInit {
             if(!conferma) {
                 return;
             }
-            const result: boolean= PlayerService.deletePlayerById(this.selectedPlayerId).result;
-            if(!result) {
-                alert("Errore: player non esistente");
-            }
-            if(this.selectedPlayer.id_team) {
-                this.router.navigate(["/teams", this.selectedPlayer.id_team]);
-            } else {
-                this.router.navigate(["/teams"]);
-            }
-        }
-        /*
-        if(this.selectedPlayerId) {
-            const conferma: boolean= confirm("Sicuro di voler eliminare il player?");
-            if(!conferma) {
-                return;
-            }
-            this.playerService.deletePlayerById(this.selectedPlayerId).subscribe(success => {
-                if(!success.result) {
-                    alert("Errore: player non esistente");
-                }
-                if(this.selectedPlayer.id_team) {
-                    this.router.navigate(["/teams", this.selectedPlayer.id_team]);
-                } else {
-                    this.router.navigate(["/teams"]);
+            this.playerService.deletePlayerById(this.selectedPlayerId).subscribe({
+                next: () => {
+                    if(this.selectedPlayer.id_team) {
+                        this.router.navigate(["/teams", this.selectedPlayer.id_team]);
+                    } else {
+                        this.router.navigate(["/teams"]);
+                    }
+                },
+                error: (err) => {
+                    if(err.status === 404) {
+                        alert("Errore: player non esistente");
+                        if(this.selectedPlayer.id_team) {
+                            this.router.navigate(["/teams", this.selectedPlayer.id_team]);
+                        } else {
+                            this.router.navigate(["/teams"]);
+                        }
+                    } else {
+                        alert("Errore " + err.status);
+                    }
                 }
             });
+        } else {
+            alert("Errore: nessun player selezionato");
+            this.router.navigate(["/teams"]);
         }
-        */
     }
 
 }

@@ -15,7 +15,7 @@ import { PlayerService } from '../../servizi/player.service';
 })
 export class TrainComponent implements OnInit {
     selectedPlayer: Partial<Player>= {};
-    selectedPlayerId: number | null= null;
+    selectedPlayerId: string | null= null;
     train: Partial<Omit<Train, "idx_train" | "id_player">>= {};
     canestriTentati: number= 0;
     canestriRiusciti: number= 0;

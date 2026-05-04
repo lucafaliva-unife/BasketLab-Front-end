@@ -10,13 +10,13 @@
             <input type="text" id="teamCity" [disabled]="!teamModifyState" [(ngModel)]="selectedTeam.citta">
         </div>
         <div class="actions">
-            <button class="btn primary" *ngIf="teamModifyState" (click)="editTeam()">Conferma</button>
-            <button class="btn danger" (click)="deleteTeam()">Elimina Team</button>
-            <button class="btn secondary" (click)="teamModifyState= true" [disabled]="teamModifyState">Modifica Team</button>
+            <button class="btn primary" *ngIf="teamModifyState" (click)="editTeam()" *ngIf="!svincolati">Conferma</button>
+            <button class="btn danger" (click)="deleteTeam()" *ngIf="!svincolati">Elimina Team</button>
+            <button class="btn secondary" (click)="teamModifyState= true" [disabled]="teamModifyState" *ngIf="!svincolati">Modifica Team</button>
         </div>
     </article>
 </section>
-<section class="container">
+<section class="container" *ngIf="!svincolati">
     <h1 class="title">Team Analytics</h1>
     <table *ngIf="!analyticsIsVoid; else analyticsIsVoidMessage" class="table">
         <thead>
@@ -37,7 +37,10 @@
     </ng-template>
 </section>
 <section *ngIf="!teamIsVoid; else teamIsVoidMessage" class="container">
-    <h1 class="title">Elenco Players ordinati decrescentemente per peformance</h1>
+    <h1 class="title" *ngIf="!svincolati; else svincolatiMessage">Elenco Players ordinati decrescentemente per peformance</h1>
+    <ng-template #svincolatiMessage>
+        <h1 class="title">Elenco Players svincolati</h1>
+    </ng-template>
     <article *ngFor="let player of players" class="card">
         <div class="field">
             <label [for]="'nomePlayer_' + player.id_player">Nome:</label>
@@ -85,10 +88,10 @@
 <ng-template #teamIsVoidMessage>
     <section class="container">
         <h1 class="title">Elenco Players</h1>
-        <h2 class="message">Nessun Player presente in questo Team</h2>
+        <h2 class="message">Nessun Player presente</h2>
     </section>
 </ng-template>
-<button class="btn add" (click)="showForm= true" [disabled]="showForm">Aggiungi Player</button>
+<button class="btn add" (click)="showForm= true" [disabled]="showForm" *ngIf="!svincolati">Aggiungi Player</button>
 <form #form="ngForm" *ngIf="showForm" (ngSubmit)="createPlayer(newPlayer)">
     <div class="field">
         <label for="nomePlayer">Nome:</label>

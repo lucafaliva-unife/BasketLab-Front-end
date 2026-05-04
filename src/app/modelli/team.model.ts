@@ -1,5 +1,5 @@
 export interface Team {
-    id_team: number,
+    id_team: string,
     nome: string,
     citta: string
 }

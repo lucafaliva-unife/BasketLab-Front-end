@@ -16,7 +16,7 @@ export class TeamsComponent implements OnInit {
     newTeam: Partial<Omit<Team, "id_team">>= {};
     teams: Team[]= [];
     noTeams: boolean= false;
-    modifyState: boolean[]= [];
+    modifyState: { [key: string]: boolean }= {}; // Dizionario che associa l'ID del team al suo modify state
     showForm: boolean= false;
 
     constructor(private teamService: TeamService) {}
@@ -39,7 +39,7 @@ export class TeamsComponent implements OnInit {
         });
     }
 
-    setModifyState(id: number): void {
+    setModifyState(id: string): void {
         this.resetModifyState();
         this.modifyState[id]= true;
     }
@@ -48,7 +48,7 @@ export class TeamsComponent implements OnInit {
         this.resetTeamsAndModifyState();
     }
 
-    deleteTeam(id: number): void {
+    deleteTeam(id: string): void {
         const conferma: boolean= confirm("Sicuro di voler eliminare il team?");
         if(!conferma) {
             return;

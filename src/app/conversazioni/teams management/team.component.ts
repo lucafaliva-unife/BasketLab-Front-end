@@ -16,7 +16,7 @@ import { PlayerService } from '../../servizi/player.service';
     styleUrls: ['./team.component.css']
 })
 export class TeamComponent implements OnInit {
-    selectedTeamId: number | null= null;
+    selectedTeamId: string | null= null;
     newPlayer: Partial<Omit<Player, "id_player">>= {};
     players: Player[]= [];
     teamIsVoid: boolean= false;
@@ -24,7 +24,7 @@ export class TeamComponent implements OnInit {
     analyticsIsVoid: boolean= false;
     selectedTeam: Partial<Team>= {};
     teamModifyState: boolean= false;
-    playerModifyState: boolean[]= [];
+    playerModifyState: { [key: string]: boolean }= {}; // Dizionario che associa l'ID del player al suo modify state
     showForm: boolean= false;
     svincolati: boolean= false;
 
@@ -34,6 +34,39 @@ export class TeamComponent implements OnInit {
         this.players.forEach(player => {
             this.playerModifyState[player.id_player]= false;
         });
+    }
+
+        private loadTeamAnalytics(): void {
+        if(this.selectedTeamId) {
+            if(this.selectedTeam.nome === "Svincolati") {
+                this.teamAnalytics= {};
+                this.analyticsIsVoid= true;
+                this.svincolati= true;
+            } else {
+                this.svincolati= false;
+                this.teamService.getAnalyticsByTeamId(this.selectedTeamId).subscribe({
+                    next: (analytics) => {
+                        this.teamAnalytics= analytics;
+                        if(this.teamAnalytics.percentuale_tiri === null && this.teamAnalytics.tempo_corsa === null) {
+                            this.analyticsIsVoid= true;
+                        } else {
+                            this.analyticsIsVoid= false;
+                        }
+                    },
+                    error: (err) => {
+                        if(err.status === 404) {
+                            alert("Errore: team non esistente");
+                        } else {
+                            alert("Errore " + err.status);
+                        }
+                        this.router.navigate(["/teams"]);
+                    }
+                });
+            }
+        } else {
+            alert("Nessun team selezionato");
+            this.router.navigate(["/teams"]);
+        }
     }
 
     private resetAllDataAndModifyState(): void {
@@ -95,7 +128,6 @@ export class TeamComponent implements OnInit {
                             alert("Errore: " + err.error);
                         }
                         this.router.navigate(["/teams"]);
-                        return;
                     }
                 });
             }
@@ -104,6 +136,7 @@ export class TeamComponent implements OnInit {
             this.router.navigate(["/teams"]);
             return;
         }
+        this.loadTeamAnalytics();
     }
 
     private validateHeightWeight(height: number | null | undefined, weight: number | null | undefined): boolean {
@@ -128,62 +161,24 @@ export class TeamComponent implements OnInit {
         return true;
     }
 
-    setModifyState(id: number): void {
+    setModifyState(id: string): void {
         this.resetPlayersModifyState();
         this.playerModifyState[id]= true;
-    }
-
-    private loadTeamAnalytics(): void {
-        if(this.selectedTeamId) {
-            if(this.selectedTeam.nome === "Svincolati") {
-                this.teamAnalytics= {};
-                this.analyticsIsVoid= true;
-                this.svincolati= true;
-            } else {
-                this.svincolati= false;
-                this.teamService.getAnalyticsByTeamId(this.selectedTeamId).subscribe({
-                    next: (analytics) => {
-                        this.teamAnalytics= analytics;
-                        if(this.teamAnalytics.percentuale_tiri === null && this.teamAnalytics.tempo_corsa === null) {
-                            this.analyticsIsVoid= true;
-                        } else {
-                            this.analyticsIsVoid= false;
-                        }
-                    },
-                    error: (err) => {
-                        if(err.status === 404) {
-                            alert("Errore: team non esistente");
-                        } else {
-                            alert("Errore " + err.status);
-                        }
-                        this.router.navigate(["/teams"]);
-                        return;
-                    }
-                });
-            }
-        } else {
-            alert("Nessun team selezionato");
-            this.router.navigate(["/teams"]);
-            return;
-        }
     }
 
     ngOnInit() {
         //Estraggo l'ID del team selezionato
         const id: string | null= this.route.snapshot.paramMap.get('id');
-        if(id && !isNaN(Number(id))) {
-            this.selectedTeamId= Number(id);
+        if(id) {
+            this.selectedTeamId= id;
         } else {
-            alert("ID non valido");
+            alert("Errore: ID non inserito");
             this.router.navigate(["/teams"]);
             return;
         }
 
-        //Carico i dati dei player del team selezionato
+        //Carico i dati dei player del team selezionato e gli analytics
         this.resetAllDataAndModifyState();
-        
-        //Carico i dati di analytics del team selezionato
-        this.loadTeamAnalytics();
     }
 
     deleteTeam(): void {
@@ -192,69 +187,52 @@ export class TeamComponent implements OnInit {
             if(!conferma) {
                 return;
             }
-            const result: boolean= TeamService.deleteTeamById(this.selectedTeamId).result;
-            if(!result) {
-                alert("Errore: team non esistente");
-            }
-        } else {
-            alert("Nessun team selezionato");
-        }
-        this.router.navigate(["/teams"]);
-        /*
-        if(this.selectedTeamId) {
-            const conferma: boolean= confirm("Sicuro di voler eliminare il team?");
-            if(!conferma) {
-                return;
-            }
-            this.teamService.deleteTeamById(this.selectedTeamId).subscribe(success => {
-                if(!success.result) {
-                    alert("Errore: team non esistente");
+            this.teamService.deleteTeamById(this.selectedTeamId).subscribe({
+                next: () => {},
+                error: (err) => {
+                    if(err.status === 404) {
+                        alert("Errore: team non esistente");
+                    } else if(err.status === 409) {
+                        alert("Errore: non puoi eliminare gli svincolati");
+                    } else {
+                        alert("Errore " + err.status);
+                    }
                 }
             });
         } else {
             alert("Nessun team selezionato");
         }
         this.router.navigate(["/teams"]);
-        */
     }
 
     editTeam(): void {
         if(this.selectedTeamId) {
             const editedTeamData: Omit<Team, "id_team">= this.selectedTeam as Omit<Team, "id_team">;
             if(editedTeamData.nome.trim() !== "" && editedTeamData.citta.trim() !== "") {
-                const result: boolean= TeamService.editTeamById(this.selectedTeamId, editedTeamData).result;
-                if(!result) {
-                    alert("Errore: team non esistente");
-                    this.router.navigate(["/teams"]);
-                    return;
-                }
-                this.resetAllDataAndModifyState();
-                this.teamModifyState= false;
+                this.teamService.editTeamById(this.selectedTeamId, editedTeamData).subscribe({
+                    next: () => {
+                        this.resetAllDataAndModifyState();
+                    },
+                    error: (err) => {
+                        if(err.status === 404) {
+                            alert("Errore: team non esistente");
+                            this.router.navigate(["/teams"]);
+                        } else if(err.status === 400) {
+                            alert("Errore: il server ha rifiutato i dati inviati");
+                        }  else if(err.status === 409) {
+                            alert("Errore: non puoi assegnare ad un team il nome 'Svincolati' o il nome di un altro team e non puoi modificare gli svincolati");
+                        } else {
+                            alert("Errore " + err.status);
+                        }
+                    }
+                });
             } else {
                 alert("I campi non possono essere vuoti");
             }
         } else {
             alert("Nessun team selezionato");
             this.router.navigate(["/teams"]);
-            return;
         }
-        /*
-        if(this.selectedTeamId) {
-            const editedTeamData: Omit<Team, "id_team">= this.selectedTeam as Omit<Team, "id_team">;
-            if(editedTeamData.nome.trim() !== "" && editedTeamData.citta.trim() !== "") {
-                this.teamService.editTeamById(this.selectedTeamId, editedTeamData).subscribe(success => {
-                    if(!success.result) {
-                        alert("Errore: team non esistente");
-                        this.router.navigate(["/teams"]);
-                    }
-                    this.resetAllDataAndModifyState();
-                });
-            }
-        } else {
-            alert("Nessun team selezionato");
-            this.router.navigate(["/teams"]);
-        }
-        */
     }
 
     createPlayer(newPlayerData: Partial<Omit<Player, "id_player">>): void {
@@ -272,52 +250,30 @@ export class TeamComponent implements OnInit {
                 }
                 const tempNewPlayer: Omit<Player, "id_player">= newPlayerData as Omit<Player, "id_player">;
                 tempNewPlayer.id_team= this.selectedTeamId;
-                const result: boolean= PlayerService.createPlayer(tempNewPlayer).result;
-                if(result) {
-                    this.newPlayer= {};
-                    this.showForm= false;
-                } else {
-                    alert("Errore: impossibile creare il nuovo team");
-                }
-            } else {
-                alert("I campi non possono essere vuoti");
-            }
-            this.resetAllDataAndModifyState();
-        } else {
-            alert("Nessun team selezionato");
-            this.router.navigate(["/teams"]);
-            return;
-        }
-        /*
-        if(this.selectedTeamId) {
-            if(
-                newPlayerData.nome && newPlayerData.nome.trim() !== "" &&
-                newPlayerData.cognome && newPlayerData.cognome.trim() !== "" &&
-                newPlayerData.data_nascita &&
-                newPlayerData.altezza &&
-                newPlayerData.peso &&
-                newPlayerData.ruolo
-            ) {
-                const tempNewPlayer: Omit<Player, "id_player">= newPlayerData as Omit<Player, "id_player">;
-                tempNewPlayer.id_team= this.selectedTeamId;
-                this.playerService.createPlayer(tempNewPlayer).subscribe(success => {
-                    if(success.result) {
+                this.playerService.createPlayer(tempNewPlayer).subscribe({
+                    next: () => {
                         this.newPlayer= {};
                         this.showForm= false;
-                    } else {
-                        alert("Errore: impossibile creare il nuovo team");
+                        this.resetAllDataAndModifyState();
+                    },
+                    error: (err) => {
+                        if(err.status === 400) {
+                            alert("Errore: il server ha rifiutato i dati inviati");
+                        }  else if(err.status === 409) {
+                            alert("Errore: team del player non esistente");
+                            this.router.navigate(["/teams"]);
+                        } else {
+                            alert("Errore: " + err.status);
+                        }
                     }
                 });
             } else {
                 alert("I campi non possono essere vuoti");
             }
-            this.resetAllDataAndModifyState();
-            } else {
-                alert("Nessun team selezionato");
-                this.router.navigate(["/teams"]);
-                return;
-            }
-        */
+        } else {
+            alert("Nessun team selezionato");
+            this.router.navigate(["/teams"]);
+        }
     }
 
     editPlayer(player: Player): void {
@@ -333,58 +289,44 @@ export class TeamComponent implements OnInit {
             if(!this.validateHeightWeight(editedPlayerData.altezza, editedPlayerData.peso)) {
                 return;
             }
-            const result: boolean= PlayerService.editPlayerById(player.id_player, editedPlayerData).result;
-            if(!result) {
-                alert("Errore: player non esistente");
-            }
-            this.resetAllDataAndModifyState();
-        } else {
-            alert("I campi non possono essere vuoti");
-        }
-        /*
-        const editedPlayerData: Omit<Player, "id_player">= player as Omit<Player, "id_player">;
-        if(
-            editedPlayerData.nome && editedPlayerData.nome.trim() !== "" &&
-            editedPlayerData.cognome && editedPlayerData.cognome.trim() !== "" &&
-            editedPlayerData.data_nascita &&
-            editedPlayerData.altezza &&
-            editedPlayerData.peso &&
-            editedPlayerData.ruolo
-        ) {
-            this.playerService.editPlayerById(player.id_player, editedPlayerData).subscribe(success => {
-                if(!success.result) {
-                    alert("Errore: player non esistente");
+            this.playerService.editPlayerById(player.id_player, editedPlayerData).subscribe({
+                next: () => {
+                    this.resetAllDataAndModifyState();
+                },
+                error: (err) => {
+                    if(err.status === 400) {
+                        alert("Errore: il server ha rifiutato i dati inviati");
+                    }  else if(err.status === 404) {
+                        alert("Errore: player non esistente");
+                        this.resetAllDataAndModifyState();
+                    } else {
+                        alert("Errore: " + err.status);
+                    }
                 }
-                this.resetAllDataAndModifyState();
             });
         } else {
             alert("I campi non possono essere vuoti");
         }
-        */
     }
 
-    deletePlayer(id: number): void {
+    deletePlayer(id: string): void {
         const conferma: boolean= confirm("Sicuro di voler eliminare il player?");
         if(!conferma) {
             return;
         }
-        const result: boolean= PlayerService.deletePlayerById(id).result;
-        if(!result) {
-            alert("Errore: player non esistente");
-        }
-        this.resetAllDataAndModifyState();
-        /*
-        const conferma: boolean= confirm("Sicuro di voler eliminare il player?");
-        if(!conferma) {
-            return;
-        }
-        this.playerService.deletePlayerById(id).subscribe(success => {
-            if(!success.result) {
-                alert("Errore: player non esistente");
+        this.playerService.deletePlayerById(id).subscribe({
+            next: () => {
+                this.resetAllDataAndModifyState();
+            },
+            error: (err) => {
+                if(err.status === 404) {
+                    alert("Errore: player non esistente");
+                    this.resetAllDataAndModifyState();
+                } else {
+                    alert("Errore: " + err.status);
+                }
             }
-            this.resetAllDataAndModifyState();
         });
-        */
     }
 
 }

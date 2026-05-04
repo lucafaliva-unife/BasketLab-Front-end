@@ -16,7 +16,7 @@ export class TeamService {
         return this.http.get<Team[]>(this.teamsUrl);
     }
 
-    public getTeamById(id: number): Observable<Team> {
+    public getTeamById(id: string): Observable<Team> {
         return this.http.get<Team>(`${this.teamsUrl}/${id}`);
     }
 
@@ -25,20 +25,20 @@ export class TeamService {
         //L'ID del team viene gestito dal backend (auto increment sul DB)
     }
 
-    public editTeamById(id: number, editedTeam: Omit<Team, "id_team">): Observable<void> {
+    public editTeamById(id: string, editedTeam: Omit<Team, "id_team">): Observable<void> {
         return this.http.put<void>(`${this.teamsUrl}/${id}`, {...editedTeam});
         //L'ID del team viene gestito dal backend (auto increment sul DB)
     }
 
-    public deleteTeamById(id: number): Observable<void> {
+    public deleteTeamById(id: string): Observable<void> {
         return this.http.delete<void>(`${this.teamsUrl}/${id}`);
     }
 
-    public getAnalyticsByTeamId(id: number): Observable<Omit<Train, "id_player" | "idx_train">> {
+    public getAnalyticsByTeamId(id: string): Observable<Omit<Train, "id_player" | "idx_train">> {
         return this.http.get<Omit<Train, "id_player" | "idx_train">>(`${this.teamsUrl}/${id}/analytics`);
     }
 
-    public getRankingByTeamId(id: number): Observable<Player[]> {
+    public getRankingByTeamId(id: string): Observable<Player[]> {
         return this.http.get<Player[]>(`${this.teamsUrl}/${id}/ranking`);
     }
 
