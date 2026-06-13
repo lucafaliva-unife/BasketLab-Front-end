@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PredictService } from '../../servizi/prediction.service';
 import { TeamService } from '../../servizi/team.service';
 import { Team } from '../../modelli/team.model';
 
@@ -20,7 +19,7 @@ export class PredictComponent implements OnInit {
     guessedTeam: string | null= null;
     guessedTeamOk: boolean= false;
 
-    constructor(private teamService: TeamService, private predictService: PredictService) {}
+    constructor(private teamService: TeamService) {}
 
     resetTeams(): void {
         this.teamService.getTeams().subscribe(teams => {
@@ -49,6 +48,7 @@ export class PredictComponent implements OnInit {
     predict(): void {
         if(this.selectedTeamId_1 && this.selectedTeamId_2) {
             if(this.selectedTeamId_1 !== this.selectedTeamId_2) {
+                /*
                 this.predictService.predict(this.selectedTeamId_1, this.selectedTeamId_2).subscribe({
                     next: (team) => {
                         if(team.nome === "" && team.citta === "" && team.id_team === "") {
@@ -72,6 +72,7 @@ export class PredictComponent implements OnInit {
                         this.reset();
                     }
                 });
+                */
             } else {
                 alert("Selezionare due team diversi");
                 this.guessedTeam= null;

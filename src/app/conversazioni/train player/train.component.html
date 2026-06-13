@@ -12,15 +12,23 @@
     <article>
         <h2 class="message centered">Dati allenamento</h2>
         <form #form="ngForm" (ngSubmit)="trainPlayer()">
-            <div class="fieldWithButton">
-                <label for="canestriTentati">Canestri tentati:</label>
-                <input type="number" step="1" id="canestriTentati" name="canestriTentati" [(ngModel)]="canestriTentati" required>
-                <button class="btn secondary" type="button"(click)="addCanestroTentato()">Incrementa canestri tentati</button>
-            </div>
-            <div class="fieldWithButton">
-                <label for="canestriRiusciti">Canestri riusciti:</label>
-                <input type="number" step="1" id="canestriRiusciti" name="canestriRiusciti" [(ngModel)]="canestriRiusciti" required>
-                <button class="btn secondary" type="button" (click)="addCanestroRiuscito()">Incrementa canestri riusciti</button>
+            <div class="shooting-row">
+                <div class="shoot-controls">
+                    <div class="fieldWithButton">
+                        <label for="canestriTentati">Canestri tentati:</label>
+                        <input type="number" step="1" id="canestriTentati" name="canestriTentati" [(ngModel)]="canestriTentati" required>
+                        <button class="btn secondary" type="button" (click)="addCanestroTentato()">Incrementa canestri tentati</button>
+                    </div>
+                    <div class="fieldWithButton">
+                        <label for="canestriRiusciti">Canestri riusciti:</label>
+                        <input type="number" step="1" id="canestriRiusciti" name="canestriRiusciti" [(ngModel)]="canestriRiusciti" required>
+                        <button class="btn secondary" type="button" (click)="addCanestroRiuscito()">Incrementa canestri riusciti</button>
+                    </div>
+                </div>
+                <div class="percent-box">
+                    <label>Percentuale canestri riusciti</label>
+                    <div class="percent-value">{{ percentualeTiri | number:'1.2-2' }} %</div>
+                </div>
             </div>
             <div class="tempoCorsaField">
                 <label class="tempo-label">Tempo corsa:</label>

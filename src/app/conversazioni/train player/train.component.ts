@@ -24,6 +24,14 @@ export class TrainComponent implements OnInit {
     tempoCorsaCentisecondi: number= 0;
     clockMode: boolean= false;
     interval: any= null;
+    percentualeTiri: number= 0;
+
+    // Restituisce la percentuale di tiri riusciti in tempo reale
+    updatePercentualeTiriRealtime(): void {
+        if(this.canestriTentati != 0) {
+            this.percentualeTiri= (this.canestriRiusciti / this.canestriTentati) * 100;
+        }
+    }
 
     constructor(private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
 
@@ -65,11 +73,13 @@ export class TrainComponent implements OnInit {
 
     addCanestroTentato(): void {
         this.canestriTentati= this.canestriTentati + 1;
+        this.updatePercentualeTiriRealtime();
     }
 
     addCanestroRiuscito(): void {
         this.canestriTentati= this.canestriTentati + 1;
         this.canestriRiusciti= this.canestriRiusciti + 1;
+        this.updatePercentualeTiriRealtime();
     }
 
     start(): void {
@@ -130,6 +140,7 @@ export class TrainComponent implements OnInit {
                     this.reset();
                     this.canestriTentati= 0;
                     this.canestriRiusciti= 0;
+                    this.percentualeTiri= 0;
                 },
                 error: (err) => {
                     if(err.status === 404) {
