@@ -36,10 +36,7 @@ export class PlayerService {
     }
 
     public trainPlayerById(id: string, train: Omit<Train, "idx_train" | "id_player">): Observable<void> {
-        return this.http.post<void>(`${this.playersUrl}/${id}/train`, {
-            id_player: id,
-            ...train
-        });
+        return this.http.post<void>(`${this.playersUrl}/${id}/train`, {...train});
     }
 
 }

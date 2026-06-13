@@ -30,7 +30,23 @@ export class PlayerComponent implements OnInit {
         if(this.selectedPlayerId) {
             this.playerService.getPlayerById(this.selectedPlayerId).subscribe({
                 next: (player) => {
+                    // Recupero i dati del player
                     this.selectedPlayer= player;
+                    // Recupero il nome del team del player
+                    this.teamService.getTeamById((this.selectedPlayer as Player).id_team).subscribe({
+                        next: (team) => {
+                            this.teamName= team.nome;
+                        },
+                        error: (err) => {
+                            if(err.status === 404) {
+                                alert("Errore: il team del player selezionato non esiste");
+                            } else {
+                                alert("Errore " + err.status);
+                            }
+                            this.router.navigate(["/teams"]);
+                            return;
+                        }
+                    });
                 },
                 error: (err) => {
                     if(err.status === 404) {
@@ -42,6 +58,7 @@ export class PlayerComponent implements OnInit {
                     return;
                 }
             });
+            // Recupero tutti i team
             this.teamService.getTeams().subscribe(teams => {
                 this.teams= teams;
                 if(this.teams.length === 0) {
@@ -50,20 +67,7 @@ export class PlayerComponent implements OnInit {
                     return;
                 }
             });
-            this.teamService.getTeamById((this.selectedPlayer as Player).id_team).subscribe({
-                next: (team) => {
-                    this.teamName= team.nome;
-                },
-                error: (err) => {
-                    if(err.status === 404) {
-                        alert("Errore: il team del player selezionato non esiste");
-                    } else {
-                        alert("Errore " + err.status);
-                    }
-                    this.router.navigate(["/teams"]);
-                    return;
-                }
-            });
+            // Recupero tutti gli allenamenti del player
             this.playerService.getTrainsByPlayerId(this.selectedPlayerId).subscribe({
                 next: (trains) => {
                     this.trains= trains;

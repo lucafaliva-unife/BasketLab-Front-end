@@ -25,11 +25,11 @@
             <div class="tempoCorsaField">
                 <label class="tempo-label">Tempo corsa:</label>
                 <fieldset>
-                    <input type="number" step="0.1" id="tempoCorsaMinuti" name="tempoCorsaMinuti" [(ngModel)]="tempoCorsaMinuti" [disabled]="clockMode" required>
+                    <input type="number" step="1" id="tempoCorsaMinuti" name="tempoCorsaMinuti" [(ngModel)]="tempoCorsaMinuti" [disabled]="clockMode" required>
                     <span>:</span>
-                    <input type="number" step="0.1" id="tempoCorsaSecondi" name="tempoCorsaSecondi" [(ngModel)]="tempoCorsaSecondi" [disabled]="clockMode" required>
+                    <input type="number" step="1" id="tempoCorsaSecondi" name="tempoCorsaSecondi" [(ngModel)]="tempoCorsaSecondi" [disabled]="clockMode" required>
                     <span>:</span>
-                    <input type="number" step="0.1" id="tempoCorsaCentisecondi" name="tempoCorsaCentisecondi" [(ngModel)]="tempoCorsaCentisecondi" [disabled]="clockMode" required>
+                    <input type="number" step="1" id="tempoCorsaCentisecondi" name="tempoCorsaCentisecondi" [(ngModel)]="tempoCorsaCentisecondi" [disabled]="clockMode" required>
                     <button class="btn secondary" type="button" [disabled]="clockMode" (click)="start()">Start</button>
                     <button class="btn danger" type="button" [disabled]="!clockMode" (click)="stop()">Stop</button>
                     <button class="btn reset" type="button" *ngIf="!clockMode" (click)="reset()">Reset</button>

@@ -61,7 +61,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let train of trains">
-                <td>{{ train.percentuale_tiri }} %</td>
+                <td>{{ train.percentuale_tiri | number:'1.2-2' }} %</td>
                 <td>{{ train.tempo_corsa }} sec.</td>
             </tr>
         </tbody>
