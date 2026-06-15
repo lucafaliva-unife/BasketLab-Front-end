@@ -90,8 +90,8 @@
         </tbody>
     </table>
     <div class="alert" *ngIf="percentualeTiriAlert || tempoCorsaAlert">
-        <p *ngIf="percentualeTiriAlert">Attenzione: la % tiri di questo Player è sotto alla media del Team</p>
-        <p *ngIf="tempoCorsaAlert">Attenzione: il tempo corsa di questo Player è sopra alla media del Team</p>
+        <p *ngIf="percentualeTiriAlert"><strong>Attenzione:</strong> la percentuale di tiri a segno di questo Player è sotto alla media del Team</p>
+        <p *ngIf="tempoCorsaAlert"><strong>Attenzione:</strong> il tempo corsa di questo Player è sopra alla media del Team</p>
     </div>
     <ng-template #trainIsVoidMessage>
         <h2 class="message">Nessun allenamento disponibile per questo Player</h2>

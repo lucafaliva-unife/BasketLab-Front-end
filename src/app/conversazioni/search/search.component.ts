@@ -64,20 +64,22 @@ export class SearchComponent {
             return;
         }
         this.playersFound.sort((p1, p2) => {
-            if(p1.cognome > p2.cognome) {
+            if(p1.cognome.toLowerCase() > p2.cognome.toLowerCase()) {
                 return 1;
-            } else if(p2.cognome > p1.cognome) {
+            } else if(p2.cognome.toLowerCase() > p1.cognome.toLowerCase()) {
                 return -1;
             } else {
-                if(p1.nome >= p2.nome) {
+                if(p1.nome.toLowerCase() > p2.nome.toLowerCase()) {
                     return 1;
-                } else {
+                } else if(p2.nome.toLowerCase() > p1.nome.toLowerCase()) {
                     return -1;
+                } else {
+                    return 0;
                 }
             }
         });
         this.teamsFound.sort((t1, t2) => {
-            if(t1.nome >= t2.nome) {
+            if(t1.nome.toLowerCase() > t2.nome.toLowerCase()) {
                 return 1;
             } else {
                 return -1;
