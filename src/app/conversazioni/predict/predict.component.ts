@@ -24,6 +24,13 @@ export class PredictComponent implements OnInit {
     teamAnalytics_2: Partial<Omit<Train, "id_player" | "idx_train">>= {};
     teamAnalytics_1_isVoid: boolean= false;
     teamAnalytics_2_isVoid: boolean= false;
+    percentualeTiriWeigth: number= 0.5;
+    tempoCorsaWeigth: number= 0.5;
+    loserTeamName: string | null= null;
+    teamScoreWinner: number= 0;
+    teamScoreLoser: number= 0;
+    winnerTeamId: string | null= null;
+    loserTeamId: string | null= null;
 
     constructor(private teamService: TeamService, private router: Router) {}
 
@@ -47,45 +54,73 @@ export class PredictComponent implements OnInit {
     reset(): void {
         this.selectedTeamId_1= null;
         this.selectedTeamId_2= null;
+        this.winnerTeamId= null;
+        this.loserTeamId= null;
         this.guessedTeam= null;
+        this.loserTeamName= null;
         this.guessedTeamOk= false;
+        this.teamScoreLoser= 0;
+        this.teamScoreWinner= 0;
     }
 
     compareTeams(): void {
-        const teamScore_1: number= (this.teamAnalytics_1.percentuale_tiri! + 1/this.teamAnalytics_1.tempo_corsa!) / 2;
-        const teamScore_2: number= (this.teamAnalytics_2.percentuale_tiri! + 1/this.teamAnalytics_2.tempo_corsa!) / 2;
+        this.tempoCorsaWeigth= 1 - this.percentualeTiriWeigth; // Calcolo il peso del tempo corsa
+        const percentualeTiri_1= this.teamAnalytics_1.percentuale_tiri ?? 0; // Uso come default 0
+        const tempoCorsa_1= this.teamAnalytics_1.tempo_corsa ?? 1; // Uso come default 1
+        const percentualeTiri_2 = this.teamAnalytics_2.percentuale_tiri ?? 0; // Uso come default 0
+        const tempoCorsa_2 = this.teamAnalytics_2.tempo_corsa ?? 1; // Uso come default 1
+        const teamScore_1= (
+            percentualeTiri_1 * this.percentualeTiriWeigth
+            +
+            (1 / tempoCorsa_1) * this.tempoCorsaWeigth
+        ) / (this.percentualeTiriWeigth + this.tempoCorsaWeigth);
+        const teamScore_2= (
+            percentualeTiri_2 * this.percentualeTiriWeigth
+            +
+            (1 / tempoCorsa_2) * this.tempoCorsaWeigth
+        ) / (this.percentualeTiriWeigth + this.tempoCorsaWeigth);
         if(teamScore_1 >= teamScore_2) {
             //Favorisco chi gioca in casa usando '>='
-            this.teamService.getTeamById(this.selectedTeamId_1!).subscribe({
-                next: (team) => {
-                    this.guessedTeam= team.nome;
-                    this.guessedTeamOk= true;
-                },
-                error: (err) => {
-                    if(err.status === 404) {
-                        alert("Errore: team ipotizzato come vincitore non esistente");
-                    } else {
-                        alert("Errore: " + err.error);
-                    }
-                    this.router.navigate(["/teams"]);
-                }
-            });
+            this.winnerTeamId= this.selectedTeamId_1;
+            this.loserTeamId= this.selectedTeamId_2;
+            this.teamScoreWinner= teamScore_1;
+            this.teamScoreLoser= teamScore_2;
         } else {
-            this.teamService.getTeamById(this.selectedTeamId_2!).subscribe({
-                next: (team) => {
-                    this.guessedTeam= team.nome;
-                    this.guessedTeamOk= true;
-                },
-                error: (err) => {
-                    if(err.status === 404) {
-                        alert("Errore: team ipotizzato come vincitore non esistente");
-                    } else {
-                        alert("Errore: " + err.error);
-                    }
-                    this.router.navigate(["/teams"]);
-                }
-            });
+            this.winnerTeamId= this.selectedTeamId_2;
+            this.loserTeamId= this.selectedTeamId_1;
+            this.teamScoreWinner= teamScore_2;
+            this.teamScoreLoser= teamScore_1;
         }
+        // Recupero i nomi dei due team
+        this.teamService.getTeamById(this.winnerTeamId!).subscribe({
+            next: (team) => {
+                // Recupero il nome del team vincitore
+                this.guessedTeam= team.nome;
+                this.guessedTeamOk= true;
+                // Recupero il nome del team perdente
+                this.teamService.getTeamById(this.loserTeamId!).subscribe({
+                    next: (team) => {
+                        this.loserTeamName= team.nome;
+                    },
+                    error: (err) => {
+                        if(err.status === 404) {
+                            alert("Errore: team ipotizzato come perdente non esistente");
+                        } else {
+                            alert("Errore: " + err.error);
+                        }
+                        this.router.navigate(["/teams"]);
+                    }
+                });
+            },
+            error: (err) => {
+                if(err.status === 404) {
+                    alert("Errore: team ipotizzato come vincitore non esistente");
+                } else {
+                    alert("Errore: " + err.error);
+                }
+                this.router.navigate(["/teams"]);
+            }
+        });
     }
 
     predict(): void {
@@ -100,6 +135,7 @@ export class PredictComponent implements OnInit {
                             // Mi fermo e non scarico nemmeno l'analytics del team 2
                             this.guessedTeamOk= false;
                             this.guessedTeam= null;
+                            this.loserTeamName= null;
                         } else {
                             this.teamAnalytics_1_isVoid= false;
                             // Scarico l'analytics del team 2
@@ -110,6 +146,7 @@ export class PredictComponent implements OnInit {
                                         this.teamAnalytics_2_isVoid= true;
                                         this.guessedTeamOk= false;
                                         this.guessedTeam= null;
+                                        this.loserTeamName= null;
                                     } else {
                                         this.teamAnalytics_2_isVoid= false;
                                         // Se entrambi i team hanno un analytics allora li confronto

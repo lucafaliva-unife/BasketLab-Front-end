@@ -12,6 +12,14 @@
                 <option *ngFor="let team of teams" [ngValue]="team.id_team">{{ team.nome }}</option>
             </select>
         </div>
+        <div class="field weightSelection">
+            <label for="range">Peso dei parametri:</label>
+            <div class="weightSelectionRow">
+                <span>Percentuale tiri ({{ percentualeTiriWeigth | number:'1.1-1' }})</span>
+                <input type="range" id="range" name="range" [(ngModel)]="percentualeTiriWeigth" step="0.1" min="0" max="1" required>
+                <span>Tempo corsa ({{ 1 - percentualeTiriWeigth | number:'1.1-1' }})</span>
+            </div>
+        </div>
         <button class="btn primary" type="submit" [disabled]="form.invalid">Predici</button>
     </form>
     <ng-template #noTeamsMessage>
@@ -21,6 +29,12 @@
         <h2 class="message">Team vincitore</h2>
         <div class="guessedTeam__result">
             <span class="guessedTeam__name">{{ guessedTeam }}</span>
+        </div>
+        <div class="guessedTeam__result">
+            <span class="message">Punteggio attribuito a '{{ guessedTeam }}': {{ teamScoreWinner | number:'1.2-2' }}</span>
+        </div>
+        <div class="guessedTeam__result">
+            <span class="message">Punteggio attribuito a '{{ loserTeamName }}': {{ teamScoreLoser | number:'1.2-2' }}</span>
         </div>
         <button class="btn cancel guessedTeam__button" (click)="reset()">Reset</button>
     </div>
