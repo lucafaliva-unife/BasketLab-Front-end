@@ -24,4 +24,7 @@
         </div>
         <button class="btn cancel guessedTeam__button" (click)="reset()">Reset</button>
     </div>
+    <div class="guessedTeam" *ngIf="teamAnalytics_1_isVoid || teamAnalytics_2_isVoid">
+        <h2 class="message">Almeno uno dei due Teams selezionati non possiede allenamenti</h2>
+    </div>
 </section>

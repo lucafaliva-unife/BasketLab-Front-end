@@ -27,6 +27,7 @@ export class TeamComponent implements OnInit {
     playerModifyState: { [key: string]: boolean }= {}; // Dizionario che associa l'ID del player al suo modify state
     showForm: boolean= false;
     svincolati: boolean= false;
+    n_players: number= 0;
 
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
 
@@ -36,7 +37,7 @@ export class TeamComponent implements OnInit {
         });
     }
 
-        private loadTeamAnalytics(): void {
+    private loadTeamAnalytics(): void {
         if(this.selectedTeamId) {
             if(this.selectedTeam.nome === "Svincolati") {
                 this.teamAnalytics= {};
@@ -78,9 +79,11 @@ export class TeamComponent implements OnInit {
                         this.players= players;
                         if(this.players.length === 0) {
                             this.teamIsVoid= true;
+                            this.n_players= 0;
                         } else {
                             this.teamIsVoid= false;
                             this.resetPlayersModifyState();
+                            this.n_players= this.players.length;
                         }
                     },
                     error: (err) => {
@@ -99,9 +102,11 @@ export class TeamComponent implements OnInit {
                         this.players= players;
                         if(this.players.length === 0) {
                             this.teamIsVoid= true;
+                            this.n_players= 0;
                         } else {
                             this.teamIsVoid= false;
                             this.resetPlayersModifyState();
+                            this.n_players= this.players.length;
                         }
                     },
                     error: (err) => {
