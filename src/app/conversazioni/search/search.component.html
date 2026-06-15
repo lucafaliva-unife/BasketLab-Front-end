@@ -1,0 +1,74 @@
+<section class="container">
+    <h1 class="title centered">Ricerca Teams e Players</h1>
+    <form class="search-form" #form="ngForm" (ngSubmit)="search(searchTerm)">
+        <div class="field">
+            <label for="searchTerm">Keyword:</label>
+            <input type="text" id="searchTerm" name="searchTerm" [(ngModel)]="searchTerm" placeholder="Cerca team o player..." required>
+        </div>
+        <button class="btn primary" type="submit" [disabled]="form.invalid">Cerca</button>
+    </form>
+    <div class="search-results" *ngIf="searched">
+        <div class="total-results-summary">
+            <span class="message">Numero totale risultati: {{ teamsFound.length + playersFound.length }}</span>
+        </div>
+        <label for="filters">
+            <input type="checkbox" id="filters" name="filters" [(ngModel)]="filtersVisibility">
+            Mostra filtri
+        </label>
+        <fieldset class="search-filters-wrapper" *ngIf="filtersVisibility">
+            <legend>Filtri</legend>
+            <div class="field rangeField" *ngIf="teamsFound.length > 0">
+                <label for="teamLimit">Numero massimo risultati Team:</label>
+                <input type="range" id="teamLimit" name="teamLimit" [(ngModel)]="teamLimit" step="1" min="0" [max]="teamsFound.length">
+                <span>{{ teamLimit }} su {{ teamsFound.length }}</span>
+            </div>
+            <div class="field rangeField" *ngIf="playersFound.length > 0">
+                <label for="playerLimit">Numero massimo risultati Player:</label>
+                <input type="range" id="playerLimit" name="playerLimit" [(ngModel)]="playerLimit" step="1" min="0" [max]="playersFound.length">
+                <span>{{ playerLimit }} su {{ playersFound.length }}</span>
+            </div>
+            <button class="btn secondary" type="button" (click)="order()" *ngIf="!ordered">Ordina i risultati alfabeticamente</button>
+        </fieldset>
+        <div class="search-results-grid">
+            <section class="search-section">
+            <h2 class="title">Teams trovati</h2>
+            <div *ngIf="teamsFound.length > 0; else noTeamsFound">
+                <article class="card" *ngFor="let team of teamsFound | slice:0:teamLimit">
+                    <div class="field">
+                        <span>{{ team.nome }}</span>
+                        <span class="subtext">{{ team.citta }}</span>
+                    </div>
+                    <div class="actions">
+                        <a [routerLink]="['/teams', team.id_team]">
+                            <button class="btn link" type="button">Vai al Team</button>
+                        </a>
+                    </div>
+                </article>
+            </div>
+            <ng-template #noTeamsFound>
+                <div class="message">Nessun team trovato</div>
+            </ng-template>
+        </section>
+        <section class="search-section">
+            <h2 class="title">Players trovati</h2>
+            <div *ngIf="playersFound.length > 0; else noPlayersFound">
+                <article class="card" *ngFor="let player of playersFound | slice:0:playerLimit">
+                    <div class="field">
+                        <span>{{ player.nome }} {{ player.cognome }}</span>
+                        <span class="subtext">{{ player.ruolo }} · {{ player.data_nascita }}</span>
+                    </div>
+                    <div class="actions">
+                        <a [routerLink]="['/players', player.id_player]">
+                            <button class="btn link" type="button">Vai al Player</button>
+                        </a>
+                    </div>
+                </article>
+            </div>
+            <ng-template #noPlayersFound>
+                <div class="message">Nessun player trovato</div>
+            </ng-template>
+        </section>
+        </div>
+    </div>
+    <button class="btn cancel" *ngIf="searched" (click)="reset()">Reset</button>
+</section>
