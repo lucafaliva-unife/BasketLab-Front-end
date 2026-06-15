@@ -30,12 +30,8 @@
         <div class="guessedTeam__result">
             <span class="guessedTeam__name">{{ guessedTeam }}</span>
         </div>
-        <div class="guessedTeam__result">
-            <span class="message">Punteggio attribuito a '{{ guessedTeam }}': {{ teamScoreWinner | number:'1.2-2' }}</span>
-        </div>
-        <div class="guessedTeam__result">
-            <span class="message">Punteggio attribuito a '{{ loserTeamName }}': {{ teamScoreLoser | number:'1.2-2' }}</span>
-        </div>
+        <div class="message">Punteggio attribuito a '{{ guessedTeam }}': {{ teamScoreWinner | number:'1.2-2' }}</div>
+        <div class="message">Punteggio attribuito a '{{ loserTeamName }}': {{ teamScoreLoser | number:'1.2-2' }}</div>
         <button class="btn cancel guessedTeam__button" (click)="reset()">Reset</button>
     </div>
     <div class="guessedTeam" *ngIf="teamAnalytics_1_isVoid || teamAnalytics_2_isVoid">
