@@ -23,6 +23,9 @@ export class PlayerComponent implements OnInit {
     trainIsVoid: boolean= false;
     teams: Team[]= [];
     teamName: string | null= null;
+    n_trains: number= 1;
+    maxTrains: number= 1;
+    svincolato: boolean= false;
 
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
 
@@ -36,6 +39,11 @@ export class PlayerComponent implements OnInit {
                     this.teamService.getTeamById((this.selectedPlayer as Player).id_team).subscribe({
                         next: (team) => {
                             this.teamName= team.nome;
+                            if(this.teamName === "Svincolati") {
+                                this.svincolato= true;
+                            } else {
+                                this.svincolato= false;
+                            }
                         },
                         error: (err) => {
                             if(err.status === 404) {
@@ -73,8 +81,10 @@ export class PlayerComponent implements OnInit {
                     this.trains= trains;
                     if(this.trains.length === 0) {
                         this.trainIsVoid= true;
+                        this.n_trains= 0;
                     } else {
                         this.trainIsVoid= false;
+                        this.n_trains= this.trains.length;
                     }
                 },
                 error: (err) => {
@@ -128,6 +138,15 @@ export class PlayerComponent implements OnInit {
 
         //Carico i dati del player, i suoi allenamenti, i team ed il nome del team del player
         this.resetAllData();
+    }
+
+    range(max: number): number[] {
+        var i: number;
+        var numbers: number[]= [];
+        for(i=0; i < max; i++) {
+            numbers.push(i);
+        }
+        return numbers;
     }
 
     editPlayer(): void {

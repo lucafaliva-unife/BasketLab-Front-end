@@ -25,6 +25,9 @@ export class TrainComponent implements OnInit {
     clockMode: boolean= false;
     interval: any= null;
     percentualeTiri: number= 0;
+    recordTempoCorsaPlayer: number= 0;
+    recordPercentualeTiriPlayer: number= 0;
+    trainsIsVoid: boolean= true;
 
     // Restituisce la percentuale di tiri riusciti in tempo reale
     updatePercentualeTiriRealtime(): void {
@@ -56,8 +59,46 @@ export class TrainComponent implements OnInit {
         }
     }
 
+    resetRecord(): void {
+        if(this.selectedPlayerId) {
+            // Calcolo i record del player
+            this.playerService.getTrainsByPlayerId(this.selectedPlayerId).subscribe({
+                next: (trains) => {
+                    if(trains.length !== 0) {
+                        const playerTrains= trains;
+                        var percentualeTiriPlayer: number[]= [];
+                        var tempoCorsaPlayer: number[]= [];
+                        playerTrains.forEach((train) => {
+                            percentualeTiriPlayer.push(train.percentuale_tiri);
+                            tempoCorsaPlayer.push(train.tempo_corsa);
+                        });
+                        this.recordPercentualeTiriPlayer= Math.max(...percentualeTiriPlayer);
+                        this.recordTempoCorsaPlayer= Math.min(...tempoCorsaPlayer);
+                        this.trainsIsVoid= false;
+                    } else {
+                        // Se il player non ha allenamenti uso come valori indicativi -1 per entrambi i record
+                        this.recordPercentualeTiriPlayer= -1;
+                        this.recordTempoCorsaPlayer= -1;
+                        this.trainsIsVoid= true;
+                    }
+                },
+                error: (err) => {
+                    if(err.status === 404) {
+                        alert("Errore: player non esistente");
+                    } else {
+                        alert("Errore " + err.status);
+                    }
+                    this.router.navigate(["/teams"]);
+                }
+            });
+        } else {
+            alert("Nessun player selezionato");
+            this.router.navigate(["/teams"]);
+        }
+    }
+
     ngOnInit(): void {
-        //Estraggo l'ID del player selezionato
+        // Estraggo l'ID del player selezionato
         const id: string | null= this.route.snapshot.paramMap.get('id');
         if(id) {
             this.selectedPlayerId= id;
@@ -67,8 +108,11 @@ export class TrainComponent implements OnInit {
             return;
         }
 
-        //Carico il player selezionato
+        // Carico il player selezionato
         this.resetPlayer();
+
+        // Calcolo i record di allenamento del team e del player
+        this.resetRecord();
     }
 
     addCanestroTentato(): void {
@@ -138,6 +182,7 @@ export class TrainComponent implements OnInit {
             this.playerService.trainPlayerById(this.selectedPlayerId, this.train as Omit<Train, "idx_train" | "id_player">).subscribe({
                 next: () => {
                     this.reset();
+                    this.resetRecord();
                     this.canestriTentati= 0;
                     this.canestriRiusciti= 0;
                     this.percentualeTiri= 0;
@@ -146,6 +191,8 @@ export class TrainComponent implements OnInit {
                     if(err.status === 404) {
                         alert("Errore: player non esistente");
                         this.router.navigate(["/teams"]);
+                    } else if(err.status === 409) {
+                        alert("Errore: non puoi allenare un giocatore svincolato");
                     } else {
                         alert("Errore: " + err.status);
                     }

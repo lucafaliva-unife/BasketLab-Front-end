@@ -52,6 +52,13 @@
 </section>
 <section class="container">
     <h1 class="title">Dati di allenamento del Player</h1>
+    <div class="field maxTrainsSelection" *ngIf="!trainIsVoid">
+        <label for="range">Numero di allenamenti da visualizzare:</label>
+        <div class="maxTrainsSelectionRow">
+            <input type="range" id="range" name="range" [(ngModel)]="maxTrains" step="1" min="0" [max]="n_trains">
+            <span>{{ maxTrains }} su {{ n_trains }}</span>
+        </div>
+    </div>
     <table *ngIf="!trainIsVoid; else trainIsVoidMessage" class="table">
         <thead>
             <tr>
@@ -60,16 +67,16 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let train of trains">
-                <td>{{ train.percentuale_tiri | number:'1.2-2' }} %</td>
-                <td>{{ train.tempo_corsa | number:'1.2-2' }} sec.</td>
+            <tr *ngFor="let i of range(maxTrains)">
+                <td>{{ trains[i].percentuale_tiri | number:'1.2-2' }} %</td>
+                <td>{{ trains[i].tempo_corsa | number:'1.2-2' }} sec.</td>
             </tr>
         </tbody>
     </table>
     <ng-template #trainIsVoidMessage>
         <h2 class="message">Nessun allenamento disponibile per questo Player</h2>
     </ng-template>
-    <a [routerLink]="['/players', selectedPlayerId, 'train']">
+    <a [routerLink]="['/players', selectedPlayerId, 'train']" *ngIf="!svincolato">
         <button class="btn add">Nuovo allenamento</button>
     </a>
 </section>

@@ -25,9 +25,15 @@
                         <button class="btn secondary" type="button" (click)="addCanestroRiuscito()">Incrementa canestri riusciti</button>
                     </div>
                 </div>
-                <div class="percent-box">
-                    <label>Percentuale canestri riusciti</label>
-                    <div class="percent-value">{{ percentualeTiri | number:'1.2-2' }} %</div>
+                <div class="stats-row">
+                    <div class="percent-box">
+                        <label>Percentuale canestri riusciti</label>
+                        <div class="percent-value">{{ percentualeTiri | number:'1.2-2' }} %</div>
+                    </div>
+                    <div class="percent-box" *ngIf="!trainsIsVoid">
+                        <label>Record percentuale tiri</label>
+                        <div class="percent-value">{{ recordPercentualeTiriPlayer | number:'1.2-2' }} %</div>
+                    </div>
                 </div>
             </div>
             <div class="tempoCorsaField">
@@ -42,6 +48,16 @@
                     <button class="btn danger" type="button" [disabled]="!clockMode" (click)="stop()">Stop</button>
                     <button class="btn reset" type="button" *ngIf="!clockMode" (click)="reset()">Reset</button>
                 </fieldset>
+                <div class="tempo-stats">
+                    <div class="percent-box">
+                        <label>Totale secondi</label>
+                        <div class="percent-value">{{ tempoCorsaMinuti * 60 + tempoCorsaSecondi + tempoCorsaCentisecondi / 100 | number:'1.2-2' }} sec.</div>
+                    </div>
+                    <div class="percent-box" *ngIf="!trainsIsVoid">
+                        <label>Record tempo corsa</label>
+                        <div class="percent-value">{{ recordTempoCorsaPlayer | number:'1.2-2' }} sec.</div>
+                    </div>
+                </div>
             </div>
             <button class="btn primary" type="submit" [disabled]="form.invalid">Conferma</button>
         </form>

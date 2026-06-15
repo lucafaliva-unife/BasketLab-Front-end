@@ -1,0 +1,15 @@
+.maxTrainsSelection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 5px;
+    margin-left: 8px;
+}
+
+.maxTrainsSelectionRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 2px;
+}
