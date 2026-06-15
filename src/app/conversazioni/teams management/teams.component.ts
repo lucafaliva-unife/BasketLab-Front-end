@@ -29,7 +29,7 @@ export class TeamsComponent implements OnInit {
     }
 
     private resetTeamsAndModifyState(): void {
-        this.teamService.getTeams().subscribe(teams => {
+        this.teamService.getTeamsRanking().subscribe(teams => {
             this.teams= teams;
             if(this.teams.length === 0) {
                 this.noTeams= true;

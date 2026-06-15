@@ -1,8 +1,8 @@
 <section class="container" *ngIf="!noTeams; else noTeamsMessage">
     <div class="message">
-        Numero di Teams presenti: {{ n_teams }}
+        Numero di Teams presenti: {{ n_teams - 1 }}
     </div>
-    <h1 class="title">Elenco Teams</h1>
+    <h1 class="title">Elenco Teams ordinati decrescentemente per performance</h1>
     <article class="card" *ngFor="let team of teams">
         <div class="field">
             <label [for]="'teamName_' + team.id_team">Nome:</label>

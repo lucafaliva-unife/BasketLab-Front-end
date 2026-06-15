@@ -140,15 +140,6 @@ export class PlayerComponent implements OnInit {
         this.resetAllData();
     }
 
-    range(max: number): number[] {
-        var i: number;
-        var numbers: number[]= [];
-        for(i=0; i < max; i++) {
-            numbers.push(i);
-        }
-        return numbers;
-    }
-
     editPlayer(): void {
         if(this.selectedPlayerId) {
             const editedPlayerData: Omit<Player, "id_player">= this.selectedPlayer as Omit<Player, "id_player">;

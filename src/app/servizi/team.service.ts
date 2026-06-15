@@ -49,4 +49,8 @@ export class TeamService {
         return this.http.get<Player[]>(`${this.teamsUrl}/${id}/players`);
     }
 
+    public getTeamsRanking(): Observable<Team[]> {
+        return this.http.get<Team[]>(`${this.teamsUrl}/ranking`);
+    }
+
 }
