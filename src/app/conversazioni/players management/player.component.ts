@@ -26,8 +26,75 @@ export class PlayerComponent implements OnInit {
     n_trains: number= 1;
     maxTrains: number= 1;
     svincolato: boolean= false;
+    analyticsPercentualeTiri: number= 0;
+    analyticsTempoCorsa: number= 0;
+    percentualeTiriAlert: boolean= false;
+    tempoCorsaAlert: boolean= false;
 
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
+
+    private resetTrains(playerId: string): void {
+        // Recupero tutti gli allenamenti del player
+        this.playerService.getTrainsByPlayerId(playerId!).subscribe({
+            next: (trains) => {
+                this.trains= trains;
+                if(this.trains.length === 0) {
+                    this.trainIsVoid= true;
+                    this.n_trains= 0;
+                } else {
+                    this.trainIsVoid= false;
+                    this.n_trains= this.trains.length;
+                    // Calcolo gli analytics del player
+                    var totPercentualeTiri: number= 0;
+                    var totTempoCorsa: number= 0;
+                    this.trains.forEach((train) => {
+                        totPercentualeTiri+= train.percentuale_tiri!;
+                        totTempoCorsa+= train.tempo_corsa!;
+                    });
+                    this.analyticsPercentualeTiri= totPercentualeTiri / this.trains.length;
+                    this.analyticsTempoCorsa= totTempoCorsa / this.trains.length;
+                    // Controllo se le medie del giocatore sono sotto alle medie del team (se non è svincolato)
+                    if(this.svincolato) {
+                        this.tempoCorsaAlert= false;
+                        this.percentualeTiriAlert= false;
+                    } else {
+                        this.teamService.getAnalyticsByTeamId(this.selectedPlayer.id_team!).subscribe({
+                            next: (analytics) => {
+                                if(Object.keys(analytics).length === 0) {
+                                    this.tempoCorsaAlert= false;
+                                    this.percentualeTiriAlert= false;
+                                } else {
+                                    if(this.analyticsPercentualeTiri < analytics.percentuale_tiri) {
+                                        this.percentualeTiriAlert= true;
+                                    }
+                                    if(this.analyticsTempoCorsa > analytics.tempo_corsa) {
+                                        this.tempoCorsaAlert= true;
+                                    }
+                                }
+                            },
+                            error: (err) => {
+                                if(err.status === 404) {
+                                    alert("Errore: team del player non esistente");
+                                } else {
+                                    alert("Errore " + err.status);
+                                }
+                                this.router.navigate(["/teams"]);
+                            }
+                        });
+                    }
+                }
+            },
+            error: (err) => {
+                if(err.status === 404) {
+                    alert("Errore: player non esistente");
+                } else {
+                    alert("Errore " + err.status);
+                }
+                this.router.navigate(["/teams"]);
+                return;
+            }
+        });
+    }
 
     private resetAllData(): void {
         if(this.selectedPlayerId) {
@@ -55,6 +122,8 @@ export class PlayerComponent implements OnInit {
                             return;
                         }
                     });
+                    // Recupero gli allenamenti del player, calcolo i suoi analytics e decido se mostrare gli alert
+                    this.resetTrains(this.selectedPlayerId!);
                 },
                 error: (err) => {
                     if(err.status === 404) {
@@ -71,28 +140,6 @@ export class PlayerComponent implements OnInit {
                 this.teams= teams;
                 if(this.teams.length === 0) {
                     alert("Errore: nessun team esistente");
-                    this.router.navigate(["/teams"]);
-                    return;
-                }
-            });
-            // Recupero tutti gli allenamenti del player
-            this.playerService.getTrainsByPlayerId(this.selectedPlayerId).subscribe({
-                next: (trains) => {
-                    this.trains= trains;
-                    if(this.trains.length === 0) {
-                        this.trainIsVoid= true;
-                        this.n_trains= 0;
-                    } else {
-                        this.trainIsVoid= false;
-                        this.n_trains= this.trains.length;
-                    }
-                },
-                error: (err) => {
-                    if(err.status === 404) {
-                        alert("Errore: player non esistente");
-                    } else {
-                        alert("Errore " + err.status);
-                    }
                     this.router.navigate(["/teams"]);
                     return;
                 }
@@ -136,7 +183,7 @@ export class PlayerComponent implements OnInit {
             return;
         }
 
-        //Carico i dati del player, i suoi allenamenti, i team ed il nome del team del player
+        //Carico i dati del player, i suoi allenamenti, i team, gli analytics, gli alert ed il nome del team del player
         this.resetAllData();
     }
 

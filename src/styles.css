@@ -221,7 +221,7 @@ select option {
 .table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 16px;
+    margin-top: 10px;
     background: #fff;
     border-radius: 10px;
     overflow: hidden;

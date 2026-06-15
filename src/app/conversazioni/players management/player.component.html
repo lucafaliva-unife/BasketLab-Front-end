@@ -59,6 +59,7 @@
             <span>{{ maxTrains }} su {{ n_trains }}</span>
         </div>
     </div>
+    <p class="message" *ngIf="!trainIsVoid">Allenamenti</p>
     <table *ngIf="!trainIsVoid; else trainIsVoidMessage" class="table">
         <thead>
             <tr>
@@ -73,6 +74,25 @@
             </tr>
         </tbody>
     </table>
+    <p class="message" *ngIf="!trainIsVoid">Analytics</p>
+    <table *ngIf="!trainIsVoid" class="table">
+        <thead>
+            <tr>
+                <th>Percentuale tiri</th>
+                <th>Tempo corsa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ analyticsPercentualeTiri | number:'1.2-2' }} %</td>
+                <td>{{ analyticsTempoCorsa | number:'1.2-2' }} sec.</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="alert" *ngIf="percentualeTiriAlert || tempoCorsaAlert">
+        <p *ngIf="percentualeTiriAlert">Attenzione: la % tiri di questo Player è sotto alla media del Team</p>
+        <p *ngIf="tempoCorsaAlert">Attenzione: il tempo corsa di questo Player è sopra alla media del Team</p>
+    </div>
     <ng-template #trainIsVoidMessage>
         <h2 class="message">Nessun allenamento disponibile per questo Player</h2>
     </ng-template>

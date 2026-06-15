@@ -13,3 +13,17 @@
     align-items: center;
     margin-top: 2px;
 }
+
+/* Alert per warnings */
+.alert {
+    padding: 10px 12px;
+    background-color: #fff8e1;
+    border: 1px solid #f0d98a;
+    color: #6b4e00;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.message {
+    margin-bottom: 0px;
+}
