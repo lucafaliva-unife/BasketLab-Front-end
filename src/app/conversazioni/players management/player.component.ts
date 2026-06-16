@@ -36,6 +36,11 @@ export class PlayerComponent implements OnInit {
 
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
 
+    /*
+    Questa funzione calcola gli analytics del player e, se non è svincolato ed ha almeno un allenamento:
+    - decide quali alerts relativi al confronto con gli analytics del team abilitare;
+    - decide se l'ultimo allenamento del player è stato migliore/peggiore/uguale rispetto al penultimo. 
+    */
     private resetAlerts(): void {
         // Calcolo gli analytics del player
         var totPercentualeTiri: number= 0;
@@ -96,6 +101,10 @@ export class PlayerComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione scarica tutti gli allenamenti effettuati dal player, controlla che ce ne sia almeno uno e decide quali
+    alerts mostrare.
+    */
     private resetTrains(playerId: string): void {
         // Recupero tutti gli allenamenti del player
         this.playerService.getTrainsByPlayerId(playerId!).subscribe({
@@ -123,6 +132,11 @@ export class PlayerComponent implements OnInit {
         });
     }
 
+    /*
+    Questa funzione scarica i dati del player, i dati del suo team ed i suoi allenamenti.
+    Inoltre controlla se è svincolato o no e calcola gli analytics per decidere se mostrare gli alerts.
+    In ultimo, scarica l'elenco dei team per poter eventualmente cambiare team al player.
+    */
     private resetAllData(): void {
         if(this.selectedPlayerId) {
             this.playerService.getPlayerById(this.selectedPlayerId).subscribe({
@@ -177,6 +191,9 @@ export class PlayerComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione valida il peso e l'altezza inseriti dall'utente nella form per controllare che siano valori corretti.
+    */
     private validateHeightWeight(height: number | null | undefined, weight: number | null | undefined): boolean {
         const parsedHeight: number= Number(height);
         const parsedWeight: number= Number(weight);
@@ -214,6 +231,10 @@ export class PlayerComponent implements OnInit {
         this.resetAllData();
     }
 
+    /*
+    Questa funzione valida i dati inseriti dall'utente ed invia una richiesta di modifica del player selezionato.
+    Infine, chiude il player alla modifica impostando lo stato a 'false' ed aggiorna tutti i dati della pagina.
+    */
     editPlayer(): void {
         if(this.selectedPlayerId) {
             const editedPlayerData: Omit<Player, "id_player">= this.selectedPlayer as Omit<Player, "id_player">;
@@ -257,6 +278,10 @@ export class PlayerComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione chiede conferma all'utente e poi invia una richiesta di eliminazione del player selezionato.
+    Infine, riporta alla pagina del team del player.
+    */
     deletePlayer(): void {
         if(this.selectedPlayerId) {
             const conferma: boolean= confirm("Sicuro di voler eliminare il player?");

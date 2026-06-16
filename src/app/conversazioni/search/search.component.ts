@@ -25,6 +25,9 @@ export class SearchComponent {
 
     constructor(private teamService: TeamService) {}
 
+    /*
+    Questa funzione cerca tra i nomi dei team e tra i nomi e cognomi dei player una sottostringa passata come parametro.
+    */
     search(searchTerm: string): void {
         this.teamsFound= [];
         this.playersFound= [];
@@ -51,6 +54,9 @@ export class SearchComponent {
         this.ordered= false;
     }
 
+    /*
+    Questa funzione resetta lo stato del componente.
+    */
     reset():void {
         this.searchTerm= "";
         this.teamsFound= [];
@@ -59,6 +65,11 @@ export class SearchComponent {
         this.ordered= false;
     }
 
+    /*
+    Questa funzione ordina:
+    - i team comparsi tra i risultati di ricerca in ordine alfabetico crescente dato il nome;
+    - i player comparsi tra i risultati di ricerca in ordine alfabetico crescente dato il cognome ed il nome.
+    */
     order():void {
         if(!this.searched) {
             return;

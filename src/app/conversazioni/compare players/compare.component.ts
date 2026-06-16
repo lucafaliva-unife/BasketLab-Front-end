@@ -32,6 +32,10 @@ export class CompareComponent implements OnInit {
 
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router) {}
 
+    /*
+    Questa funzione scarica tutti i team, itera su ciascuno di essi ed ogni volta estrae i player per metterli
+    nell'apposito array locale.
+    */
     private resetPlayers(): void {
         this.teamService.getTeams().subscribe(teams => {
             teams.forEach((team) => {
@@ -44,6 +48,9 @@ export class CompareComponent implements OnInit {
         });
     }
 
+    /*
+    Questa funzione restituisce la percentuale tiri media ed il tempo corsa medio data una serie di allenamenti.
+    */
     private calculateAnalytics(trains: Train[]): Omit<Train, "id_player" | "idx_train"> {
         var totPercentualeTiri: number= 0;
         var totTempoCorsa: number= 0;
@@ -59,6 +66,9 @@ export class CompareComponent implements OnInit {
         };
     }
 
+    /*
+    Questa funzione imposta il contenuto degli alerts relativi al confronto diretto fra gli analyitics dei players.
+    */
     private resetComparisonAlerts(analytics1: Omit<Train, "id_player" | "idx_train">, analytics2: Omit<Train, "id_player" | "idx_train">): void {
         const tiri1= analytics1.percentuale_tiri.toFixed(2);
         const tiri2= analytics2.percentuale_tiri.toFixed(2);
@@ -80,6 +90,10 @@ export class CompareComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione riceve due ID di player, scarica i loro allenamenti assicurandosi che nessuno dei due ne abbia zero,
+    calcola gli analytics di entrambi e sceglie il player migliore in base agli analytics.
+    */
     private resetAnalyticsAndTrains(selectedPlayer1Id: string, selectedPlayer2Id: string): void {
         // Scarico gli allenamenti del player 1
         this.playerService.getTrainsByPlayerId(selectedPlayer1Id).subscribe({
@@ -178,6 +192,9 @@ export class CompareComponent implements OnInit {
         this.resetPlayers();
     }
 
+    /*
+    Questa funzione si assicura che i player selezionati siano diversi ed avvia il confronto basato sugli analytics.
+    */
     compare(): void {
         // Controllo che i due ID siano diversi
         if(this.selectedPlayer1Id === this.selectedPlayer2Id) {
@@ -188,6 +205,9 @@ export class CompareComponent implements OnInit {
         this.resetAnalyticsAndTrains(this.selectedPlayer1Id as string, this.selectedPlayer2Id as string);
     }
 
+    /*
+    Questa funzione resetta lo stato del componente ed aggiorna la lista dei player.
+    */
     reset(): void {
         this.analyticsPlayer1= {};
         this.analyticsPlayer2= {};

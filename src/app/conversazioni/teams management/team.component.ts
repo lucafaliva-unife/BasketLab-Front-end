@@ -31,12 +31,19 @@ export class TeamComponent implements OnInit {
 
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
 
+    /*
+    Questa funzione imposta lo stato di modifica di tutti i player del team a 'false'.
+    */
     private resetPlayersModifyState(): void {
         this.players.forEach(player => {
             this.playerModifyState[player.id_player]= false;
         });
     }
 
+    /*
+    Questa funzione si assicura che il team selezionato non sia quello degli svincolati e solo in tal caso scarica
+    l'analytics del team assicurandosi che sia valido (quindi che almeno un giocatore abbia un allenamento).
+    */
     private loadTeamAnalytics(): void {
         if(this.selectedTeamId) {
             if(this.selectedTeam.nome === "Svincolati") {
@@ -70,6 +77,12 @@ export class TeamComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione controlla se il team selezionato è quello degli svincolati e:
+    - se lo è, scarica l'elenco dei player del team in ordine casuale;
+    - se non lo è, scarica l'elenco dei player del team in ordine descrescente di performance.
+    Infine, si assicura che il team abbia almeno un player ed imposta lo stato di modifica di ogni player a 'false'.
+    */
     private resetRankingAndModifyState(): void {
         if(this.selectedTeamId) {
             if(this.selectedTeam.nome === "Svincolati") {
@@ -127,6 +140,9 @@ export class TeamComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione scarica i dati del team selezionato, scarica i player nell'ordine opportuno e carica gli analytics del team.
+    */
     private resetAllDataAndModifyState(): void {
         if(this.selectedTeamId) {
             this.teamService.getTeamById(this.selectedTeamId).subscribe({
@@ -150,6 +166,9 @@ export class TeamComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione valida il peso e l'altezza inseriti dall'utente nella form per controllare che siano valori corretti.
+    */
     private validateHeightWeight(height: number | null | undefined, weight: number | null | undefined): boolean {
         const parsedHeight: number= Number(height);
         const parsedWeight: number= Number(weight);
@@ -172,6 +191,10 @@ export class TeamComponent implements OnInit {
         return true;
     }
 
+    /*
+    Questa funzione imposta lo stato di modifica di tutti i player a 'false' ed imposta lo stato di modifica di un player
+    specifico a 'true': in questo modo si ha un solo player per volta aperto alla modifica.
+    */
     setModifyState(id: string): void {
         this.resetPlayersModifyState();
         this.playerModifyState[id]= true;
@@ -192,6 +215,10 @@ export class TeamComponent implements OnInit {
         this.resetAllDataAndModifyState();
     }
 
+    /*
+    Questa funzione chiede conferma all'utente e poi invia una richiesta di eliminazione del team selezionato.
+    Infine riporta alla pagina dei team.
+    */
     deleteTeam(): void {
         if(this.selectedTeamId) {
             const conferma: boolean= confirm("Sicuro di voler eliminare il team?");
@@ -219,6 +246,10 @@ export class TeamComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione valida i dati inseriti dall'utente ed invia una richiesta di modifica del player selezionato.
+    Infine aggiorna tutti i dati della pagina e chiude il team alla modifica impostando lo stato a 'false'.
+    */
     editTeam(): void {
         if(this.selectedTeamId) {
             const editedTeamData: Omit<Team, "id_team">= this.selectedTeam as Omit<Team, "id_team">;
@@ -250,6 +281,11 @@ export class TeamComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione valida i dati inseriti dall'utente ed invia una richiesta di creazione di un nuovo player nel
+    team selezionato.
+    Infine, nasconde e svuota la form ed aggiorna tutti i dati della pagina.
+    */
     createPlayer(newPlayerData: Partial<Omit<Player, "id_player">>): void {
         if(this.selectedTeamId) {
             if(
@@ -291,6 +327,10 @@ export class TeamComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione valida i dati inseriti dall'utente ed invia una richiesta di modifica del player selezionato.
+    Infine, chiude tutti i player alla modifica impostando tutti gli stati a 'false' ed aggiorna tutti i dati della pagina.
+    */
     editPlayer(player: Player): void {
         const editedPlayerData: Omit<Player, "id_player">= player as Omit<Player, "id_player">;
         if(
@@ -324,6 +364,10 @@ export class TeamComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione chiede conferma all'utente e poi invia una richiesta di eliminazione del player selezionato.
+    Infine, chiude tutti i player alla modifica impostando tutti gli stati a 'false' ed aggiorna tutti i dati della pagina.
+    */
     deletePlayer(id: string): void {
         const conferma: boolean= confirm("Sicuro di voler eliminare il player?");
         if(!conferma) {

@@ -29,7 +29,9 @@ export class TrainComponent implements OnInit {
     recordPercentualeTiriPlayer: number= 0;
     trainsIsVoid: boolean= true;
 
-    // Restituisce la percentuale di tiri riusciti in tempo reale
+    /*
+    Questa funzione calcola la percentuale di tiri riusciti.
+    */
     updatePercentualeTiriRealtime(): void {
         if(this.canestriTentati != 0) {
             this.percentualeTiri= (this.canestriRiusciti / this.canestriTentati) * 100;
@@ -38,6 +40,9 @@ export class TrainComponent implements OnInit {
 
     constructor(private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
 
+    /*
+    Questa funzione scarica i dati del player che si intende allenare.
+    */
     resetPlayer(): void {
         if(this.selectedPlayerId) {
             this.playerService.getPlayerById(this.selectedPlayerId).subscribe({
@@ -59,6 +64,11 @@ export class TrainComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione scarica gli allenamenti già effettuati dal player e:
+    - se ha almeno un allenamento cerca il record di percentuale tiri (max) e di tempo corsa (min);
+    - se non ha allenamenti imposta come record i flag -1.
+    */
     resetRecord(): void {
         if(this.selectedPlayerId) {
             // Calcolo i record del player
@@ -111,21 +121,32 @@ export class TrainComponent implements OnInit {
         // Carico il player selezionato
         this.resetPlayer();
 
-        // Calcolo i record di allenamento del team e del player
+        // Calcolo i record di allenamento del player
         this.resetRecord();
     }
 
+    /*
+    Questa funzione incrementa SOLO i canestri tentati e calcola la percentuale di tiri da mostare all'utente.
+    */
     addCanestroTentato(): void {
         this.canestriTentati= this.canestriTentati + 1;
         this.updatePercentualeTiriRealtime();
     }
 
+    /*
+    Questa funzione incrementa i canestri tentati ed i canestri riusciti e calcola la percentuale di tiri da mostare
+    all'utente.
+    */
     addCanestroRiuscito(): void {
         this.canestriTentati= this.canestriTentati + 1;
         this.canestriRiusciti= this.canestriRiusciti + 1;
         this.updatePercentualeTiriRealtime();
     }
 
+    /*
+    Questa funzione avvia il timer integrato nella pagina tramite un interval che incrementa il tempo di 1 centesimo di
+    secondo ogni 10 millisecondi. Inoltre imposta lo stato di chiusura del timer alla modifica a 'true'.
+    */
     start(): void {
         this.clockMode= true;
         this.interval= setInterval(() => {
@@ -142,6 +163,10 @@ export class TrainComponent implements OnInit {
         }, 10);
     }
 
+    /*
+    Questa funzione ferma il timer integrato nella pagina "pulendo" l'interval creato prima.
+    Inoltre, imposta lo stato di chiusura del timer alla modifica a 'false'.
+    */
     stop(): void {
         this.clockMode= false;
         if(this.interval) {
@@ -149,12 +174,21 @@ export class TrainComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione resetta lo stato del timer riportandolo a 00:00:00.
+    */
     reset(): void {
         this.tempoCorsaCentisecondi= 0;
         this.tempoCorsaSecondi= 0;
         this.tempoCorsaMinuti= 0;
     }
 
+    /*
+    Questa funzione si assicura che non sia al momento attivo l'interval del timer (se lo è, lo "pulisce" ed imposta lo
+    stato della modalità interval a 'false'), valida i dati di allenamento inseriti dall'utente, calcola la percentuale
+    di tiri risuciti ed i secondi totali del tempo corsa. Infine, chiede conferma all'utente ed invia una richiesta di
+    inserimento del nuovo allenamento, poi resetta il timer ed i canestri e ricalcola i record di allenamento del player.
+    */
     trainPlayer(): void {
         if(this.selectedPlayerId) {
             if(this.clockMode) {

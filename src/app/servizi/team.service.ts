@@ -24,13 +24,12 @@ export class TeamService {
     }
 
     public createTeam(team: Omit<Team, "id_team">): Observable<void> {
-        return this.http.post<void>(this.teamsUrl, {...team});
         //L'ID del team viene gestito dal backend (auto increment sul DB)
+        return this.http.post<void>(this.teamsUrl, {...team});
     }
 
     public editTeamById(id: string, editedTeam: Omit<Team, "id_team">): Observable<void> {
         return this.http.put<void>(`${this.teamsUrl}/${id}`, {...editedTeam});
-        //L'ID del team viene gestito dal backend (auto increment sul DB)
     }
 
     public deleteTeamById(id: string): Observable<void> {

@@ -22,12 +22,19 @@ export class TeamsComponent implements OnInit {
 
     constructor(private teamService: TeamService) {}
 
+    /*
+    Questa funzione imposta lo stato di modifica di tutti i team a 'false'.
+    */
     private resetModifyState(): void {
         this.teams.forEach(team => {
             this.modifyState[team.id_team]= false;
         });
     }
 
+    /*
+    Questa funzione scarica tutti i team in ordine di performance decrescente, si assiura che sia presente almeno un team
+    ed in tal caso imposta tutti gli stati di modifica a 'false'.
+    */
     private resetTeamsAndModifyState(): void {
         this.teamService.getTeamsRanking().subscribe(teams => {
             this.teams= teams;
@@ -42,15 +49,23 @@ export class TeamsComponent implements OnInit {
         });
     }
 
+    /*
+    Questa funzione imposta lo stato di modifica di tutti i team a 'false' ed imposta lo stato di modifica di un team
+    specifico a 'true': in questo modo si ha un solo team per volta aperto alla modifica.
+    */
     setModifyState(id: string): void {
         this.resetModifyState();
         this.modifyState[id]= true;
     }
 
     ngOnInit() {
+        // Scarico l'elenco dei team ordinati per performance ed imposto gli stati di modifica a 'false'
         this.resetTeamsAndModifyState();
     }
 
+    /*
+    Questa funzione prende come parametro l'ID di un team e controlla se il suo nome è "Svincolati".
+    */
     isSvincolati(id: string): boolean {
         const index: number= this.teams.findIndex(team => team.nome === "Svincolati");
         if(index === -1) {
@@ -63,6 +78,10 @@ export class TeamsComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione chiede conferma all'utente e poi invia una richiesta di eliminazione del team selezionato.
+    Infine imposta tutti gli stati di modifica a 'false' ed aggiorna tutti i dati della pagina.
+    */
     deleteTeam(id: string): void {
         const conferma: boolean= confirm("Sicuro di voler eliminare il team?");
         if(!conferma) {
@@ -85,6 +104,10 @@ export class TeamsComponent implements OnInit {
         });
     }
 
+    /*
+    Questa funzione valida i dati inseriti dall'utente ed invia una richiesta di modifica del team selezionato.
+    Infine imposta tutti gli stati di modifica a 'false' ed aggiorna tutti i dati della pagina.
+    */
     editTeam(team: Team): void {
         const editedTeamData: Omit<Team, "id_team">= team as Omit<Team, "id_team">;
         if(editedTeamData.nome && editedTeamData.nome.trim() !== "" && editedTeamData.citta && editedTeamData.citta.trim() !== "") {
@@ -110,6 +133,10 @@ export class TeamsComponent implements OnInit {
         }
     }
 
+    /*
+    Questa funzione valida i dati inseriti dall'utente ed invia una richiesta di creazione di un nuovo team.
+    Infine, nasconde e svuota la form, chiude alla modifica tutti i team ed aggiorna tutti i dati della pagina.
+    */
     createTeam(newTeamData: Partial<Omit<Team, "id_team">>): void {
         if(newTeamData.nome && newTeamData.citta && newTeamData.nome.trim() !== "" && newTeamData.citta.trim() !== "") {
             const tempNewTeam: Omit<Team, "id_team">= newTeamData as Omit<Team, "id_team">;

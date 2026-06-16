@@ -34,6 +34,9 @@ export class PredictComponent implements OnInit {
 
     constructor(private teamService: TeamService, private router: Router) {}
 
+    /*
+    Questa funzione scarica l'elenco dei team, controlla che ce ne sia almeno uno ed esclude quello degli svincolati.
+    */
     resetTeams(): void {
         this.teamService.getTeams().subscribe(teams => {
             this.teams= teams;
@@ -51,6 +54,9 @@ export class PredictComponent implements OnInit {
         this.resetTeams();
     }
 
+    /*
+    Questa funzione resetta lo stato del componente ed aggiorna la lista dei team.
+    */
     reset(): void {
         this.selectedTeamId_1= null;
         this.selectedTeamId_2= null;
@@ -66,6 +72,10 @@ export class PredictComponent implements OnInit {
         this.resetTeams();
     }
 
+    /*
+    Questa funzione calcola lo score dei due team usando i loro analytics e decide quale è il favorito.
+    Infine scarica i dati dei due team per mostrare all'utente i loro nomi dati i loro ID.
+    */
     compareTeams(): void {
         this.tempoCorsaWeigth= 1 - this.percentualeTiriWeigth; // Calcolo il peso del tempo corsa
         const percentualeTiri_1= this.teamAnalytics_1.percentuale_tiri ?? 0; // Uso come default 0
@@ -126,6 +136,10 @@ export class PredictComponent implements OnInit {
         });
     }
 
+    /*
+    Questa funzione scarica gli analytics dei due team, si assicura che entrambi abbiano un analytics valido (quindi con
+    degli allenamenti applicati ai suoi player) ed infine li confronta per decidere il vincitore.
+    */
     predict(): void {
         if(this.selectedTeamId_1 && this.selectedTeamId_2) {
             if(this.selectedTeamId_1 !== this.selectedTeamId_2) {
