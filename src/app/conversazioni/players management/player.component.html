@@ -74,6 +74,15 @@
             </tr>
         </tbody>
     </table>
+    <div class="alert no-variations" *ngIf="noVariazioniAlert">
+        <p>L'ultimo allenamento è stato uguale al precedente in termini di performance</p>
+    </div>
+    <div class="alert improvement" *ngIf="miglioramentoAlert">
+        <p>L'ultimo allenamento è stato migliore del precedente in termini di performance</p>
+    </div>
+    <div class="alert worsening" *ngIf="peggioramentoAlert">
+        <p>L'ultimo allenamento è stato peggiore del precedente in termini di performance</p>
+    </div>
     <p class="message" *ngIf="!trainIsVoid">Analytics</p>
     <table *ngIf="!trainIsVoid" class="table">
         <thead>

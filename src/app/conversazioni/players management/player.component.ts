@@ -30,8 +30,71 @@ export class PlayerComponent implements OnInit {
     analyticsTempoCorsa: number= 0;
     percentualeTiriAlert: boolean= false;
     tempoCorsaAlert: boolean= false;
+    miglioramentoAlert: boolean= false;
+    peggioramentoAlert: boolean= false;
+    noVariazioniAlert: boolean= false;
 
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
+
+    private resetAlerts(): void {
+        // Calcolo gli analytics del player
+        var totPercentualeTiri: number= 0;
+        var totTempoCorsa: number= 0;
+        this.trains.forEach((train) => {
+            totPercentualeTiri+= train.percentuale_tiri!;
+            totTempoCorsa+= train.tempo_corsa!;
+        });
+        this.analyticsPercentualeTiri= totPercentualeTiri / this.trains.length;
+        this.analyticsTempoCorsa= totTempoCorsa / this.trains.length;
+        // Controllo se le medie del giocatore sono sotto alle medie del team (se non è svincolato)
+        if(this.svincolato) {
+            this.tempoCorsaAlert= false;
+            this.percentualeTiriAlert= false;
+        } else {
+            this.teamService.getAnalyticsByTeamId(this.selectedPlayer.id_team!).subscribe({
+                next: (analytics) => {
+                    if(Object.keys(analytics).length === 0) {
+                        this.tempoCorsaAlert= false;
+                        this.percentualeTiriAlert= false;
+                    } else {
+                        if(this.analyticsPercentualeTiri < analytics.percentuale_tiri) {
+                            this.percentualeTiriAlert= true;
+                        }
+                        if(this.analyticsTempoCorsa > analytics.tempo_corsa) {
+                            this.tempoCorsaAlert= true;
+                        }
+                    }
+                },
+                error: (err) => {
+                    if(err.status === 404) {
+                        alert("Errore: team del player non esistente");
+                    } else {
+                        alert("Errore " + err.status);
+                    }
+                    this.router.navigate(["/teams"]);
+                }
+            });
+        }
+        // Controllo se l'ultimo allenamento ha migliorato o peggiorato le prestazioni rispetto all'allenamento precedente.
+        // Prima verifico che siano presenti almeno 2 allenamenti
+        if(this.trains.length >= 2) {
+            const performanceNew: number= (this.trains[this.n_trains - 1].percentuale_tiri! + (100/this.trains[this.n_trains - 1].tempo_corsa!)) / 2;
+            const performanceOld: number= (this.trains[this.n_trains - 2].percentuale_tiri! + (100/this.trains[this.n_trains - 2].tempo_corsa!)) / 2;
+            if(performanceNew > performanceOld) {
+                this.miglioramentoAlert= true;
+                this.peggioramentoAlert= false;
+                this.noVariazioniAlert= false;
+            } else if(performanceNew < performanceOld) {
+                this.miglioramentoAlert= false;
+                this.peggioramentoAlert= true;
+                this.noVariazioniAlert= false;
+            } else {
+                this.noVariazioniAlert= true;
+                this.miglioramentoAlert= false;
+                this.peggioramentoAlert= false;
+            }
+        }
+    }
 
     private resetTrains(playerId: string): void {
         // Recupero tutti gli allenamenti del player
@@ -44,44 +107,8 @@ export class PlayerComponent implements OnInit {
                 } else {
                     this.trainIsVoid= false;
                     this.n_trains= this.trains.length;
-                    // Calcolo gli analytics del player
-                    var totPercentualeTiri: number= 0;
-                    var totTempoCorsa: number= 0;
-                    this.trains.forEach((train) => {
-                        totPercentualeTiri+= train.percentuale_tiri!;
-                        totTempoCorsa+= train.tempo_corsa!;
-                    });
-                    this.analyticsPercentualeTiri= totPercentualeTiri / this.trains.length;
-                    this.analyticsTempoCorsa= totTempoCorsa / this.trains.length;
-                    // Controllo se le medie del giocatore sono sotto alle medie del team (se non è svincolato)
-                    if(this.svincolato) {
-                        this.tempoCorsaAlert= false;
-                        this.percentualeTiriAlert= false;
-                    } else {
-                        this.teamService.getAnalyticsByTeamId(this.selectedPlayer.id_team!).subscribe({
-                            next: (analytics) => {
-                                if(Object.keys(analytics).length === 0) {
-                                    this.tempoCorsaAlert= false;
-                                    this.percentualeTiriAlert= false;
-                                } else {
-                                    if(this.analyticsPercentualeTiri < analytics.percentuale_tiri) {
-                                        this.percentualeTiriAlert= true;
-                                    }
-                                    if(this.analyticsTempoCorsa > analytics.tempo_corsa) {
-                                        this.tempoCorsaAlert= true;
-                                    }
-                                }
-                            },
-                            error: (err) => {
-                                if(err.status === 404) {
-                                    alert("Errore: team del player non esistente");
-                                } else {
-                                    alert("Errore " + err.status);
-                                }
-                                this.router.navigate(["/teams"]);
-                            }
-                        });
-                    }
+                    // Imposto gli alerts
+                    this.resetAlerts();
                 }
             },
             error: (err) => {

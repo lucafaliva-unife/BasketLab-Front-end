@@ -14,14 +14,32 @@
     margin-top: 2px;
 }
 
-/* Alert per warnings */
+/* Alerts */
 .alert {
     padding: 10px 12px;
-    background-color: #fff8e1;
-    border: 1px solid #f0d98a;
-    color: #6b4e00;
     border-radius: 6px;
     margin-bottom: 8px;
+    border: 1px solid transparent;
+    background-color: #eff1d0;
+    border-color: #b9bb6f;
+}
+
+.alert.improvement {
+    background-color: #e6f7e6;
+    border-color: #8cd08c;
+    color: #1f5a1f;
+}
+
+.alert.worsening {
+    background-color: #fde8e8;
+    border-color: #ef8a8a;
+    color: #7a1f1f;
+}
+
+.alert.no-variations {
+    background-color: #eff3ff;
+    border-color: #9db7e7;
+    color: #1f3f7a;
 }
 
 .message {

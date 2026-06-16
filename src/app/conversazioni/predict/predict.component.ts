@@ -74,12 +74,12 @@ export class PredictComponent implements OnInit {
         const teamScore_1= (
             percentualeTiri_1 * this.percentualeTiriWeigth
             +
-            (1 / tempoCorsa_1) * this.tempoCorsaWeigth
+            (100 / tempoCorsa_1) * this.tempoCorsaWeigth
         ) / (this.percentualeTiriWeigth + this.tempoCorsaWeigth);
         const teamScore_2= (
             percentualeTiri_2 * this.percentualeTiriWeigth
             +
-            (1 / tempoCorsa_2) * this.tempoCorsaWeigth
+            (100 / tempoCorsa_2) * this.tempoCorsaWeigth
         ) / (this.percentualeTiriWeigth + this.tempoCorsaWeigth);
         if(teamScore_1 >= teamScore_2) {
             //Favorisco chi gioca in casa usando '>='
