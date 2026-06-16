@@ -11,11 +11,13 @@
         <div class="total-results-summary">
             <span class="message">Numero totale risultati: {{ teamsFound.length + playersFound.length }}</span>
         </div>
-        <label for="filters">
-            <input type="checkbox" id="filters" name="filters" [(ngModel)]="filtersVisibility">
-            Mostra filtri
-        </label>
-        <fieldset class="search-filters-wrapper" *ngIf="filtersVisibility">
+        <div class="filters-toggle" *ngIf="playersFound.length > 0 || teamsFound.length > 0">
+            <label class="checkbox-label">
+                <input type="checkbox" id="filters" name="filters" [(ngModel)]="filtersVisibility">
+                <span>Mostra filtri</span>
+            </label>
+        </div>
+        <fieldset class="search-filters-wrapper" *ngIf="filtersVisibility && (playersFound.length > 0 || teamsFound.length > 0)">
             <legend>Filtri</legend>
             <div class="field rangeField" *ngIf="teamsFound.length > 0">
                 <label for="teamLimit">Numero massimo risultati Team:</label>
@@ -46,7 +48,7 @@
                 </article>
             </div>
             <ng-template #noTeamsFound>
-                <div class="message">Nessun team trovato</div>
+                <div class="message">Nessun Team trovato</div>
             </ng-template>
         </section>
         <section class="search-section">
@@ -54,7 +56,7 @@
             <div *ngIf="playersFound.length > 0; else noPlayersFound">
                 <article class="card" *ngFor="let player of playersFound | slice:0:playerLimit">
                     <div class="field">
-                        <span>{{ player.nome }} {{ player.cognome }}</span>
+                        <span>{{ player.cognome }} {{ player.nome }}</span>
                         <span class="subtext">{{ player.ruolo }} · {{ player.data_nascita }}</span>
                     </div>
                     <div class="actions">
@@ -65,7 +67,7 @@
                 </article>
             </div>
             <ng-template #noPlayersFound>
-                <div class="message">Nessun player trovato</div>
+                <div class="message">Nessun Player trovato</div>
             </ng-template>
         </section>
         </div>

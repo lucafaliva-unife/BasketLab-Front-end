@@ -70,3 +70,22 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Toggle filtro: checkbox + label allineati */
+.filters-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+.filters-toggle .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+.filters-toggle input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
