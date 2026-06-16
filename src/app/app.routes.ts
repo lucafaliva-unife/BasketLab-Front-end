@@ -5,6 +5,7 @@ import { PlayerComponent } from './conversazioni/players management/player.compo
 import { TrainComponent } from './conversazioni/train player/train.component';
 import { PredictComponent } from './conversazioni/predict/predict.component';
 import { SearchComponent } from './conversazioni/search/search.component';
+import { CompareComponent } from './conversazioni/compare players/compare.component';
 
 export const routes: Routes= [
     { path: '', redirectTo: '/teams', pathMatch: 'full' },
@@ -13,5 +14,6 @@ export const routes: Routes= [
     { path: 'players/:id', component: PlayerComponent },
     { path: 'players/:id/train', component: TrainComponent },
     { path: 'predict', component: PredictComponent },
-    { path: 'search', component: SearchComponent }
+    { path: 'search', component: SearchComponent },
+    { path: 'compare', component: CompareComponent }
 ];
