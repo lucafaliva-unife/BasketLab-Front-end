@@ -1,0 +1,88 @@
+.compare-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+}
+
+.compare-form {
+  display: grid;
+  gap: 16px;
+}
+
+.compare-form .field {
+  max-width: 420px;
+}
+
+.compare-form .actions {
+  justify-content: flex-end;
+}
+
+.compare-results {
+  margin-top: 20px;
+}
+
+.compare-table-wrapper {
+  overflow-x: auto;
+}
+
+.compare-table-wrapper .table {
+  min-width: 720px;
+}
+
+.comparison-summary {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: #f9f9fb;
+  border-left: 4px solid #4caf50;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.comparison-summary .message {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: #333;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+.comparison-summary .message strong {
+  color: #1068ec;
+  font-weight: 600;
+}
+
+.comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: rgb(156, 204, 247);
+  border: 1px solid rgba(16, 104, 236, 0.15);
+  box-shadow: 0 12px 32px rgba(16, 104, 236, 0.08);
+  color: #2d3a4b;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.winner {
+  background: linear-gradient(135deg, #fff6d6 0%, #ffe89e 100%);
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  color: #4a3d1b;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 206, 81, 0.35);
+  box-shadow: 0 10px 20px rgba(255, 217, 92, 0.18);
+}
+
+.directAnalysis {
+  color: rgb(101, 158, 234);
+  font-weight: bold;
+  font-size: large;
+}

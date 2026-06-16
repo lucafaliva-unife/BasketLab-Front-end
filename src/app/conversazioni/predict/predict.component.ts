@@ -63,6 +63,7 @@ export class PredictComponent implements OnInit {
         this.teamScoreWinner= 0;
         this.percentualeTiriWeigth= 0.5;
         this.tempoCorsaWeigth= 0.5;
+        this.resetTeams();
     }
 
     compareTeams(): void {
