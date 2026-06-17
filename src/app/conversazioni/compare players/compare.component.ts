@@ -6,11 +6,13 @@ import { TeamService } from "../../servizi/team.service";
 import { PlayerService } from "../../servizi/player.service";
 import { Train } from "../../modelli/train.model";
 import { Router } from "@angular/router";
+import { BaseChartDirective } from "ng2-charts";
+import { ChartConfiguration } from "chart.js";
 
 @Component({
     standalone: true,
     selector: 'app-compare',
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, BaseChartDirective],
     templateUrl: './compare.component.html',
     styleUrls: ['./compare.component.css']
 })
@@ -29,6 +31,11 @@ export class CompareComponent implements OnInit {
     selectedPlayer2Id: string | null= null;
     percentualeTiriComparison: string | null= null;
     tempoCorsaComparison: string | null= null;
+    playersTrend: ChartConfiguration<'line'>['data']= {
+        labels: [],
+        datasets: []
+    };
+    chartOptions: ChartConfiguration<'line'>['options']= {}
 
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router) {}
 
@@ -46,6 +53,24 @@ export class CompareComponent implements OnInit {
                 });
             });
         });
+    }
+
+    /*
+    Questa funzione calcola lo score di un player dati i suoi allenamenti facendo la media di ogni score.
+    */
+    private calculateScore(trains: Train[]): number {
+        var scoresPlayer: number[]= [];
+        // Calcolo gli scores di ogni allenamento del player
+        trains.forEach((train) => {
+            const score: number= (train.percentuale_tiri + 100/train.tempo_corsa) / 2;
+            scoresPlayer.push(score);
+        });
+        // Calcolo la media degli scores e la ritorno
+        var totalScoresPlayer: number= 0;
+        scoresPlayer.forEach((score) => {
+            totalScoresPlayer+= score;
+        });
+        return totalScoresPlayer / scoresPlayer.length;
     }
 
     /*
@@ -92,7 +117,7 @@ export class CompareComponent implements OnInit {
 
     /*
     Questa funzione riceve due ID di player, scarica i loro allenamenti assicurandosi che nessuno dei due ne abbia zero,
-    calcola gli analytics di entrambi e sceglie il player migliore in base agli analytics.
+    calcola gli analytics di entrambi, mostra il trend nel grafico e sceglie il player migliore in base agli analytics.
     */
     private resetAnalyticsAndTrains(selectedPlayer1Id: string, selectedPlayer2Id: string): void {
         // Scarico gli allenamenti del player 1
@@ -118,8 +143,8 @@ export class CompareComponent implements OnInit {
                         // Calcolo gli analytics del player 2
                         this.analyticsPlayer2= this.calculateAnalytics(this.trainsPlayer2);
                         // Calcolo i punteggi dei due player selezionati
-                        this.player1_score= (this.analyticsPlayer1.percentuale_tiri! + (100 / this.analyticsPlayer1.tempo_corsa!)) / 2;
-                        this.player2_score= (this.analyticsPlayer2.percentuale_tiri! + (100 / this.analyticsPlayer2.tempo_corsa!)) / 2;
+                        this.player1_score= this.calculateScore(this.trainsPlayer1);
+                        this.player2_score= this.calculateScore(this.trainsPlayer2);
                         // Decido quale è il player migliore
                         if(this.player1_score > this.player2_score) {
                             this.playerService.getPlayerById(selectedPlayer1Id).subscribe({
@@ -139,6 +164,7 @@ export class CompareComponent implements OnInit {
                             this.performanceDifference= this.player1_score - this.player2_score;
                             this.compared= true;
                             this.resetComparisonAlerts(this.analyticsPlayer1 as Omit<Train, "id_player" | "idx_train">, this.analyticsPlayer2 as Omit<Train, "id_player" | "idx_train">);
+                            this.resetTrend();
                         } else if(this.player2_score > this.player1_score) {
                             this.playerService.getPlayerById(selectedPlayer2Id).subscribe({
                                 next: (player) => {
@@ -157,11 +183,13 @@ export class CompareComponent implements OnInit {
                             this.performanceDifference= this.player2_score - this.player1_score;
                             this.compared= true;
                             this.resetComparisonAlerts(this.analyticsPlayer1 as Omit<Train, "id_player" | "idx_train">, this.analyticsPlayer2 as Omit<Train, "id_player" | "idx_train">);
+                            this.resetTrend();
                         } else {
                             this.bestPlayer= "Nessuno (Player con prestazioni uguali)";
                             this.performanceDifference= 0;
                             this.compared= true;
                             this.resetComparisonAlerts(this.analyticsPlayer1 as Omit<Train, "id_player" | "idx_train">, this.analyticsPlayer2 as Omit<Train, "id_player" | "idx_train">);
+                            this.resetTrend();
                         }
                     },
                     error: (err) => {
@@ -187,9 +215,82 @@ export class CompareComponent implements OnInit {
         });
     }
 
+    /*
+    Questa funzione itera su ogni allenamento di ciascuno dei due player e calcola per ciascun elemento lo score.
+    Infine, aggiorna la struttura apposita "bindata" con il grafico presente nella view, che si aggiorna
+    automaticamente grazie ad Angular.
+    */
+    private resetTrend(): void {
+        var scoresPlayer1: number[]= [];
+        var scoresPlayer2: number[]= [];
+        // Calcolo gli scores di ogni allenamento del player 1
+        this.trainsPlayer1.forEach((train) => {
+            const score: number= (train.percentuale_tiri + 100/train.tempo_corsa) / 2;
+            scoresPlayer1.push(score);
+        });
+        // Calcolo gli scores di ogni allenamento del player 2
+        this.trainsPlayer2.forEach((train) => {
+            const score: number= (train.percentuale_tiri + 100/train.tempo_corsa) / 2;
+            scoresPlayer2.push(score);
+        });
+        // Creo un oggetto che contiene i dati sugli score di ogni allenamento dei due player
+        this.playersTrend= {
+            // Valori sull'asse X: uso gli indici degli allenamenti (prendo la lunghezza maggiore
+            // degli array contenenti gli allenamenti)
+            labels: Array.from(
+                // Definisco la lunghezza dell'array
+                { length: Math.max(this.trainsPlayer1.length, this.trainsPlayer2.length) },
+                // Definisco il contenuto con un'arrow function
+                (_, i) => `Train ${i + 1}`
+            ),
+            // Valori sull'asse Y: uso gli score degli allenamenti
+            datasets: [
+                {
+                    label: 'Player 1',
+                    data: scoresPlayer1,
+                    borderColor: 'blue',
+                    backgroundColor: 'blue',
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    fill: false
+                },
+                {
+                    label: 'Player 2',
+                    data: scoresPlayer2,
+                    borderColor: 'red',
+                    backgroundColor: 'red',
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    fill: false
+                }
+            ],
+        };
+    }
+
     ngOnInit(): void {
         // Carico i player
         this.resetPlayers();
+        // Configuro il grafico per essere responsive e do un titolo all'asse Y ed all'asse X
+        this.chartOptions= {
+            responsive: true,
+            plugins: {
+                legend: { display: true, position: 'top' }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Performance score'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Trains'
+                    }
+                }
+            }
+        };
     }
 
     /*
@@ -220,6 +321,10 @@ export class CompareComponent implements OnInit {
         this.trainsPlayer2= [];
         this.selectedPlayer1Id= null;
         this.selectedPlayer2Id= null;
+        this.playersTrend= {
+            labels: [],
+            datasets: []
+        };
         this.resetPlayers();
     }
 }

@@ -53,6 +53,10 @@
             <p class="comparison"><strong>{{ percentualeTiriComparison }}</strong></p>
             <p class="comparison"><strong>{{ tempoCorsaComparison }}</strong></p>
         </div>
+        <div class="chart-wrapper">
+            <p class="directAnalysis centered">Trend delle performance</p>
+            <canvas baseChart [data]="playersTrend" [options]="chartOptions" [type]="'line'"></canvas>
+        </div>
     </section>
     <button class="btn cancel" (click)="reset()">Reset</button>
 </div>
