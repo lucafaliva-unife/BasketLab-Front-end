@@ -21,7 +21,7 @@
                     </div>
                     <div class="fieldWithButton">
                         <label for="canestriRiusciti">Canestri riusciti:</label>
-                        <input type="number" step="1" id="canestriRiusciti" name="canestriRiusciti" [(ngModel)]="canestriRiusciti" required>
+                        <input type="number" step="1" id="canestriRiusciti" name="canestriRiusciti" [max]="canestriTentati" [(ngModel)]="canestriRiusciti" required>
                         <button class="btn secondary" type="button" (click)="addCanestroRiuscito()">Incrementa canestri riusciti</button>
                     </div>
                 </div>

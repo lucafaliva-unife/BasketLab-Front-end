@@ -198,6 +198,7 @@ export class TrainComponent implements OnInit {
             if(
                 this.canestriRiusciti >= 0 &&
                 this.canestriTentati > 0 &&
+                this.canestriRiusciti <= this.canestriTentati &&
                 this.tempoCorsaCentisecondi >= 0 && this.tempoCorsaCentisecondi <= 99 &&
                 this.tempoCorsaSecondi >= 0 && this.tempoCorsaSecondi <= 59 &&
                 this.tempoCorsaMinuti >= 0 &&
