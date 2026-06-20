@@ -16,19 +16,19 @@
                 <div class="shoot-controls">
                     <div class="fieldWithButton">
                         <label for="canestriTentati">Canestri tentati:</label>
-                        <input type="number" step="1" id="canestriTentati" name="canestriTentati" [(ngModel)]="canestriTentati" required>
+                        <input type="number" step="1" id="canestriTentati" min="0" name="canestriTentati" [(ngModel)]="canestriTentati" required>
                         <button class="btn secondary" type="button" (click)="addCanestroTentato()">Incrementa canestri tentati</button>
                     </div>
                     <div class="fieldWithButton">
                         <label for="canestriRiusciti">Canestri riusciti:</label>
-                        <input type="number" step="1" id="canestriRiusciti" name="canestriRiusciti" [max]="canestriTentati" [(ngModel)]="canestriRiusciti" required>
+                        <input type="number" step="1" id="canestriRiusciti" name="canestriRiusciti" min="0" [max]="canestriTentati" [(ngModel)]="canestriRiusciti" required>
                         <button class="btn secondary" type="button" (click)="addCanestroRiuscito()">Incrementa canestri riusciti</button>
                     </div>
                 </div>
                 <div class="stats-row">
                     <div class="percent-box">
                         <label>Percentuale canestri riusciti</label>
-                        <div class="percent-value">{{ percentualeTiri | number:'1.2-2' }} %</div>
+                        <div class="percent-value">{{ canestriTentati === 0 ? 0 : (canestriRiusciti / canestriTentati) * 100 | number:'1.2-2' }} %</div>
                     </div>
                     <div class="percent-box" *ngIf="!trainsIsVoid">
                         <label>Record percentuale tiri</label>

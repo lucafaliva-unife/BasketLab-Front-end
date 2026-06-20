@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -13,7 +13,7 @@ import { PlayerService } from '../../servizi/player.service';
     templateUrl: './train.component.html',
     styleUrls: ['./train.component.css']
 })
-export class TrainComponent implements OnInit {
+export class TrainComponent implements OnInit, OnDestroy {
     selectedPlayer: Partial<Player>= {};
     selectedPlayerId: string | null= null;
     train: Partial<Omit<Train, "idx_train" | "id_player">>= {};
@@ -24,19 +24,9 @@ export class TrainComponent implements OnInit {
     tempoCorsaCentisecondi: number= 0;
     clockMode: boolean= false;
     interval: any= null;
-    percentualeTiri: number= 0;
     recordTempoCorsaPlayer: number= 0;
     recordPercentualeTiriPlayer: number= 0;
     trainsIsVoid: boolean= true;
-
-    /*
-    Questa funzione calcola la percentuale di tiri riusciti.
-    */
-    updatePercentualeTiriRealtime(): void {
-        if(this.canestriTentati != 0) {
-            this.percentualeTiri= (this.canestriRiusciti / this.canestriTentati) * 100;
-        }
-    }
 
     constructor(private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
 
@@ -125,22 +115,26 @@ export class TrainComponent implements OnInit {
         this.resetRecord();
     }
 
-    /*
-    Questa funzione incrementa SOLO i canestri tentati e calcola la percentuale di tiri da mostare all'utente.
-    */
-    addCanestroTentato(): void {
-        this.canestriTentati= this.canestriTentati + 1;
-        this.updatePercentualeTiriRealtime();
+    ngOnDestroy(): void {
+        // Distruggo il timer nel caso in cui sia attivo.
+        if(this.clockMode) {
+            clearInterval(this.interval);
+        }
     }
 
     /*
-    Questa funzione incrementa i canestri tentati ed i canestri riusciti e calcola la percentuale di tiri da mostare
-    all'utente.
+    Questa funzione incrementa SOLO i canestri tentati.
+    */
+    addCanestroTentato(): void {
+        this.canestriTentati= this.canestriTentati + 1;
+    }
+
+    /*
+    Questa funzione incrementa i canestri tentati ed i canestri riusciti.
     */
     addCanestroRiuscito(): void {
         this.canestriTentati= this.canestriTentati + 1;
         this.canestriRiusciti= this.canestriRiusciti + 1;
-        this.updatePercentualeTiriRealtime();
     }
 
     /*
@@ -220,7 +214,6 @@ export class TrainComponent implements OnInit {
                     this.resetRecord();
                     this.canestriTentati= 0;
                     this.canestriRiusciti= 0;
-                    this.percentualeTiri= 0;
                 },
                 error: (err) => {
                     if(err.status === 404) {
