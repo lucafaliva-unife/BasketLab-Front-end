@@ -1,25 +1,28 @@
-/* Header brand layout: logo + title */
+/* Il selettore riguarda gli elementi con classe .brand: header del marchio con logo e titolo */
 .brand {
-	display: flex;
-	align-items: center;
-	gap: 12px;
+	display: flex; /* Usa layout flex per posizionare logo e titolo */
+	align-items: center; /* Allinea verticalmente logo e titolo */
+	gap: 12px; /* Spazio di 12px tra gli elementi interni */
 }
 
+/* Il selettore riguarda l'elemento con classe .logo all'interno di .brand: immagine del logo */
 .brand .logo {
-	width: 40px;
-	height: 40px;
-	object-fit: contain;
+	width: 40px; /* Larghezza del logo */
+	height: 40px; /* Altezza del logo */
+	object-fit: contain; /* Mantiene le proporzioni dell'immagine */
 }
 
 @media (min-width: 900px) {
+	/* Il selettore riguarda l'elemento .brand .logo su schermi larghi: logo più grande */
 	.brand .logo {
-		width: 48px;
-		height: 48px;
+		width: 48px; /* Aumenta la larghezza a 48px su schermi grandi */
+		height: 48px; /* Aumenta l'altezza a 48px su schermi grandi */
 	}
 }
 
 @media (max-width: 420px) {
+	/* Il selettore riguarda l'elemento h1 all'interno di .brand su schermi stretti: testo ridotto */
 	.brand h1 {
-		font-size: 18px;
+		font-size: 18px; /* Imposta la dimensione del titolo a 18px su dispositivi piccoli */
 	}
 }

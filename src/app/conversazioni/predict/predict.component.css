@@ -1,69 +1,78 @@
+/* Il selettore riguarda gli elementi con classe .fieldPredict: contenitore inline dei campi di previsione */
 .fieldPredict {
-    display: inline-flex;
-    flex-direction: column;
-    margin: 0 8px;
+    display: inline-flex; /* Usa layout inline-flex per mantenere il contenitore nella linea del testo */
+    flex-direction: column; /* Dispone i figli in colonna */
+    margin: 0 8px; /* Spazio orizzontale 8px ai lati, nessun margine verticale */
 }
 
+/* Il selettore riguarda l'elemento <select> all'interno di .fieldPredict: menu a discesa del campo previsione */
 .fieldPredict select {
-    min-width: 180px;
-    padding: 8px 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    background-color: #fff;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    min-width: 180px; /* Larghezza minima di 180px */
+    padding: 8px 10px; /* Spazio interno verticale 8px, orizzontale 10px */
+    border-radius: 8px; /* Angoli arrotondati di 8px */
+    border: 1px solid #ccc; /* Bordo sottile grigio chiaro */
+    font-size: 14px; /* Dimensione del testo di 14px */
+    background-color: #fff; /* Sfondo bianco */
+    cursor: pointer; /* Mostra il cursore a mano nel passaggio del mouse */
+    transition: all 0.2s ease; /* Transizione morbida di 0.2s per tutte le proprietà */
 }
 
+/* Il selettore riguarda lo stato focus del <select> in .fieldPredict: stilo del bordo attivo */
 .fieldPredict select:focus {
-    outline: none;
-    border-color: #4caf50;
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+    outline: none; /* Rimuove il bordo focus predefinito */
+    border-color: #4caf50; /* Colore del bordo verde quando è attivo */
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2); /* Ombra verde attorno per evidenziare il focus */
 }
 
+/* Il selettore riguarda gli elementi con classe .weightSelection: contenitore per la selezione dei pesi */
 .weightSelection {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 30px;
-    margin-left: 8px;
+    display: flex; /* Usa layout flex per il contenuto */
+    flex-direction: column; /* Dispone gli elementi in colonna */
+    gap: 8px; /* Spazio di 8px tra gli elementi */
+    margin-top: 30px; /* Spazio esterno superiore di 30px */
+    margin-left: 8px; /* Spazio esterno sinistro di 8px */
 }
 
+/* Il selettore riguarda gli elementi con classe .weightSelectionRow: riga che raggruppa opzioni di peso */
 .weightSelectionRow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-    margin-top: 2px;
+    display: flex; /* Usa layout flex orizzontale */
+    flex-wrap: wrap; /* Permette agli elementi di andare a capo se necessario */
+    gap: 10px; /* Spazio di 10px tra le opzioni */
+    align-items: center; /* Allinea verticalmente gli elementi al centro */
+    margin-top: 2px; /* Spazio esterno superiore di 2px */
 }
 
+/* Il selettore riguarda gli elementi con classe .guessedTeam: contenitore del risultato della squadra indovinata */
 .guessedTeam {
-    margin-top: 20px;
-    padding: 16px;
-    border-radius: 12px;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    text-align: center;
+    margin-top: 20px; /* Spazio esterno superiore di 20px */
+    padding: 16px; /* Spazio interno di 16px */
+    border-radius: 12px; /* Angoli arrotondati di 12px */
+    background-color: #f5f5f5; /* Sfondo grigio chiaro */
+    border: 1px solid #ddd; /* Bordo grigio chiaro */
+    display: flex; /* Usa layout flex per i contenuti */
+    flex-direction: column; /* Dispone gli elementi in colonna */
+    align-items: center; /* Centra orizzontalmente gli elementi */
+    justify-content: center; /* Centra verticalmente gli elementi */
+    gap: 12px; /* Spazio di 12px tra i figli */
+    text-align: center; /* Allinea il testo al centro */
 }
 
+/* Il selettore riguarda gli elementi con classe .guessedTeam__result: contenitore per il risultato interno */
 .guessedTeam__result {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; /* Usa layout flex */
+    align-items: center; /* Centra verticalmente i figli */
+    justify-content: center; /* Centra orizzontalmente i figli */
 }
 
+/* Il selettore riguarda gli elementi con classe .guessedTeam__name: nome della squadra indovinata */
 .guessedTeam__name {
-    color: #4caf50;
-    font-size: 40px;
-    font-weight: 700;
-    margin-bottom: 15px;
+    color: #4caf50; /* Colore del testo verde */
+    font-size: 40px; /* Dimensione del font grande */
+    font-weight: 700; /* Font in grassetto */
+    margin-bottom: 15px; /* Spazio sotto il nome di 15px */
 }
 
+/* Il selettore riguarda gli elementi con classe .guessedTeam__button: pulsante dentro il risultato della squadra */
 .guessedTeam__button {
-    margin: 0;
+    margin: 0; /* Rimuove margini esterni */
 }

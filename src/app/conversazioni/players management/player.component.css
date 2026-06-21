@@ -1,47 +1,53 @@
+/* Il selettore riguarda gli elementi con classe .maxTrainsSelection: contenitore per la selezione del numero massimo di allenamenti */
 .maxTrainsSelection {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 5px;
-    margin-left: 8px;
+    display: flex; /* Usa layout flex per disporre i figli */
+    flex-direction: column; /* Dispone i figli in colonna */
+    gap: 8px; /* Spazio di 8px tra gli elementi figli */
+    margin-top: 5px; /* Spazio esterno superiore di 5px */
+    margin-left: 8px; /* Spazio esterno sinistro di 8px */
 }
 
+/* Il selettore riguarda gli elementi con classe .maxTrainsSelectionRow: riga interna che contiene opzioni selezionabili */
 .maxTrainsSelectionRow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-    margin-top: 2px;
+    display: flex; /* Usa layout flex per disporre gli elementi orizzontalmente */
+    flex-wrap: wrap; /* Permette il wrapping degli elementi su più righe se necessario */
+    gap: 10px; /* Spazio di 10px tra gli elementi */
+    align-items: center; /* Allinea verticalmente gli elementi al centro */
+    margin-top: 2px; /* Spazio esterno superiore di 2px */
 }
 
-/* Alerts */
+/* Alerts: stile generale per i messaggi di avviso/indicazione */
 .alert {
-    padding: 10px 12px;
-    border-radius: 6px;
-    margin-bottom: 8px;
-    border: 1px solid transparent;
-    background-color: #eff1d0;
-    border-color: #b9bb6f;
+    padding: 10px 12px; /* Spazio interno verticale 10px, orizzontale 12px */
+    border-radius: 6px; /* Angoli arrotondati di 6px */
+    margin-bottom: 8px; /* Spazio esterno inferiore di 8px */
+    border: 1px solid transparent; /* Bordo sottile inizialmente trasparente */
+    background-color: #eff1d0; /* Colore di sfondo giallo-chiaro per avviso neutro */
+    border-color: #b9bb6f; /* Colore del bordo verde-oliva chiaro */
 }
 
+/* Variante per miglioramento: colore di sfondo e bordo verde, testo scuro */
 .alert.improvement {
-    background-color: #e6f7e6;
-    border-color: #8cd08c;
-    color: #1f5a1f;
+    background-color: #e6f7e6; /* Sfondo verde chiaro */
+    border-color: #8cd08c; /* Bordo verde */
+    color: #1f5a1f; /* Colore del testo verde scuro */
 }
 
+/* Variante per peggioramento: sfondo rosato e bordo rosso chiaro, testo scuro */
 .alert.worsening {
-    background-color: #fde8e8;
-    border-color: #ef8a8a;
-    color: #7a1f1f;
+    background-color: #fde8e8; /* Sfondo rosato chiaro */
+    border-color: #ef8a8a; /* Bordo rosso chiaro */
+    color: #7a1f1f; /* Colore del testo rosso scuro */
 }
 
+/* Variante per nessuna variazione: sfondo blu chiaro e bordo blu, testo scuro */
 .alert.no-variations {
-    background-color: #eff3ff;
-    border-color: #9db7e7;
-    color: #1f3f7a;
+    background-color: #eff3ff; /* Sfondo blu molto chiaro */
+    border-color: #9db7e7; /* Bordo blu chiaro */
+    color: #1f3f7a; /* Colore del testo blu scuro */
 }
 
+/* Il selettore riguarda gli elementi con classe .message: paragrafi/messaggi all'interno degli alert */
 .message {
-    margin-bottom: 0px;
+    margin-bottom: 0px; /* Rimuove il margine inferiore predefinito */
 }

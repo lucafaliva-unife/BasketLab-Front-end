@@ -1,311 +1,338 @@
+/* Il selettore riguarda html e body: assicura l'altezza totale della pagina */
 html, body { 
-    height: 100%;
+    height: 100%; /* Imposta altezza al 100% per il layout full-height */
 }
 
+/* Il selettore riguarda il body: reset del margine e font globale */
 body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    margin: 0; /* Rimuove il margine predefinito del browser */
+    font-family: Roboto, "Helvetica Neue", sans-serif; /* Imposta il font globale */
 }
 
-/* CSS per le zone delle pagine */
-
+/* Il selettore riguarda l'elemento con classe .container: contenitore principale delle pagine */
 .container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 20px;
+    display: flex; /* Usa layout flex per il contenuto principale */
+    flex-direction: column; /* Dispone i figli in colonna */
+    gap: 16px; /* Spazio di 16px tra le sezioni */
+    margin-left: 20px; /* Margine esterno sinistro di 20px */
+    margin-right: 20px; /* Margine esterno destro di 20px */
+    margin-top: 20px; /* Margine esterno superiore di 20px */
 }
 
+/* Il selettore riguarda l'elemento con classe .card: scheda di contenuto */
 .card {
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 16px;
-    background: #fafafa;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border: 1px solid #ddd; /* Bordo grigio chiaro */
+    border-radius: 12px; /* Angoli arrotondati di 12px */
+    padding: 16px; /* Spazio interno di 16px */
+    background: #fafafa; /* Sfondo grigio chiaro */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* Ombra leggera per profondità */
 }
 
+/* Il selettore riguarda l'elemento con classe .actions: contenitore dei pulsanti */
 .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
+    display: flex; /* Usa layout flex */
+    flex-wrap: wrap; /* Permette ai pulsanti di andare a capo se necessario */
+    gap: 8px; /* Spazio di 8px tra i pulsanti */
+    margin-top: 10px; /* Spazio esterno superiore di 10px */
 }
 
-/* CSS per le form ed i campi delle card */
-
+/* Il selettore riguarda l'elemento con classe .field: wrapper del campo form */
 .field {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
+    display: flex; /* Usa layout flex */
+    flex-direction: column; /* Dispone etichetta e campo in colonna */
+    margin-bottom: 10px; /* Margine inferiore di 10px */
 }
 
+/* Il selettore riguarda le label all'interno di .field: etichette dei campi */
 .field label {
-    font-size: 14px;
-    margin-bottom: 4px;
-    color: #555;
+    font-size: 14px; /* Dimensione del font di 14px */
+    margin-bottom: 4px; /* Spazio inferiore di 4px */
+    color: #555; /* Colore del testo grigio medio */
 }
 
+/* Il selettore riguarda gli elementi <input>: campi input generici */
 input {
-    padding: 6px 8px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
+    padding: 6px 8px; /* Spazio interno verticale 6px, orizzontale 8px */
+    border-radius: 6px; /* Angoli arrotondati di 6px */
+    border: 1px solid #ccc; /* Bordo grigio chiaro */
+    font-size: 14px; /* Dimensione del font di 14px */
 }
 
+/* Il selettore riguarda lo stato focus degli <input>: input attivi */
 input:focus {
-    outline: none;
-    border-color: #4caf50;
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
-    background-color: #fff;
+    outline: none; /* Rimuove il focus predefinito */
+    border-color: #4caf50; /* Bordo verde quando il campo è attivo */
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2); /* Evidenzia il campo con ombra verde */
+    background-color: #fff; /* Sfondo bianco quando è attivo */
 }
 
+/* Il selettore riguarda lo stato disabilitato degli <input>: input non utilizzabili */
 input:disabled {
-    background-color: #eee;
-    color: #777;
+    background-color: #eee; /* Sfondo grigio chiaro */
+    color: #777; /* Colore del testo grigio */
 }
 
+/* Il selettore riguarda l'elemento <form>: blocco del form */
 form {
-    border: 1px solid #ddd;
-    padding: 16px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 20px;
-    background: #fff;
+    border: 1px solid #ddd; /* Bordo grigio chiaro */
+    padding: 16px; /* Spazio interno di 16px */
+    border-radius: 12px; /* Angoli arrotondati di 12px */
+    margin-bottom: 20px; /* Margine inferiore di 20px */
+    margin-left: 20px; /* Margine sinistro di 20px */
+    margin-right: 20px; /* Margine destro di 20px */
+    margin-top: 20px; /* Margine superiore di 20px */
+    background: #fff; /* Sfondo bianco */
 }
 
+/* Il selettore riguarda gli elementi <select>: menu a discesa */
 select {
-    padding: 6px 8px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    background-color: #fff;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    padding: 6px 8px; /* Spazio interno verticale 6px, orizzontale 8px */
+    border-radius: 6px; /* Angoli arrotondati di 6px */
+    border: 1px solid #ccc; /* Bordo grigio chiaro */
+    font-size: 14px; /* Dimensione del font di 14px */
+    background-color: #fff; /* Sfondo bianco */
+    cursor: pointer; /* Cursore mano per i menu a discesa */
+    transition: all 0.2s ease; /* Transizione morbida di 0.2s */
 }
 
+/* Il selettore riguarda lo stato focus degli <select>: menu a discesa attivi */
 select:focus {
-    outline: none;
-    border-color: #4caf50;
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+    outline: none; /* Rimuove il focus predefinito */
+    border-color: #4caf50; /* Bordo verde quando è attivo */
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2); /* Ombra verde intorno */
 }
 
+/* Il selettore riguarda gli <option> all'interno dei menu a discesa */
 select option {
-    padding: 6px;
-    font-size: 14px;
-    color: #333;
-    background-color: #fff;
+    padding: 6px; /* Spazio interno di 6px */
+    font-size: 14px; /* Dimensione del font di 14px */
+    color: #333; /* Colore del testo grigio scuro */
+    background-color: #fff; /* Sfondo bianco */
 }
 
-/* CSS per i field con di fianco un bottone */
-
+/* Il selettore riguarda l'elemento con classe .fieldWithButton: campo con pulsante laterale */
 .fieldWithButton {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 10px;
-    margin-bottom: 12px;
+    display: flex; /* Usa layout flex */
+    flex-wrap: wrap; /* Permette al contenuto di andare a capo */
+    gap: 6px 10px; /* Spazio verticale 6px e orizzontale 10px */
+    margin-bottom: 12px; /* Margine inferiore di 12px */
 }
 
+/* Il selettore riguarda le label all'interno di .fieldWithButton: etichette del campo */
 .fieldWithButton label {
-    width: 100%;
-    font-size: 14px;
-    color: #555;
+    width: 100%; /* Occupa tutta la larghezza disponibile */
+    font-size: 14px; /* Dimensione del font di 14px */
+    color: #555; /* Colore del testo grigio medio */
 }
 
+/* Il selettore riguarda gli input all'interno di .fieldWithButton: campo testo flessibile */
 .fieldWithButton input {
-    flex: 1;
+    flex: 1; /* Occupa lo spazio rimanente */
 }
 
+/* Il selettore riguarda il pulsante .btn all'interno di .fieldWithButton: pulsante allineato in basso */
 .fieldWithButton .btn {
-    align-self: flex-end;
+    align-self: flex-end; /* Allinea il pulsante in basso nella riga */
 }
 
-/* CSS per i bottoni */
-
+/* Il selettore riguarda gli elementi con classe .btn: stile di base dei pulsanti */
 .btn {
-    padding: 6px 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s ease;
+    padding: 6px 10px; /* Spazio interno verticale 6px, orizzontale 10px */
+    border: none; /* Nessun bordo */
+    border-radius: 6px; /* Angoli arrotondati di 6px */
+    cursor: pointer; /* Cursore a mano */
+    font-size: 14px; /* Dimensione del font di 14px */
+    transition: all 0.2s ease; /* Transizione morbida di 0.2s */
 }
 
+/* Il selettore riguarda i pulsanti disabilitati */
 .btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+    opacity: 0.6; /* Riduce l'opacità per indicare disabilitazione */
+    cursor: not-allowed; /* Cursore vietato */
 }
 
+/* Il selettore riguarda il hover dei pulsanti attivi */
 .btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    filter: brightness(1.1);
+    transform: translateY(-2px); /* Solleva leggermente il pulsante */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* Aggiunge ombra sul hover */
+    filter: brightness(1.1); /* Schiarisce leggermente il pulsante */
 }
 
+/* Il selettore riguarda il click sui pulsanti attivi */
 .btn:active:not(:disabled) {
-    transform: translateY(0);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transform: translateY(0); /* Ripristina la posizione al click */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Ombra ridotta al click */
 }
 
+/* Il selettore riguarda gli elementi con classe .primary: pulsante principale */
 .primary {
-    background-color: #4caf50;
-    color: white;
+    background-color: #4caf50; /* Sfondo verde */
+    color: white; /* Testo bianco */
 }
 
+/* Il selettore riguarda gli elementi con classe .secondary: pulsante secondario */
 .secondary {
-    background-color: #2196f3;
-    color: white;
+    background-color: #2196f3; /* Sfondo blu */
+    color: white; /* Testo bianco */
 }
 
+/* Il selettore riguarda gli elementi con classe .danger: pulsante di azione negativa */
 .danger {
-    background-color: #f44336;
-    color: white;
+    background-color: #f44336; /* Sfondo rosso */
+    color: white; /* Testo bianco */
 }
 
+/* Il selettore riguarda gli elementi con classe .link: pulsante stilizzato come link */
 .link {
-    background-color: #9c27b0;
-    color: white;
+    background-color: #9c27b0; /* Sfondo viola */
+    color: white; /* Testo bianco */
 }
 
+/* Il selettore riguarda gli elementi con classe .add: pulsante di aggiunta */
 .add {
-    background-color: #ff9800;
-    color: white;
-    margin-left: 20px;
-    margin-bottom: 20px;
-    margin-top: 20px;
+    background-color: #ff9800; /* Sfondo arancione */
+    color: white; /* Testo bianco */
+    margin-left: 20px; /* Spazio sinistro di 20px */
+    margin-bottom: 20px; /* Spazio inferiore di 20px */
+    margin-top: 20px; /* Spazio superiore di 20px */
 }
 
+/* Il selettore riguarda gli elementi con classe .cancel: pulsante di annullamento */
 .cancel {
-    background-color: #085594;
-    color: white;
-    margin-left: 20px;
-    margin-bottom: 20px;
+    background-color: #085594; /* Sfondo blu scuro */
+    color: white; /* Testo bianco */
+    margin-left: 20px; /* Spazio sinistro di 20px */
+    margin-bottom: 20px; /* Spazio inferiore di 20px */
 }
 
+/* Il selettore riguarda gli elementi con classe .back: pulsante di ritorno */
 .back {
-    background-color: #919923;
-    color: white;
-    margin-left: 20px;
-    margin-bottom: 20px;
-    margin-top: 20px;
+    background-color: #919923; /* Sfondo verde scuro */
+    color: white; /* Testo bianco */
+    margin-left: 20px; /* Spazio sinistro di 20px */
+    margin-bottom: 20px; /* Spazio inferiore di 20px */
+    margin-top: 20px; /* Spazio superiore di 20px */
 }
 
-/* CSS per le scritte */
-
+/* Il selettore riguarda gli elementi con classe .title: titoli principali */
 .title {
-    font-size: 28px;
-    font-weight: 600;
-    color: #1068ec;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    letter-spacing: 0.5px;
+    font-size: 28px; /* Dimensione del font di 28px */
+    font-weight: 600; /* Font semibold */
+    color: #1068ec; /* Colore blu */
+    margin-top: 10px; /* Spazio superiore di 10px */
+    margin-bottom: 5px; /* Spazio inferiore di 5px */
+    letter-spacing: 0.5px; /* Spaziatura tra le lettere */
 }
 
+/* Il selettore riguarda gli elementi con classe .message: messaggi di stato o descrizione */
 .message {
-    font-size: 20px;
-    font-weight: 300;
-    color: #7b9dd1;
-    margin-bottom: 20px;
-    letter-spacing: 0.2px;
+    font-size: 20px; /* Dimensione del font di 20px */
+    font-weight: 300; /* Font leggero */
+    color: #7b9dd1; /* Colore blu-grigio */
+    margin-bottom: 20px; /* Spazio inferiore di 20px */
+    letter-spacing: 0.2px; /* Spaziatura leggera tra le lettere */
 }
 
+/* Il selettore riguarda gli elementi con classe .centered: centrare il testo */
 .centered {
-    text-align: center;
+    text-align: center; /* Allinea il testo al centro */
 }
 
-/* CSS per le tabelle */
-
+/* Il selettore riguarda l'elemento con classe .table: tabella di dati */
 .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    width: 100%; /* Larghezza massima disponibile */
+    border-collapse: collapse; /* Rimuove gli spazi tra i bordi delle celle */
+    margin-top: 10px; /* Spazio esterno superiore di 10px */
+    background: #fff; /* Sfondo bianco */
+    border-radius: 10px; /* Angoli arrotondati di 10px */
+    overflow: hidden; /* Nasconde i contenuti oltre i bordi */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* Ombra leggera per profondità */
 }
 
+/* Il selettore riguarda l'header della tabella */
 .table thead {
-    background-color: #f5f5f5;
+    background-color: #f5f5f5; /* Sfondo grigio chiaro per l'intestazione */
 }
 
+/* Il selettore riguarda le celle di intestazione della tabella */
 .table th {
-    text-align: left;
-    padding: 10px;
-    font-weight: 600;
-    color: #333;
-    font-size: 14px;
+    text-align: left; /* Allinea il testo a sinistra */
+    padding: 10px; /* Spazio interno di 10px */
+    font-weight: 600; /* Font semibold */
+    color: #333; /* Colore del testo grigio scuro */
+    font-size: 14px; /* Dimensione del font di 14px */
 }
 
+/* Il selettore riguarda le celle del corpo della tabella */
 .table td {
-    padding: 10px;
-    font-size: 14px;
-    color: #555;
-    border-top: 1px solid #eee;
+    padding: 10px; /* Spazio interno di 10px */
+    font-size: 14px; /* Dimensione del font di 14px */
+    color: #555; /* Colore del testo grigio medio */
+    border-top: 1px solid #eee; /* Linea superiore sottile per separare le righe */
 }
 
-/* CSS per la navbar ed il footer */
-
+/* Il selettore riguarda l'elemento header: barra superiore del sito */
 header {
-    background-color: #ffffff;
-    border-bottom: 1px solid #ddd;
-    padding: 16px 20px;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    background-color: #ffffff; /* Sfondo bianco */
+    border-bottom: 1px solid #ddd; /* Bordo inferiore grigio */
+    padding: 16px 20px; /* Spazio interno verticale 16px, orizzontale 20px */
+    display: flex; /* Usa layout flex */
+    justify-content: space-between; /* Spinge gli elementi alle estremità */
+    align-items: center; /* Allinea verticalmente gli elementi */
 }
 
+/* Il selettore riguarda l'elemento h1 all'interno dell'header: titolo della pagina */
 header h1 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 600;
-    color: #333;
+    margin: 0; /* Rimuove il margine predefinito */
+    font-size: 24px; /* Dimensione del font di 24px */
+    font-weight: 600; /* Font semibold */
+    color: #333; /* Colore del testo grigio scuro */
 }
 
+/* Il selettore riguarda l'elemento nav: menu di navigazione */
 nav {
-    display: flex;
-    gap: 10px;
+    display: flex; /* Usa layout flex */
+    gap: 10px; /* Spazio di 10px tra i link */
 }
 
+/* Il selettore riguarda i link di navigazione */
 nav a {
-    text-decoration: none;
-    color: #333;
-    font-size: 14px;
-
-    padding: 8px 12px;
-    border-radius: 8px;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-
-    transition: all 0.2s ease;
+    text-decoration: none; /* Rimuove la sottolineatura */
+    color: #333; /* Colore del testo grigio scuro */
+    font-size: 14px; /* Dimensione del font di 14px */
+    padding: 8px 12px; /* Spazio interno verticale 8px, orizzontale 12px */
+    border-radius: 8px; /* Angoli arrotondati di 8px */
+    background-color: #f5f5f5; /* Sfondo grigio chiaro */
+    border: 1px solid #ddd; /* Bordo grigio chiaro */
+    transition: all 0.2s ease; /* Transizione morbida di 0.2s */
 }
 
+/* Il selettore riguarda l'hover sui link di navigazione */
 nav a:hover {
-    background-color: #4caf50;
-    color: #fff;
-    border-color: #4caf50;
-    transform: translateY(-1px);
+    background-color: #4caf50; /* Sfondo verde al passaggio del mouse */
+    color: #fff; /* Testo bianco */
+    border-color: #4caf50; /* Bordo verde */
+    transform: translateY(-1px); /* Alza leggermente il link */
 }
 
+/* Il selettore riguarda l'elemento main: area principale del contenuto */
 main {
-    min-height: 70vh;
-    background-color: #f9f9f9;
-    padding-top: 10px;
+    min-height: 70vh; /* Altezza minima del 70% della viewport */
+    background-color: #f9f9f9; /* Sfondo grigio chiaro */
+    padding-top: 10px; /* Spazio interno superiore di 10px */
 }
 
+/* Il selettore riguarda l'elemento footer: piè di pagina */
 footer {
-    background-color: #ffffff;
-    border-top: 1px solid #ddd;
-    color: #555;
-    padding: 16px 20px;
-    text-align: center;
-    font-size: 13px;
+    background-color: #ffffff; /* Sfondo bianco */
+    border-top: 1px solid #ddd; /* Bordo superiore grigio */
+    color: #555; /* Colore del testo grigio medio */
+    padding: 16px 20px; /* Spazio interno verticale 16px, orizzontale 20px */
+    text-align: center; /* Testo centrato */
+    font-size: 13px; /* Dimensione del font di 13px */
 }
 
+/* Il selettore riguarda l'elemento con id #privacy: testo della policy */
 #privacy {
-    line-height: 1.5;
+    line-height: 1.5; /* Altezza della linea maggiore per leggibilità */
 }

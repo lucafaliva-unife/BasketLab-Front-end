@@ -1,76 +1,86 @@
+/* Il selettore riguarda il fieldset all'interno di .tempoCorsaField: campo del form per il tempo di corsa */
 .tempoCorsaField fieldset {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 10px;
-    background-color: #fafafa;
+    display: flex; /* Usa layout flex per disporre input e label */
+    align-items: center; /* Allinea verticalmente i contenuti al centro */
+    gap: 8px; /* Spazio di 8px tra gli elementi interni */
+    border: 1px solid #ddd; /* Bordo grigio chiaro */
+    border-radius: 10px; /* Angoli arrotondati di 10px */
+    padding: 10px; /* Spazio interno di 10px */
+    background-color: #fafafa; /* Sfondo grigio chiaro */
 }
 
+/* Il selettore riguarda gli input all'interno di .tempoCorsaField: caselle numeriche per il tempo */
 .tempoCorsaField input {
-    width: 60px;
-    text-align: center;
+    width: 60px; /* Larghezza fissa di 60px */
+    text-align: center; /* Testo centrato all'interno dell'input */
 }
 
+/* Il selettore riguarda gli span all'interno di .tempoCorsaField: testo descrittivo accanto all'input */
 .tempoCorsaField span {
-    font-weight: 600;
-    font-size: 16px;
-    color: #333;
+    font-weight: 600; /* Testo semibold */
+    font-size: 16px; /* Dimensione del font di 16px */
+    color: #333; /* Colore del testo grigio scuro */
 }
 
+/* Il selettore riguarda gli elementi con classe .tempoCorsaField: wrapper principale del campo tempo di corsa */
 .tempoCorsaField {
-    margin-bottom: 16px;
+    margin-bottom: 16px; /* Spazio esterno inferiore di 16px */
 }
 
+/* Il selettore riguarda gli elementi con classe .tempo-label: etichetta del campo tempo */
 .tempo-label {
-    display: block;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 6px;
+    display: block; /* Mostra l'elemento come blocco */
+    font-size: 14px; /* Dimensione del font di 14px */
+    color: #555; /* Colore del testo grigio medio */
+    margin-bottom: 6px; /* Spazio esterno inferiore di 6px */
 }
 
+/* Il selettore riguarda gli elementi con classe .reset: pulsante reset */
 .reset {
-    background-color: #ff9800;
-    color: white;
-    margin-left: 20px;
+    background-color: #ff9800; /* Sfondo arancione */
+    color: white; /* Testo bianco */
+    margin-left: 20px; /* Spazio esterno sinistro di 20px */
 }
 
-/* Layout per i controlli dei tiri e la visualizzazione della percentuale */
+/* Il selettore riguarda gli elementi con classi .shooting-row e .shoot-controls: layout verticale dei controlli di tiro */
 .shooting-row, .shoot-controls {
-    display: flex;
-    flex-direction: column; /* impila i controlli e poi i box sotto */
+    display: flex; /* Usa layout flex */
+    flex-direction: column; /* Dispone i controlli in colonna */
 }
 
+/* Il selettore riguarda gli elementi con classi .stats-row e .tempo-stats: riga di statistiche e percentuali */
 .stats-row, .tempo-stats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    display: flex; /* Usa layout flex */
+    flex-wrap: wrap; /* Permette il wrapping se lo spazio è limitato */
+    gap: 12px; /* Spazio di 12px tra i box */
+    justify-content: center; /* Centra gli elementi orizzontalmente */
+    margin-top: 20px; /* Spazio esterno superiore di 20px */
+    margin-bottom: 20px; /* Spazio esterno inferiore di 20px */
 }
 
+/* Il selettore riguarda gli elementi con classe .percent-box: contenitore delle percentuali */
 .percent-box {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 12px 14px;
-    background-color: #ebe9e6;
-    min-width: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    border: 1px solid #ddd; /* Bordo grigio chiaro */
+    border-radius: 8px; /* Angoli arrotondati di 8px */
+    padding: 12px 14px; /* Spazio interno verticale 12px, orizzontale 14px */
+    background-color: #ebe9e6; /* Sfondo beige chiaro */
+    min-width: 200px; /* Larghezza minima di 200px */
+    display: flex; /* Usa layout flex */
+    flex-direction: column; /* Dispone gli elementi in colonna */
+    align-items: center; /* Centra orizzontalmente gli elementi */
+    justify-content: center; /* Centra verticalmente gli elementi */
 }
 
+/* Il selettore riguarda gli elementi <label> all'interno di .percent-box: etichetta descrittiva */
 .percent-box label {
-    font-size: 12px;
-    color: #555;
-    margin-bottom: 6px;
+    font-size: 12px; /* Dimensione del font di 12px */
+    color: #555; /* Colore del testo grigio medio */
+    margin-bottom: 6px; /* Spazio esterno inferiore di 6px */
 }
 
+/* Il selettore riguarda gli elementi con classe .percent-value: valore percentuale evidente */
 .percent-value {
-    font-size: 16px;
-    font-weight: 700;
-    color: #0b727a;
+    font-size: 16px; /* Dimensione del font di 16px */
+    font-weight: 700; /* Font in grassetto */
+    color: #0b727a; /* Colore del testo blu-verde */
 }

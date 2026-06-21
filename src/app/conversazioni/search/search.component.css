@@ -1,91 +1,106 @@
+/* Il selettore riguarda gli elementi con classe .search-form: contenitore principale del form di ricerca */
 .search-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    display: flex; /* Usa layout flex per i campi */
+    flex-direction: column; /* Dispone i figli in colonna */
+    gap: 16px; /* Spazio di 16px tra i campi */
 }
 
+/* Il selettore riguarda gli elementi con classe .search-filters: contenitore dei filtri di ricerca */
 .search-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
+    display: flex; /* Usa layout flex orizzontale */
+    flex-wrap: wrap; /* Permette ai filtri di andare a capo su più righe */
+    gap: 16px; /* Spazio di 16px tra i filtri */
 }
 
+/* Il selettore riguarda gli elementi con classe .rangeField: campo di ricerca con range */
 .rangeField {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-width: 220px;
+    display: flex; /* Usa layout flex per il campo */
+    flex-direction: column; /* Dispone l'etichetta e il controllo in colonna */
+    gap: 8px; /* Spazio di 8px tra i figli */
+    min-width: 220px; /* Larghezza minima di 220px */
 }
 
+/* Il selettore riguarda gli elementi con classe .search-results: contenitore dei risultati di ricerca */
 .search-results {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    display: flex; /* Usa layout flex per i risultati */
+    flex-direction: column; /* Dispone i risultati in colonna */
+    gap: 16px; /* Spazio di 16px tra i risultati */
 }
 
+/* Il selettore riguarda gli elementi con classe .search-results-grid: griglia dei risultati */
 .search-results-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    display: grid; /* Usa layout grid */
+    grid-template-columns: 1fr 1fr; /* Due colonne uguali */
+    gap: 16px; /* Spazio di 16px tra gli elementi della griglia */
 }
 
+/* Il selettore riguarda gli elementi con classe .search-section: singola sezione di ricerca */
 .search-section {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    display: flex; /* Usa layout flex */
+    flex-direction: column; /* Dispone il contenuto in colonna */
+    gap: 12px; /* Spazio di 12px tra i figli */
 }
 
+/* Il selettore riguarda gli elementi con classe .total-results-summary: riepilogo del totale dei risultati */
 .total-results-summary {
-    padding: 16px;
-    background-color: #f9f7f4;
-    border-radius: 8px;
-    text-align: center;
+    padding: 16px; /* Spazio interno di 16px */
+    background-color: #f9f7f4; /* Sfondo chiaro crema */
+    border-radius: 8px; /* Angoli arrotondati di 8px */
+    text-align: center; /* Testo centrato */
 }
 
+/* Il selettore riguarda gli elementi con classe .search-filters-wrapper: involucro di tutti i filtri */
 .search-filters-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: flex-end;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    background-color: #fafaf8;
+    display: flex; /* Usa layout flex */
+    flex-wrap: wrap; /* Permette ai filtri di andare a capo */
+    gap: 16px; /* Spazio di 16px tra gli elementi */
+    align-items: flex-end; /* Allinea gli elementi inferiormente */
+    border: 1px solid #ddd; /* Bordo grigio chiaro */
+    border-radius: 8px; /* Angoli arrotondati di 8px */
+    padding: 16px; /* Spazio interno di 16px */
+    background-color: #fafaf8; /* Sfondo grigio chiaro */
 }
 
+/* Il selettore riguarda gli elementi <legend> all'interno di .search-filters-wrapper: titolo della sezione filtri */
 .search-filters-wrapper legend {
-    padding: 0 8px;
-    font-weight: 600;
-    color: #333;
-    font-size: 14px;
+    padding: 0 8px; /* Spazio orizzontale di 8px */
+    font-weight: 600; /* Font semibold */
+    color: #333; /* Colore del testo grigio scuro */
+    font-size: 14px; /* Dimensione del font di 14px */
 }
 
+/* Il selettore riguarda gli elementi con classe .subtext: testo secondario o descrittivo */
 .subtext {
-    color: #555;
-    font-size: 13px;
+    color: #555; /* Colore del testo grigio medio */
+    font-size: 13px; /* Dimensione del font di 13px */
 }
 
 @media (max-width: 860px) {
+    /* Il selettore riguarda la vista mobile: griglia dei risultati su una colonna sola */
     .search-results-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Una sola colonna sotto 860px */
     }
 }
 
-/* Toggle filtro: checkbox + label allineati */
+/* Il selettore riguarda gli elementi con classe .filters-toggle: wrapper per toggle filtro */
 .filters-toggle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 8px 0;
+    display: flex; /* Usa layout flex */
+    align-items: center; /* Allinea verticalmente i figli */
+    gap: 8px; /* Spazio di 8px tra gli elementi */
+    margin: 8px 0; /* Spazio verticale di 8px sopra e sotto */
 }
+
+/* Il selettore riguarda il label con classe .checkbox-label all'interno di .filters-toggle: etichetta cliccabile per il checkbox */
 .filters-toggle .checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    user-select: none;
+    display: flex; /* Usa layout flex */
+    align-items: center; /* Centra verticalmente gli elementi */
+    gap: 8px; /* Spazio di 8px tra checkbox e testo */
+    cursor: pointer; /* Mostra il puntatore mano */
+    user-select: none; /* Impedisce la selezione del testo */
 }
+
+/* Il selettore riguarda l'input checkbox all'interno di .filters-toggle: controllo checkbox */
 .filters-toggle input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
+    width: 16px; /* Larghezza di 16px */
+    height: 16px; /* Altezza di 16px */
 }

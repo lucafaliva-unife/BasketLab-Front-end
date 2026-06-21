@@ -1,92 +1,106 @@
 .compare-page {
-  max-width: 960px;
-  margin: 0 auto;
-  padding-bottom: 32px;
+  /* Il selettore riguarda gli elementi con classe .compare-page: contenitore principale della pagina di confronto */
+  max-width: 960px; /* Limita la larghezza massima del contenitore a 960px */
+  margin: 0 auto; /* Centra orizzontalmente il contenitore (margine automatico a sinistra e destra) */
+  padding-bottom: 32px; /* Aggiunge uno spazio interno inferiore di 32px */
 }
 
 .compare-form {
-  display: grid;
-  gap: 16px;
+  /* Il selettore riguarda gli elementi con classe .compare-form: modulo/area dei controlli per la comparazione */
+  display: grid; /* Imposta il layout interno come griglia CSS */
+  gap: 16px; /* Spazio di 16px tra le celle/elementi della griglia */
 }
 
 .compare-form .field {
-  max-width: 420px;
+  /* Il selettore riguarda gli elementi con classe .field discendenti di .compare-form: singoli campi del form */
+  max-width: 420px; /* Limita la larghezza massima del singolo campo a 420px */
 }
 
 .compare-form .actions {
-  justify-content: flex-end;
+  /* Il selettore riguarda gli elementi con classe .actions discendenti di .compare-form: contenitore dei pulsanti/azioni */
+  justify-content: flex-end; /* Allinea gli elementi figli (azione/pulsanti) verso destra */
 }
 
 .compare-results {
-  margin-top: 20px;
+  /* Il selettore riguarda gli elementi con classe .compare-results: area in cui vengono mostrati i risultati */
+  margin-top: 20px; /* Aggiunge uno spazio esterno superiore di 20px sopra i risultati */
 }
 
 .compare-table-wrapper {
-  overflow-x: auto;
+  /* Il selettore riguarda gli elementi con classe .compare-table-wrapper: involucro scrollabile della tabella */
+  overflow-x: auto; /* Abilita lo scroll orizzontale se il contenuto supera la larghezza del contenitore */
 }
 
 .compare-table-wrapper .table {
-  min-width: 720px;
+  /* Il selettore riguarda gli elementi con classe .table discendenti di .compare-table-wrapper: tabella dei risultati */
+  min-width: 720px; /* Impone una larghezza minima della tabella di 720px per evitare collassi stretti */
 }
 
 .comparison-summary {
-  margin-top: 24px;
-  padding: 16px;
-  background-color: #f9f9fb;
-  border-left: 4px solid #4caf50;
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  /* Il selettore riguarda gli elementi con classe .comparison-summary: blocco riassuntivo della comparazione */
+  margin-top: 24px; /* Spazio esterno superiore di 24px */
+  padding: 16px; /* Spazio interno di 16px tutto intorno */
+  background-color: #f9f9fb; /* Colore di sfondo chiaro per evidenziare il riassunto */
+  border-left: 4px solid #4caf50; /* Bordo sinistro spesso 4px di colore verde per evidenziazione */
+  border-radius: 6px; /* Angoli arrotondati di 6px */
+  display: flex; /* Usa layout flex per il contenuto interno */
+  flex-direction: column; /* Dispone gli elementi figli in colonna */
+  gap: 14px; /* Spazio di 14px tra gli elementi figli */
 }
 
 .comparison-summary .message {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 400;
-  color: #333;
-  line-height: 1.6;
-  letter-spacing: 0;
+  /* Il selettore riguarda gli elementi con classe .message all'interno di .comparison-summary: testo descrittivo del riassunto */
+  margin: 0; /* Rimuove i margini esterni predefiniti (utile per elementi <p>) */
+  font-size: 15px; /* Imposta la dimensione del font a 15px */
+  font-weight: 400; /* Peso del font normale (400) */
+  color: #333; /* Colore del testo grigio scuro */
+  line-height: 1.6; /* Altezza della linea per migliorare la leggibilità */
+  letter-spacing: 0; /* Spaziatura tra le lettere impostata a 0 */
 }
 
 .comparison-summary .message strong {
-  color: #1068ec;
-  font-weight: 600;
+  /* Il selettore riguarda gli elementi <strong> all'interno di .comparison-summary .message: testo enfatizzato */
+  color: #1068ec; /* Colore blu per enfatizzare il testo forte */
+  font-weight: 600; /* Peso del font più marcato per enfasi */
 }
 
 .comparison {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 18px 20px;
-  border-radius: 14px;
-  background: rgb(156, 204, 247);
-  border: 1px solid rgba(16, 104, 236, 0.15);
-  box-shadow: 0 12px 32px rgba(16, 104, 236, 0.08);
-  color: #2d3a4b;
-  font-size: 15px;
-  line-height: 1.7;
+  /* Il selettore riguarda gli elementi con classe .comparison: contenitore principale di una singola comparazione */
+  display: flex; /* Usa layout flex per organizzare contenuto interno */
+  flex-direction: column; /* Dispone gli elementi figli in colonna */
+  gap: 14px; /* Spazio di 14px tra gli elementi figli */
+  padding: 18px 20px; /* Padding verticale 18px e orizzontale 20px */
+  border-radius: 14px; /* Angoli arrotondati di 14px */
+  background: rgb(156, 204, 247); /* Colore di sfondo azzurro chiaro */
+  border: 1px solid rgba(16, 104, 236, 0.15); /* Bordo sottile semitrasparente blu */
+  box-shadow: 0 12px 32px rgba(16, 104, 236, 0.08); /* Ombratura soffusa per profondità */
+  color: #2d3a4b; /* Colore del testo scuro */
+  font-size: 15px; /* Dimensione del font */
+  line-height: 1.7; /* Altezza di linea per leggibilità */
 }
 
 .winner {
-  background: linear-gradient(135deg, #fff6d6 0%, #ffe89e 100%);
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-weight: 700;
-  color: #4a3d1b;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid rgba(255, 206, 81, 0.35);
-  box-shadow: 0 10px 20px rgba(255, 217, 92, 0.18);
+  /* Il selettore riguarda gli elementi con classe .winner: evidenza grafica del vincitore */
+  background: linear-gradient(135deg, #fff6d6 0%, #ffe89e 100%); /* Gradiente caldo di sfondo */
+  padding: 12px 18px; /* Spazio interno verticale 12px e orizzontale 18px */
+  border-radius: 12px; /* Angoli arrotondati */
+  font-weight: 700; /* Testo in grassetto per maggiore enfasi */
+  color: #4a3d1b; /* Colore del testo scuro-marrone */
+  display: inline-flex; /* Visualizza come elemento inline-flex per allineare icone/testo */
+  align-items: center; /* Centra verticalmente gli elementi figli */
+  gap: 8px; /* Spazio di 8px tra elementi interni */
+  border: 1px solid rgba(255, 206, 81, 0.35); /* Bordo semitrasparente caldo */
+  box-shadow: 0 10px 20px rgba(255, 217, 92, 0.18); /* Ombratura calda per profondità */
 }
 
 .directAnalysis {
-  color: rgb(101, 158, 234);
-  font-weight: bold;
-  font-size: large;
+  /* Il selettore riguarda gli elementi con classe .directAnalysis: testo/etichetta per analisi diretta */
+  color: rgb(101, 158, 234); /* Colore blu per indicare analisi o link */
+  font-weight: bold; /* Testo in grassetto */
+  font-size: large; /* Dimensione del font più grande rispetto al normale */
 }
 
 .chart-wrapper {
-  margin-top: 16px;
+  /* Il selettore riguarda gli elementi con classe .chart-wrapper: contenitore del grafico */
+  margin-top: 16px; /* Spazio esterno superiore di 16px sopra il grafico */
 }
