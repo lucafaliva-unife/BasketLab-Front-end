@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { TeamsComponent } from './conversazioni/teams management/teams.component';
-import { TeamComponent } from './conversazioni/teams management/team.component';
-import { PlayerComponent } from './conversazioni/players management/player.component';
-import { TrainComponent } from './conversazioni/train player/train.component';
+import { TeamsComponent } from './conversazioni/teams/teams.component';
+import { TeamComponent } from './conversazioni/team/team.component';
+import { PlayerComponent } from './conversazioni/player/player.component';
+import { TrainComponent } from './conversazioni/train/train.component';
 import { PredictComponent } from './conversazioni/predict/predict.component';
 import { SearchComponent } from './conversazioni/search/search.component';
-import { CompareComponent } from './conversazioni/compare players/compare.component';
+import { CompareComponent } from './conversazioni/compare/compare.component';
 
 export const routes: Routes= [
     { path: '', redirectTo: '/teams', pathMatch: 'full' },
