@@ -45,7 +45,7 @@
             <p class="message">Punteggio Player 2: <strong>{{ player2_score | number:'1.2-2' }}</strong></p>
             <p class="winner">
                 Migliore in termini di performance: <strong>{{ bestPlayer }}</strong>
-                <span> (differenza: {{ performanceDifference | number:'1.2-2' }})</span>
+                <span> (differenza: {{ (player1_score >= player2_score ? player1_score - player2_score : player2_score - player1_score) | number:'1.2-2' }})</span>
             </p>
         </div>
         <div class="comparison-summary">

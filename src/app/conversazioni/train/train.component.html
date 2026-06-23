@@ -28,7 +28,7 @@
                 <div class="stats-row">
                     <div class="percent-box">
                         <label>Percentuale canestri riusciti</label>
-                        <div class="percent-value">{{ canestriTentati <= 0 || canestriTentati < canestriRiusciti ? 0 : (canestriRiusciti / canestriTentati) * 100 | number:'1.2-2' }} %</div>
+                        <div class="percent-value">{{ (canestriTentati <= 0 || canestriTentati < canestriRiusciti ? 0 : (canestriRiusciti / canestriTentati) * 100) | number:'1.2-2' }} %</div>
                     </div>
                     <div class="percent-box" *ngIf="!trainsIsVoid">
                         <label>Record percentuale tiri</label>

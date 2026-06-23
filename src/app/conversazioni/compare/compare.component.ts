@@ -8,6 +8,7 @@ import { Train } from "../../modelli/train.model";
 import { Router } from "@angular/router";
 import { BaseChartDirective } from "ng2-charts";
 import { ChartConfiguration } from "chart.js";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
     standalone: true,
@@ -24,7 +25,6 @@ export class CompareComponent implements OnInit {
     trainsPlayer2: Train[]= [];
     player1_score: number= 0;
     player2_score: number= 0;
-    performanceDifference: number= 0;
     bestPlayer: string | null= null;
     compared: boolean= false;
     selectedPlayer1Id: string | null= null;
@@ -44,6 +44,7 @@ export class CompareComponent implements OnInit {
     nell'apposito array locale.
     */
     private resetPlayers(): void {
+        this.players= [];
         this.teamService.getTeams().subscribe(teams => {
             teams.forEach((team) => {
                 this.teamService.getPlayersByTeamId(team.id_team).subscribe(players => {
@@ -118,100 +119,129 @@ export class CompareComponent implements OnInit {
     }
 
     /*
+    Questa funzione prende in input l'ID di un player, scarica i suoi allenamenti e restituisce una promise che
+    diventa fullfilled quando la lista degli allenamenti è arrivata e che ritorna un errore oppure la lista.
+    */
+    private async getTrainsByPlayerId(playerId: string): Promise<Train[]> {
+        const promise: Promise<Train[]>= new Promise<Train[]>((resolve, reject) => {
+            this.playerService.getTrainsByPlayerId(playerId).subscribe({
+                next: (trains) => {
+                    resolve(trains);
+                },
+                error: (error) => {
+                    reject(error);
+                }
+            });
+        });
+        return promise;
+    }
+
+    /*
+    Questa funzione prende in input l'ID di un player, scarica i suoi dati e restituisce una promise che diventa
+    fullfilled quando i dati sono arrivati e che ritorna un errore oppure la stringa del nome del giocatore.
+    */
+    private async getPlayerNameById(playerId: string): Promise<string> {
+        const promise: Promise<string>= new Promise<string>((resolve, reject) => {
+            this.playerService.getPlayerById(playerId).subscribe({
+                next: (player) => {
+                    resolve(player.nome + " " + player.cognome);
+                },
+                error: (error) => {
+                    reject(error);
+                }
+            });
+        });
+        return promise;
+    }
+
+    /*
+    Questa funzione ritorna:
+    - una tupla di due stringhe con l'ID del player con lo score più alto e la stringa "Player n" dove n è 1 o 2
+      a seconda del player vincitore.
+    - null se gli score sono uguali.
+    */
+    private getBestPlayerId(): [string, string] | null {
+        if(this.player1_score > this.player2_score) {
+            return [this.selectedPlayer1Id!, "Player 1"];
+        } else if(this.player2_score > this.player1_score) {
+            return [this.selectedPlayer2Id!, "Player 2"];
+        } else {
+            return null;
+        }
+    }
+
+    /*
     Questa funzione riceve due ID di player, scarica i loro allenamenti assicurandosi che nessuno dei due ne abbia zero,
     calcola gli analytics di entrambi, mostra il trend nel grafico e sceglie il player migliore in base agli analytics.
     */
-    private resetAnalyticsAndTrains(selectedPlayer1Id: string, selectedPlayer2Id: string): void {
+    private async resetAnalyticsAndTrains(selectedPlayer1Id: string, selectedPlayer2Id: string): Promise<void> {
         // Scarico gli allenamenti del player 1
-        this.playerService.getTrainsByPlayerId(selectedPlayer1Id).subscribe({
-            next: (trains) => {
-                this.trainsPlayer1= trains;
-                // Controllo che il player 1 abbia allenamenti
-                if(this.trainsPlayer1.length === 0) {
-                    alert("Il Player 1 non ha allenamenti");
-                    return;
-                }
-                // Calcolo gli analytics del player 1
-                this.analyticsPlayer1= this.calculateAnalytics(this.trainsPlayer1);
-                // Scarico gli allenamenti del player 2
-                this.playerService.getTrainsByPlayerId(selectedPlayer2Id).subscribe({
-                    next: (trains) => {
-                        this.trainsPlayer2= trains;
-                        // Controllo che il player 2 abbia allenamenti
-                        if(this.trainsPlayer2.length === 0) {
-                            alert("Il Player 2 non ha allenamenti");
-                            return;
-                        }
-                        // Calcolo gli analytics del player 2
-                        this.analyticsPlayer2= this.calculateAnalytics(this.trainsPlayer2);
-                        // Calcolo i punteggi dei due player selezionati
-                        this.player1_score= this.calculateScore(this.trainsPlayer1);
-                        this.player2_score= this.calculateScore(this.trainsPlayer2);
-                        // Decido quale è il player migliore
-                        if(this.player1_score > this.player2_score) {
-                            // Recupero nome e cognome del player migliore
-                            this.playerService.getPlayerById(selectedPlayer1Id).subscribe({
-                                next: (player) => {
-                                    this.bestPlayer= player.nome + " " + player.cognome + " (Player 1)";
-                                },
-                                error: (err) => {
-                                    if(err.status === 404) {
-                                        alert("Errore: player non esistente");
-                                    } else {
-                                        alert("Errore " + err.status);
-                                    }
-                                    this.router.navigate(["/teams"]);
-                                    return;
-                                }
-                            });
-                            this.performanceDifference= this.player1_score - this.player2_score;
-                        } else if(this.player2_score > this.player1_score) {
-                            // Recupero nome e cognome del player migliore
-                            this.playerService.getPlayerById(selectedPlayer2Id).subscribe({
-                                next: (player) => {
-                                    this.bestPlayer= player.nome + " " + player.cognome + " (Player 2)";
-                                },
-                                error: (err) => {
-                                    if(err.status === 404) {
-                                        alert("Errore: player non esistente");
-                                    } else {
-                                        alert("Errore " + err.status);
-                                    }
-                                    this.router.navigate(["/teams"]);
-                                    return;
-                                }
-                            });
-                            this.performanceDifference= this.player2_score - this.player1_score;
-                        } else {
-                            this.bestPlayer= "Nessuno (Player con prestazioni uguali)";
-                            this.performanceDifference= 0;
-                        }
-                        // Mostro il confronto fra players, imposto gli alerts ed aggiorno il grafico dei trend
-                        this.compared= true;
-                        this.resetComparisonAlerts(this.analyticsPlayer1 as Omit<Train, "id_player" | "idx_train">, this.analyticsPlayer2 as Omit<Train, "id_player" | "idx_train">);
-                        this.resetTrend();
-                    },
-                    error: (err) => {
-                        if(err.status === 404) {
-                            alert("Errore: player 2 non esistente");
-                        } else {
-                            alert("Errore " + err.status);
-                        }
-                        this.router.navigate(["/teams"]);
-                        return;
-                    }
-                });
-            },
-            error: (err) => {
-                if(err.status === 404) {
-                    alert("Errore: player 1 non esistente");
+        try {
+            this.trainsPlayer1= await this.getTrainsByPlayerId(selectedPlayer1Id);
+        } catch(err) {
+            // Inizialmente err è di tipo unknown, quindi lo devo trattare come un HttpErrorResponse
+            if((err as HttpErrorResponse).status === 404) {
+                alert("Errore: player 1 non esistente");
+            } else {
+                alert("Errore " + (err as HttpErrorResponse).status);
+            }
+            this.router.navigate(["/teams"]);
+            return;
+        }
+        // Controllo che il player 1 abbia allenamenti
+        if(this.trainsPlayer1.length === 0) {
+            alert("Il Player 1 non ha allenamenti");
+            return;
+        }
+        // Calcolo gli analytics del player 1
+        this.analyticsPlayer1= this.calculateAnalytics(this.trainsPlayer1);
+        // Scarico gli allenamenti del player 2
+        try {
+            this.trainsPlayer2= await this.getTrainsByPlayerId(selectedPlayer2Id);
+        } catch(err) {
+            // Inizialmente err è di tipo unknown, quindi lo devo trattare come un HttpErrorResponse
+            if((err as HttpErrorResponse).status === 404) {
+                alert("Errore: player 2 non esistente");
+            } else {
+                alert("Errore " + (err as HttpErrorResponse).status);
+            }
+            this.router.navigate(["/teams"]);
+            return;
+        }
+        // Controllo che il player 2 abbia allenamenti
+        if(this.trainsPlayer2.length === 0) {
+            alert("Il Player 2 non ha allenamenti");
+            return;
+        }
+        // Calcolo gli analytics del player 2
+        this.analyticsPlayer2= this.calculateAnalytics(this.trainsPlayer2);
+        // Calcolo i punteggi dei due player selezionati
+        this.player1_score= this.calculateScore(this.trainsPlayer1);
+        this.player2_score= this.calculateScore(this.trainsPlayer2);
+        // Decido quale è il player migliore
+        const bestPlayerData: [string, string] | null= this.getBestPlayerId();
+        if(bestPlayerData) {
+            // Se gli score sono diversi allora recupero nome e cognome del player migliore
+            try {
+                this.bestPlayer= await this.getPlayerNameById(bestPlayerData[0]) + " (" + bestPlayerData[1] + ")";
+            } catch(err) {
+                // Inizialmente err è di tipo unknown, quindi lo devo trattare come un HttpErrorResponse
+                if((err as HttpErrorResponse).status === 404) {
+                    alert("Errore: " + bestPlayerData[1] + " non esistente");
                 } else {
-                    alert("Errore " + err.status);
+                    alert("Errore " + (err as HttpErrorResponse).status);
                 }
                 this.router.navigate(["/teams"]);
                 return;
             }
-        });
+        } else {
+            // Se gli score sono uguali allora mostro che nessun player è migliore
+            this.bestPlayer= "Nessuno (Player con prestazioni uguali)";
+        }
+        // Mostro il confronto fra players, imposto gli alerts ed aggiorno il grafico dei trend
+        this.compared= true;
+        this.resetComparisonAlerts(this.analyticsPlayer1 as Omit<Train, "id_player" | "idx_train">, this.analyticsPlayer2 as Omit<Train, "id_player" | "idx_train">);
+        this.resetTrend();
     }
 
     /*
@@ -312,7 +342,6 @@ export class CompareComponent implements OnInit {
         this.analyticsPlayer1= {};
         this.analyticsPlayer2= {};
         this.bestPlayer= null;
-        this.performanceDifference= 0;
         this.compared= false;
         this.player1_score= 0;
         this.player2_score= 0;
