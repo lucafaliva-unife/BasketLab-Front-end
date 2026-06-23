@@ -19,7 +19,6 @@ export class TeamComponent implements OnInit {
     selectedTeamId: string | null= null;
     newPlayer: Partial<Omit<Player, "id_player">>= {};
     players: Player[]= [];
-    teamIsVoid: boolean= false;
     teamAnalytics: Partial<Omit<Train, "id_player" | "idx_train">>= {};
     analyticsIsVoid: boolean= false;
     selectedTeam: Partial<Team>= {};
@@ -27,7 +26,6 @@ export class TeamComponent implements OnInit {
     playerModifyState: { [key: string]: boolean }= {}; // Dizionario che associa l'ID del player al suo modify state
     showForm: boolean= false;
     svincolati: boolean= false;
-    n_players: number= 0;
 
     constructor(private teamService: TeamService, private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {}
 
@@ -86,17 +84,14 @@ export class TeamComponent implements OnInit {
     private resetRankingAndModifyState(): void {
         if(this.selectedTeamId) {
             if(this.selectedTeam.nome === "Svincolati") {
+                // Se il team è quello degli svincolati scarico i player in ordine casuale
                 this.svincolati= true;
                 this.teamService.getPlayersByTeamId(this.selectedTeamId).subscribe({
                     next: (players) => {
                         this.players= players;
-                        if(this.players.length === 0) {
-                            this.teamIsVoid= true;
-                            this.n_players= 0;
-                        } else {
-                            this.teamIsVoid= false;
+                        // Se il team ha almeno un giocatore allora imposto gli stati di modifica a 'false'
+                        if(this.players.length !== 0) {
                             this.resetPlayersModifyState();
-                            this.n_players= this.players.length;
                         }
                     },
                     error: (err) => {
@@ -109,17 +104,14 @@ export class TeamComponent implements OnInit {
                     }
                 });
             } else {
+                // Se il team non è quello degli svincolati scarico i player in ordine decrescente di performance
                 this.svincolati= false;
                 this.teamService.getRankingByTeamId(this.selectedTeamId).subscribe({
                     next: (players) => {
                         this.players= players;
-                        if(this.players.length === 0) {
-                            this.teamIsVoid= true;
-                            this.n_players= 0;
-                        } else {
-                            this.teamIsVoid= false;
+                        // Se il team ha almeno un giocatore allora imposto gli stati di modifica a 'false'
+                        if(this.players.length !== 0) {
                             this.resetPlayersModifyState();
-                            this.n_players= this.players.length;
                         }
                     },
                     error: (err) => {

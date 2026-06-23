@@ -36,9 +36,9 @@
         <h2 class="message">Analytics non disponibile per questo Team</h2>
     </ng-template>
 </section>
-<section *ngIf="!teamIsVoid; else teamIsVoidMessage" class="container">
+<section *ngIf="players.length > 0; else teamIsVoidMessage" class="container">
     <div class="message">
-        Numero di Players presenti: {{ n_players }}
+        Numero di Players presenti: {{ players.length }}
     </div>
     <h1 class="title" *ngIf="!svincolati; else svincolatiMessage">Elenco Players ordinati decrescentemente per peformance</h1>
     <ng-template #svincolatiMessage>

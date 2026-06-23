@@ -3,7 +3,7 @@
     <form class="search-form" #form="ngForm" (ngSubmit)="search(searchTerm)">
         <div class="field">
             <label for="searchTerm">Keyword:</label>
-            <input type="text" id="searchTerm" name="searchTerm" [(ngModel)]="searchTerm" placeholder="Cerca team o player..." required>
+            <input type="search" id="searchTerm" name="searchTerm" [(ngModel)]="searchTerm" placeholder="Cerca team o player..." required>
         </div>
         <button class="btn primary" type="submit" [disabled]="form.invalid">Cerca</button>
     </form>
