@@ -61,11 +61,12 @@ export class TrainComponent implements OnInit, OnDestroy {
     */
     resetRecord(): void {
         if(this.selectedPlayerId) {
-            // Calcolo i record del player
+            // Scarico gli allenamenti del player
             this.playerService.getTrainsByPlayerId(this.selectedPlayerId).subscribe({
                 next: (trains) => {
                     if(trains.length !== 0) {
                         const playerTrains= trains;
+                        // Calcolo i record del player in ogni esercizio
                         var percentualeTiriPlayer: number[]= [];
                         var tempoCorsaPlayer: number[]= [];
                         playerTrains.forEach((train) => {
@@ -74,11 +75,13 @@ export class TrainComponent implements OnInit, OnDestroy {
                         });
                         this.recordPercentualeTiriPlayer= Math.max(...percentualeTiriPlayer);
                         this.recordTempoCorsaPlayer= Math.min(...tempoCorsaPlayer);
+                        // Memorizzo il fatto che il player ha almeno un allenamento
                         this.trainsIsVoid= false;
                     } else {
                         // Se il player non ha allenamenti uso come valori indicativi -1 per entrambi i record
                         this.recordPercentualeTiriPlayer= -1;
                         this.recordTempoCorsaPlayer= -1;
+                        // Memorizzo il fatto che il player non ha allenamenti
                         this.trainsIsVoid= true;
                     }
                 },
@@ -117,9 +120,7 @@ export class TrainComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         // Distruggo il timer nel caso in cui sia attivo.
-        if(this.clockMode) {
-            clearInterval(this.interval);
-        }
+        this.stop();
     }
 
     /*
@@ -185,11 +186,10 @@ export class TrainComponent implements OnInit, OnDestroy {
     */
     trainPlayer(): void {
         if(this.selectedPlayerId) {
-            if(this.clockMode) {
-                clearInterval(this.interval);
-                this.clockMode= false;
-            }
+            // Se il timer è attivo allora lo disabilito
+            this.stop();
             if(
+                // Validazione dei dati inseriti
                 this.canestriRiusciti >= 0 &&
                 this.canestriTentati > 0 &&
                 this.canestriRiusciti <= this.canestriTentati &&
@@ -198,6 +198,7 @@ export class TrainComponent implements OnInit, OnDestroy {
                 this.tempoCorsaMinuti >= 0 &&
                 !(this.tempoCorsaCentisecondi === 0 && this.tempoCorsaSecondi === 0 && this.tempoCorsaMinuti === 0)
             ) {
+                // Calcolo dei parametri di allenamento da inviare all'API
                 this.train.percentuale_tiri= (this.canestriRiusciti / this.canestriTentati) * 100;
                 this.train.tempo_corsa= this.tempoCorsaMinuti * 60 + this.tempoCorsaSecondi + this.tempoCorsaCentisecondi / 100;
             } else {
@@ -208,6 +209,7 @@ export class TrainComponent implements OnInit, OnDestroy {
             if(!conferma) {
                 return;
             }
+            // Invio i dati di allenamento all'API e resetto il timer, i record ed i canestri
             this.playerService.trainPlayerById(this.selectedPlayerId, this.train as Omit<Train, "idx_train" | "id_player">).subscribe({
                 next: () => {
                     this.reset();
