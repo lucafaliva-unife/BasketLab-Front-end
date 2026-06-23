@@ -15,10 +15,8 @@ import { TeamService } from '../../servizi/team.service';
 export class TeamsComponent implements OnInit {
     newTeam: Partial<Omit<Team, "id_team">>= {};
     teams: Team[]= [];
-    noTeams: boolean= false;
     modifyState: { [key: string]: boolean }= {}; // Dizionario che associa l'ID del team al suo modify state
     showForm: boolean= false;
-    n_teams: number= 0;
 
     constructor(private teamService: TeamService) {}
 
@@ -38,13 +36,9 @@ export class TeamsComponent implements OnInit {
     private resetTeamsAndModifyState(): void {
         this.teamService.getTeamsRanking().subscribe(teams => {
             this.teams= teams;
-            if(this.teams.length === 0) {
-                this.noTeams= true;
-                this.n_teams= 0;
-            } else {
-                this.noTeams= false;
+            // Se esiste almeno un team allora imposto gli stati di modifica a 'false'
+            if(this.teams.length !== 0) {
                 this.resetModifyState();
-                this.n_teams= this.teams.length;
             }
         });
     }
