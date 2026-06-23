@@ -95,10 +95,12 @@ export class CompareComponent implements OnInit {
     Questa funzione imposta il contenuto degli alerts relativi al confronto diretto fra gli analyitics dei players.
     */
     private resetComparisonAlerts(analytics1: Omit<Train, "id_player" | "idx_train">, analytics2: Omit<Train, "id_player" | "idx_train">): void {
+        // Converto le misure in stringhe che rappresentano numeri a 2 cifre dopo la virgola
         const tiri1= analytics1.percentuale_tiri.toFixed(2);
         const tiri2= analytics2.percentuale_tiri.toFixed(2);
         const tempo1= analytics1.tempo_corsa.toFixed(2);
         const tempo2= analytics2.tempo_corsa.toFixed(2);
+        // Decido quali alerts mostrare
         if(analytics1.percentuale_tiri > analytics2.percentuale_tiri) {
             this.percentualeTiriComparison= `Il Player 1 ha una percentuale tiri maggiore del Player 2: ${tiri1}% > ${tiri2}%`;
         } else if(analytics2.percentuale_tiri > analytics1.percentuale_tiri) {
@@ -147,6 +149,7 @@ export class CompareComponent implements OnInit {
                         this.player2_score= this.calculateScore(this.trainsPlayer2);
                         // Decido quale è il player migliore
                         if(this.player1_score > this.player2_score) {
+                            // Recupero nome e cognome del player migliore
                             this.playerService.getPlayerById(selectedPlayer1Id).subscribe({
                                 next: (player) => {
                                     this.bestPlayer= player.nome + " " + player.cognome + " (Player 1)";
@@ -162,10 +165,8 @@ export class CompareComponent implements OnInit {
                                 }
                             });
                             this.performanceDifference= this.player1_score - this.player2_score;
-                            this.compared= true;
-                            this.resetComparisonAlerts(this.analyticsPlayer1 as Omit<Train, "id_player" | "idx_train">, this.analyticsPlayer2 as Omit<Train, "id_player" | "idx_train">);
-                            this.resetTrend();
                         } else if(this.player2_score > this.player1_score) {
+                            // Recupero nome e cognome del player migliore
                             this.playerService.getPlayerById(selectedPlayer2Id).subscribe({
                                 next: (player) => {
                                     this.bestPlayer= player.nome + " " + player.cognome + " (Player 2)";
@@ -181,16 +182,14 @@ export class CompareComponent implements OnInit {
                                 }
                             });
                             this.performanceDifference= this.player2_score - this.player1_score;
-                            this.compared= true;
-                            this.resetComparisonAlerts(this.analyticsPlayer1 as Omit<Train, "id_player" | "idx_train">, this.analyticsPlayer2 as Omit<Train, "id_player" | "idx_train">);
-                            this.resetTrend();
                         } else {
                             this.bestPlayer= "Nessuno (Player con prestazioni uguali)";
                             this.performanceDifference= 0;
-                            this.compared= true;
-                            this.resetComparisonAlerts(this.analyticsPlayer1 as Omit<Train, "id_player" | "idx_train">, this.analyticsPlayer2 as Omit<Train, "id_player" | "idx_train">);
-                            this.resetTrend();
                         }
+                        // Mostro il confronto fra players, imposto gli alerts ed aggiorno il grafico dei trend
+                        this.compared= true;
+                        this.resetComparisonAlerts(this.analyticsPlayer1 as Omit<Train, "id_player" | "idx_train">, this.analyticsPlayer2 as Omit<Train, "id_player" | "idx_train">);
+                        this.resetTrend();
                     },
                     error: (err) => {
                         if(err.status === 404) {

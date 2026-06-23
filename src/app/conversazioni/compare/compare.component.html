@@ -58,5 +58,5 @@
             <canvas baseChart [data]="playersTrend" [options]="chartOptions" [type]="'line'"></canvas>
         </div>
     </section>
-    <button class="btn cancel" (click)="reset()">Reset</button>
+    <button class="btn cancel" *ngIf="compared" (click)="reset()">Reset</button>
 </div>
