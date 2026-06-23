@@ -18,6 +18,7 @@
 
 /* Alerts: stile generale per i messaggi di avviso/indicazione */
 .alert {
+    margin-top: 20px; /* Separazione dall'elemento superiore di 20px */
     padding: 10px 12px; /* Spazio interno verticale 10px, orizzontale 12px */
     border-radius: 6px; /* Angoli arrotondati di 6px */
     margin-bottom: 8px; /* Spazio esterno inferiore di 8px */

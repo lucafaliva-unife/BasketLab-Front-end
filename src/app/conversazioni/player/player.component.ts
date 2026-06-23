@@ -7,6 +7,7 @@ import { Train } from '../../modelli/train.model';
 import { Player } from '../../modelli/player.model';
 import { TeamService } from '../../servizi/team.service';
 import { PlayerService } from '../../servizi/player.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
     standalone: true,
@@ -20,10 +21,8 @@ export class PlayerComponent implements OnInit {
     selectedPlayer: Partial<Player>= {};
     selectedPlayerId: string | null= null;
     trains: Partial<Train>[]= [];
-    trainIsVoid: boolean= false;
     teams: Team[]= [];
     teamName: string | null= null;
-    n_trains: number= 1;
     maxTrains: number= 1;
     svincolato: boolean= false;
     analyticsPercentualeTiri: number= 0;
@@ -56,12 +55,14 @@ export class PlayerComponent implements OnInit {
             this.tempoCorsaAlert= false;
             this.percentualeTiriAlert= false;
         } else {
+            // Scarico l'analytics del team
             this.teamService.getAnalyticsByTeamId(this.selectedPlayer.id_team!).subscribe({
                 next: (analytics) => {
                     if(Object.keys(analytics).length === 0) {
                         this.tempoCorsaAlert= false;
                         this.percentualeTiriAlert= false;
                     } else {
+                        // Confronto l'analytics del team con l'analytics del giocatore
                         if(this.analyticsPercentualeTiri < analytics.percentuale_tiri) {
                             this.percentualeTiriAlert= true;
                         }
@@ -83,8 +84,8 @@ export class PlayerComponent implements OnInit {
         // Controllo se l'ultimo allenamento ha migliorato o peggiorato le prestazioni rispetto all'allenamento precedente.
         // Prima verifico che siano presenti almeno 2 allenamenti
         if(this.trains.length >= 2) {
-            const performanceNew: number= (this.trains[this.n_trains - 1].percentuale_tiri! + (100/this.trains[this.n_trains - 1].tempo_corsa!)) / 2;
-            const performanceOld: number= (this.trains[this.n_trains - 2].percentuale_tiri! + (100/this.trains[this.n_trains - 2].tempo_corsa!)) / 2;
+            const performanceNew: number= (this.trains[this.trains.length - 1].percentuale_tiri! + (100/this.trains[this.trains.length - 1].tempo_corsa!)) / 2;
+            const performanceOld: number= (this.trains[this.trains.length - 2].percentuale_tiri! + (100/this.trains[this.trains.length - 2].tempo_corsa!)) / 2;
             if(performanceNew > performanceOld) {
                 this.miglioramentoAlert= true;
                 this.peggioramentoAlert= false;
@@ -110,13 +111,8 @@ export class PlayerComponent implements OnInit {
         this.playerService.getTrainsByPlayerId(playerId!).subscribe({
             next: (trains) => {
                 this.trains= trains;
-                if(this.trains.length === 0) {
-                    this.trainIsVoid= true;
-                    this.n_trains= 0;
-                } else {
-                    this.trainIsVoid= false;
-                    this.n_trains= this.trains.length;
-                    // Imposto gli alerts
+                // Imposto gli alerts se il giocatore ha almeno un allenamento
+                if(this.trains.length !== 0) {
                     this.resetAlerts();
                 }
             },
@@ -133,49 +129,82 @@ export class PlayerComponent implements OnInit {
     }
 
     /*
+    Questa funzione prende in input l'ID di un player, scarica i suoi dati e ritorna una promise che quando diventa
+    fullfilled restituisce un errore oppure i dati del player.
+    */
+    private async getPlayerById(playerId: string): Promise<Player> {
+        const promise: Promise<Player>= new Promise<Player>((resolve, reject) => {
+            this.playerService.getPlayerById(playerId).subscribe({
+                next: (player) => {
+                    resolve(player);
+                },
+                error: (error) => {
+                    reject(error);
+                }
+            });
+        });
+        return promise;
+    }
+
+    /*
+    Questa funzione prende in input l'ID di un team, scarica i dati del team e restituisce una promise che quando
+    diventa fullfilled ritorna un errore oppure il nome del team.
+    */
+    private async getTeamNameById(teamId: string): Promise<string> {
+        const promise: Promise<string>= new Promise<string>((resolve, reject) => {
+            this.teamService.getTeamById(teamId).subscribe({
+                next: (team) => {
+                    resolve(team.nome);
+                },
+                error: (error) => {
+                    reject(error);
+                }
+            });
+        });
+        return promise;
+    }
+
+    /*
     Questa funzione scarica i dati del player, i dati del suo team ed i suoi allenamenti.
     Inoltre controlla se è svincolato o no e calcola gli analytics per decidere se mostrare gli alerts.
     In ultimo, scarica l'elenco dei team per poter eventualmente cambiare team al player.
     */
-    private resetAllData(): void {
+    private async resetAllData(): Promise<void> {
         if(this.selectedPlayerId) {
-            this.playerService.getPlayerById(this.selectedPlayerId).subscribe({
-                next: (player) => {
-                    // Recupero i dati del player
-                    this.selectedPlayer= player;
-                    // Recupero il nome del team del player
-                    this.teamService.getTeamById((this.selectedPlayer as Player).id_team).subscribe({
-                        next: (team) => {
-                            this.teamName= team.nome;
-                            if(this.teamName === "Svincolati") {
-                                this.svincolato= true;
-                            } else {
-                                this.svincolato= false;
-                            }
-                        },
-                        error: (err) => {
-                            if(err.status === 404) {
-                                alert("Errore: il team del player selezionato non esiste");
-                            } else {
-                                alert("Errore " + err.status);
-                            }
-                            this.router.navigate(["/teams"]);
-                            return;
-                        }
-                    });
-                    // Recupero gli allenamenti del player, calcolo i suoi analytics e decido se mostrare gli alert
-                    this.resetTrains(this.selectedPlayerId!);
-                },
-                error: (err) => {
-                    if(err.status === 404) {
-                        alert("Errore: player non esistente");
-                    } else {
-                        alert("Errore " + err.status);
-                    }
-                    this.router.navigate(["/teams"]);
-                    return;
+            // Recupero i dati del player
+            try {
+                this.selectedPlayer= await this.getPlayerById(this.selectedPlayerId);
+            } catch(err) {
+                // Inizialmente err è di tipo unknown, quindi lo devo trattare come un HttpErrorResponse
+                if((err as HttpErrorResponse).status === 404) {
+                    alert("Errore: player non esistente");
+                } else {
+                    alert("Errore " + (err as HttpErrorResponse).status);
                 }
-            });
+                this.router.navigate(["/teams"]);
+                return;
+            }
+            // Recupero il nome del team del player e controllo se è "Svincolati"
+            try {
+                this.teamName= await this.getTeamNameById((this.selectedPlayer as Player).id_team);
+                // Controllo se il giocatore è svincolato
+                if(this.teamName === "Svincolati") {
+                    this.svincolato= true;
+                } else {
+                    this.svincolato= false;
+                }
+            } catch(err) {
+                // Inizialmente err è di tipo unknown, quindi lo devo trattare come un HttpErrorResponse
+                if((err as HttpErrorResponse).status === 404) {
+                    alert("Errore: il team del player selezionato non esiste");
+                } else {
+                    alert("Errore " + (err as HttpErrorResponse).status);
+                }
+                this.router.navigate(["/teams"]);
+                return;
+            }
+            // Recupero gli allenamenti del player, calcolo i suoi analytics e decido se mostrare gli alert
+            this.resetTrains(this.selectedPlayerId);
             // Recupero tutti i team
             this.teamService.getTeams().subscribe(teams => {
                 this.teams= teams;
@@ -239,6 +268,7 @@ export class PlayerComponent implements OnInit {
         if(this.selectedPlayerId) {
             const editedPlayerData: Omit<Player, "id_player">= this.selectedPlayer as Omit<Player, "id_player">;
             if(
+                // Validazione dati inseriti
                 editedPlayerData.nome && editedPlayerData.nome.trim() !== "" &&
                 editedPlayerData.cognome && editedPlayerData.cognome.trim() !== "" &&
                 editedPlayerData.data_nascita &&
@@ -247,12 +277,16 @@ export class PlayerComponent implements OnInit {
                 editedPlayerData.ruolo &&
                 editedPlayerData.id_team
             ) {
+                // Validazione peso e altezza
                 if(!this.validateHeightWeight(editedPlayerData.altezza, editedPlayerData.peso)) {
                     return;
                 }
+                // Invio al server i dati modificati ed aggiorno i dati del componente
                 this.playerService.editPlayerById(this.selectedPlayerId, editedPlayerData).subscribe({
                     next: () => {
+                        // Aggiorno i dati del componente
                         this.resetAllData();
+                        // Ripristino lo stato di modifica del player a 'false'
                         this.modifyState= false;
                     },
                     error: (err) => {
@@ -288,9 +322,11 @@ export class PlayerComponent implements OnInit {
             if(!conferma) {
                 return;
             }
+            // Invio al server una richiesta di eliminazione del player e ritorno alla pagina del suo team
             this.playerService.deletePlayerById(this.selectedPlayerId).subscribe({
                 next: () => {
                     if(this.selectedPlayer.id_team) {
+                        // Ritorno al team del player
                         this.router.navigate(["/teams", this.selectedPlayer.id_team]);
                     } else {
                         this.router.navigate(["/teams"]);
