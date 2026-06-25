@@ -112,8 +112,8 @@ export class PredictComponent implements OnInit {
         this.tempoCorsaWeigth= 1 - this.percentualeTiriWeigth; // Calcolo il peso del tempo corsa
         const percentualeTiri_1= this.teamAnalytics_1.percentuale_tiri ?? 0; // Uso come default 0
         const tempoCorsa_1= this.teamAnalytics_1.tempo_corsa ?? 1; // Uso come default 1
-        const percentualeTiri_2 = this.teamAnalytics_2.percentuale_tiri ?? 0; // Uso come default 0
-        const tempoCorsa_2 = this.teamAnalytics_2.tempo_corsa ?? 1; // Uso come default 1
+        const percentualeTiri_2= this.teamAnalytics_2.percentuale_tiri ?? 0; // Uso come default 0
+        const tempoCorsa_2= this.teamAnalytics_2.tempo_corsa ?? 1; // Uso come default 1
         // Calcolo lo score del team 1
         const teamScore_1= (
             percentualeTiri_1 * this.percentualeTiriWeigth

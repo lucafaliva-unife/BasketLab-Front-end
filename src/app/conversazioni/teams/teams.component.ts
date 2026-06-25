@@ -24,6 +24,7 @@ export class TeamsComponent implements OnInit {
     Questa funzione imposta lo stato di modifica di tutti i team a 'false'.
     */
     private resetModifyState(): void {
+        this.modifyState= {};
         this.teams.forEach(team => {
             this.modifyState[team.id_team]= false;
         });
@@ -115,7 +116,7 @@ export class TeamsComponent implements OnInit {
                     } else if(err.status === 400) {
                         alert("Errore: il server ha rifiutato i dati inviati");
                     } else if(err.status === 409) {
-                        alert("Errore: non puoi modificare il team degli svincolati e non puoi rinominare un team in 'Svincolati'");
+                        alert("Errore: non puoi rinominare un team in 'Svincolati' o con il nome di un altro team");
                     } else {
                         alert("Errore: " + err.error);
                     }

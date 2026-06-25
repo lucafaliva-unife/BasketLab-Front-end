@@ -38,6 +38,9 @@
         <label for="teamCity">Città:</label>
         <input type="text" id="teamCity" name="teamCity" [(ngModel)]="newTeam.citta" required>
     </div>
-    <button class="btn primary" type="submit" [disabled]="form.invalid">Conferma</button>
+    <div class="actions">
+        <button class="btn primary" type="submit" [disabled]="form.invalid">Conferma</button>
+        <button class="btn danger" type="reset" [disabled]="form.invalid">Cancella</button>
+    </div>
 </form>
 <button class="btn cancel" (click)="showForm= false" *ngIf="showForm">Annulla</button>
