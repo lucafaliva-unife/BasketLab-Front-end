@@ -6,6 +6,7 @@ import { TrainComponent } from './conversazioni/train/train.component';
 import { PredictComponent } from './conversazioni/predict/predict.component';
 import { SearchComponent } from './conversazioni/search/search.component';
 import { CompareComponent } from './conversazioni/compare/compare.component';
+import { BuilderComponent } from './conversazioni/builder/builder.component';
 
 export const routes: Routes= [
     { path: '', redirectTo: '/teams', pathMatch: 'full' },
@@ -15,5 +16,6 @@ export const routes: Routes= [
     { path: 'players/:id/train', component: TrainComponent },
     { path: 'predict', component: PredictComponent },
     { path: 'search', component: SearchComponent },
-    { path: 'compare', component: CompareComponent }
+    { path: 'compare', component: CompareComponent },
+    { path: 'builder', component: BuilderComponent }
 ];

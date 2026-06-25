@@ -1,0 +1,47 @@
+<section class="container">
+    <h1 class="title centered">Dream Team Builder</h1>
+    <h2 class="subtitle">Osserva come sarebbe il team dei tuoi sogni!</h2>
+    <div *ngIf="allPlayers.length > 0; else noPlayers">
+        <section>
+            <form #form="ngForm" (ngSubmit)="addPlayer()">
+                <div class="field">
+                    <label for="newPlayer">Seleziona un Player da aggiungere:</label>
+                    <select id="newPlayer" name="newPlayer" [(ngModel)]="newPlayer" required>
+                        <option *ngFor="let player of allPlayers" [ngValue]="player">{{ player.nome }} {{ player.cognome }}</option>
+                    </select>
+                </div>
+                <button class="btn primary" type="submit" [disabled]="form.invalid">Aggiungi</button>
+            </form>
+        </section>
+        <div *ngIf="selectedPlayers.length > 0">
+            <h2 class="message">Giocatori selezionati</h2>
+            <ul class="selectedPlayers">
+                <li *ngFor="let player of selectedPlayers">
+                    <div class="selectedPlayer">
+                        <strong>{{ player.nome }} {{ player.cognome }}</strong> - {{ player.ruolo }}
+                        <button class="btn secondary" (click)="removePlayer(player)">Rimuovi</button>
+                    </div>
+                </li>
+            </ul>
+            <h2 class="message centered">Analytics ottenuto</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Percentuale tiri</th>
+                        <th>Tempo corsa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ analytics!.percentuale_tiri | number:'1.2-2' }} %</td>
+                        <td>{{ analytics!.tempo_corsa | number:'1.2-2' }} sec.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn danger" (click)="reset()">Reset</button>
+        </div>
+    </div>
+    <ng-template #noPlayers>
+        <h2 class="message">Nessun Player presente</h2>
+    </ng-template>
+</section>
