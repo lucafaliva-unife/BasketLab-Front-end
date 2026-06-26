@@ -33,15 +33,20 @@ export class PredictComponent implements OnInit {
     constructor(private teamService: TeamService, private router: Router) {}
 
     /*
-    Questa funzione scarica l'elenco dei team, controlla che ce ne sia almeno uno ed esclude quello degli svincolati.
+    Questa funzione scarica l'elenco dei team e filtra solo quelli con un analytics e che non abbiano il nome "Svincolati".
     */
     resetTeams(): void {
+        this.teams= [];
         this.teamService.getTeams().subscribe(teams => {
-            this.teams= teams;
-            // Se esiste almeno un team allora rimuovo quello degli svincolati dalla lista
-            if(this.teams.length !== 0) {
-                this.teams= this.teams.filter(team => team.nome !== "Svincolati");
-            }
+            // Itero su tutti i team
+            teams.forEach((team) => {
+                this.teamService.getAnalyticsByTeamId(team.id_team).subscribe((analytics) => {
+                    // Se il team ha un analytics e non è quello degli svincolati allora lo inserisco
+                    if(Object.keys(analytics).length !== 0 && team.nome !== "Svincolati") {
+                        this.teams.push(team);
+                    }
+                });
+            });
         });
     }
 

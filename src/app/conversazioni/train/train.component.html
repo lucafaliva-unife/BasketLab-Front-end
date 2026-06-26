@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            <button class="btn primary" type="submit" [disabled]="form.invalid">Conferma</button>
+            <button class="btn primary" type="submit" [disabled]="form.invalid || (tempoCorsaMinuti == 0 && tempoCorsaSecondi == 0 && tempoCorsaCentisecondi == 0) || canestriTentati == 0">Conferma</button>
         </form>
         <a [routerLink]="['/players', selectedPlayerId]">
             <button class="btn cancel">Annulla e torna al Player</button>

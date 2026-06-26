@@ -41,15 +41,22 @@ export class CompareComponent implements OnInit {
 
     /*
     Questa funzione scarica tutti i team, itera su ciascuno di essi ed ogni volta estrae i player per metterli
-    nell'apposito array locale.
+    nell'apposito array locale se hanno almeno un allenamento.
     */
     private resetPlayers(): void {
         this.players= [];
         this.teamService.getTeams().subscribe(teams => {
+            // Itero su tutti i team
             teams.forEach((team) => {
                 this.teamService.getPlayersByTeamId(team.id_team).subscribe(players => {
+                    // Itero su tutti i player del team
                     players.forEach((player) => {
-                        this.players.push(player);
+                        this.playerService.getTrainsByPlayerId(player.id_player).subscribe((trains) => {
+                            // Se il player ha almeno un allenamento allora lo includo
+                            if(trains.length > 0) {
+                                this.players.push(player);
+                            }
+                        });
                     });
                 });
             });

@@ -15,10 +15,12 @@
     flex-wrap: wrap;
 }
 
+/* Allinea a sinistra la label del team in casa */
 .casa label {
     text-align: left;
 }
 
+/* Allinea a destra la label del team in trasferta */
 .trasferta label {
     text-align: right;
 }
