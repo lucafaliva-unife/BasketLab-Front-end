@@ -26,10 +26,8 @@
             </div>
         </div>
         <div class="dateRow">
-            <div class="fieldMatch">
-                <label [for]="'data_' + match.id_match">Data Match:</label>
-                <input type="date" [id]="'data_' + match.id_match" name="'data_' + match.id_match" [(ngModel)]="match.data" [disabled]="!modifyState[match.id_match]">
-            </div>
+            <label [for]="'data_' + match.id_match">Data Match:</label>
+            <input type="date" [id]="'data_' + match.id_match" name="'data_' + match.id_match" [(ngModel)]="match.data" [disabled]="!modifyState[match.id_match]">
         </div>
         <div class="actions">
             <button class="btn primary" *ngIf="modifyState[match.id_match]" (click)="editMatch(match)">Conferma</button>
@@ -46,22 +44,24 @@
 </ng-template>
 <button class="btn add" (click)="showForm= true" [disabled]="showForm">Aggiungi Match</button>
 <form #form="ngForm" *ngIf="showForm" (ngSubmit)="createMatch()">
-    <div class="fieldMatch">
-        <label for="teamCasa">Team casa:</label>
-        <select id="teamCasa" name="teamCasa" [(ngModel)]="newMatch.team_casa" required>
-            <option *ngFor="let team of allTeams" [ngValue]="team.id_team">{{ team.nome }}</option>
-        </select>
+    <div class="matchRow">
+        <div class="teamBlock casa">
+            <label for="teamCasa">Team casa:</label>
+            <select id="teamCasa" name="teamCasa" [(ngModel)]="newMatch.team_casa" required>
+                <option *ngFor="let team of allTeams" [ngValue]="team.id_team">{{ team.nome }}</option>
+            </select>
+        </div>
+        <input type="number" step="1" id="teamCasaPoints" name="teamCasaPoints" min="0" max="150" [(ngModel)]="newMatch.punti_casa" required>
+        <span class="separator">-</span>
+        <input type="number" step="1" id="teamTrasfertaPoints" name="teamTrasfertaPoints" min="0" max="150" [(ngModel)]="newMatch.punti_trasferta" required>
+        <div class="teamBlock trasferta">
+            <label for="teamTrasferta">Team trasferta:</label>
+            <select id="teamTrasferta" name="teamTrasferta" [(ngModel)]="newMatch.team_trasferta" required>
+                <option *ngFor="let team of allTeams" [ngValue]="team.id_team">{{ team.nome }}</option>
+            </select>
+        </div>
     </div>
-    <input type="number" step="1" id="teamCasaPoints" name="teamCasaPoints" min="0" max="150" [(ngModel)]="newMatch.punti_casa" required>
-    -
-    <div class="fieldMatch">
-        <label for="teamTrasferta">Team trasferta:</label>
-        <select id="teamTrasferta" name="teamTrasferta" [(ngModel)]="newMatch.team_trasferta" required>
-            <option *ngFor="let team of allTeams" [ngValue]="team.id_team">{{ team.nome }}</option>
-        </select>
-    </div>
-    <input type="number" step="1" id="teamTrasfertaPoints" name="teamTrasfertaPoints" min="0" max="150" [(ngModel)]="newMatch.punti_trasferta" required>
-    <div class="field">
+    <div class="dateRow">
         <label for="data">Data Match:</label>
         <input type="date" id="data" name="data" [(ngModel)]="newMatch.data" required>
     </div>

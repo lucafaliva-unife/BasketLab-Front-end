@@ -50,6 +50,7 @@
 
 /* Riga data sotto, centrata */
 .dateRow {
+    margin-top: 20px;
     display: flex;
     justify-content: center;
 }
