@@ -107,10 +107,10 @@
     <ng-template #trainIsVoidMessage>
         <h2 class="message">Nessun allenamento disponibile per questo Player</h2>
     </ng-template>
-    <a [routerLink]="['/players', selectedPlayerId, 'train']" *ngIf="!svincolato">
-        <button class="btn add">Nuovo allenamento</button>
-    </a>
 </section>
+<a [routerLink]="['/players', selectedPlayerId, 'train']" *ngIf="!svincolato">
+    <button class="btn add">Nuovo allenamento</button>
+</a>
 <a [routerLink]="['/teams', selectedPlayer.id_team]">
     <button class="btn back">Vai al Team del Player</button>
 </a>
