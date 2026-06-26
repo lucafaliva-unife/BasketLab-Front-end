@@ -1,9 +1,19 @@
 <section class="container">
     <h1 class="title centered">Ricerca Teams e Players</h1>
-    <form class="search-form" #form="ngForm" (ngSubmit)="search(searchTerm)">
+    <form class="search-form" #form="ngForm" (ngSubmit)="search(searchTerm, noTeamsVoid, noPlayersWithoutTrains)">
         <div class="field">
             <label for="searchTerm">Keyword:</label>
             <input type="search" id="searchTerm" name="searchTerm" [(ngModel)]="searchTerm" placeholder="Cerca team o player..." required>
+        </div>
+        <div class="field">
+            <label class="checkbox-label">
+                <input type="checkbox" id="noTeamsVoid" name="noTeamsVoid" [(ngModel)]="noTeamsVoid">
+                <span>Escludi Teams senza Players</span>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="noPlayersWithoutTrains" name="noPlayersWithoutTrains" [(ngModel)]="noPlayersWithoutTrains">
+                <span>Escludi Players senza allenamenti</span>
+            </label>
         </div>
         <button class="btn primary" type="submit" [disabled]="form.invalid">Cerca</button>
     </form>

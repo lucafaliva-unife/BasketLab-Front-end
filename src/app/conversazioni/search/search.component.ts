@@ -5,6 +5,7 @@ import { RouterLink } from "@angular/router";
 import { TeamService } from "../../servizi/team.service";
 import { Team } from "../../modelli/team.model";
 import { Player } from "../../modelli/player.model";
+import { PlayerService } from "../../servizi/player.service";
 
 @Component({
     standalone: true,
@@ -15,6 +16,8 @@ import { Player } from "../../modelli/player.model";
 })
 export class SearchComponent {
     searchTerm: string= "";
+    noTeamsVoid: boolean= false;
+    noPlayersWithoutTrains: boolean= false;
     teamLimit: number= 1;
     playerLimit: number= 1;
     teamsFound: Team[]= [];
@@ -23,32 +26,60 @@ export class SearchComponent {
     ordered: boolean= false;
     filtersVisibility: boolean= true;
 
-    constructor(private teamService: TeamService) {}
+    constructor(private teamService: TeamService, private playerService: PlayerService) {}
 
     /*
     Questa funzione cerca tra i nomi dei team e tra i nomi e cognomi dei player una sottostringa passata come parametro.
     */
-    search(searchTerm: string): void {
+    search(searchTerm: string, noTeamsVoid: boolean, noPlayersWithoutTrains: boolean): void {
         this.teamsFound= [];
         this.playersFound= [];
         searchTerm= searchTerm.toLowerCase();
         // Cerco tra i team
         this.teamService.getTeams().subscribe(teams => {
             teams.forEach((team) => {
+                // Controllo se il nome del team include il termine di ricerca
                 if(team.nome.toLowerCase().includes(searchTerm)) {
-                    this.teamsFound.push(team);
+                    // Se voglio solo team con players allora controllo anche che ne abbia almeno uno, altrimenti lo
+                    // inserisco direttamente
+                    if(noTeamsVoid) {
+                        this.teamService.getPlayersByTeamId(team.id_team).subscribe((teamPlayers) => {
+                            if(teamPlayers.length > 0) {
+                                this.teamsFound.push(team);
+                                // Aggiorno il limite di team visualizzati
+                                this.teamLimit= this.teamsFound.length;
+                            }
+                        });
+                    } else {
+                        this.teamsFound.push(team);
+                        // Aggiorno il limite di team visualizzati
+                        this.teamLimit= this.teamsFound.length;
+                    }
                 }
                 // Cerco tra i player del team
                 this.teamService.getPlayersByTeamId(team.id_team).subscribe(players => {
                     players.forEach((player => {
+                        // Controllo se il nome o cognome del player include il termine di ricerca
                         if(player.nome.toLowerCase().includes(searchTerm) || player.cognome.toLowerCase().includes(searchTerm)) {
-                            this.playersFound.push(player);
+                            // Se voglio solo players con allenamenti allora controllo anche che ne abbia almeno uno,
+                            // altrimenti lo inserisco direttamente
+                            if(noPlayersWithoutTrains) {
+                                this.playerService.getTrainsByPlayerId(player.id_player).subscribe((playerTrains) => {
+                                    if(playerTrains.length > 0) {
+                                        this.playersFound.push(player);
+                                        // Aggiorno il limite di player visualizzati
+                                        this.playerLimit= this.playersFound.length;
+                                    }
+                                });
+                            } else {
+                                this.playersFound.push(player);
+                                // Aggiorno il limite di player visualizzati
+                                this.playerLimit= this.playersFound.length;
+                            }
                         }
                     }));
-                    this.playerLimit= this.playersFound.length;
                 });
             });
-            this.teamLimit= this.teamsFound.length;
             this.searched= true;
         });
         this.ordered= false;
@@ -59,6 +90,8 @@ export class SearchComponent {
     */
     reset():void {
         this.searchTerm= "";
+        this.noTeamsVoid= false;
+        this.noPlayersWithoutTrains= false;
         this.teamsFound= [];
         this.playersFound= [];
         this.searched= false;
