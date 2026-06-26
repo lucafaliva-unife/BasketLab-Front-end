@@ -7,6 +7,7 @@ import { PredictComponent } from './conversazioni/predict/predict.component';
 import { SearchComponent } from './conversazioni/search/search.component';
 import { CompareComponent } from './conversazioni/compare/compare.component';
 import { BuilderComponent } from './conversazioni/builder/builder.component';
+import { MatchComponent } from './conversazioni/match/match.component';
 
 export const routes: Routes= [
     { path: '', redirectTo: '/teams', pathMatch: 'full' },
@@ -17,5 +18,6 @@ export const routes: Routes= [
     { path: 'predict', component: PredictComponent },
     { path: 'search', component: SearchComponent },
     { path: 'compare', component: CompareComponent },
-    { path: 'builder', component: BuilderComponent }
+    { path: 'builder', component: BuilderComponent },
+    { path: 'match', component: MatchComponent }
 ];

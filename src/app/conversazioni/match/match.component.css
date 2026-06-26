@@ -1,0 +1,72 @@
+/* Layout principale della card */
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: auto;
+}
+
+/* Riga superiore: match (team + punti + punti + team) */
+.matchRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.casa label {
+    text-align: left;
+}
+
+.trasferta label {
+    text-align: right;
+}
+
+/* Blocchi team */
+.teamBlock {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+    flex: 1;
+}
+
+/* Punteggi */
+.card input[type="number"] {
+    width: 70px;
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+/* Separatore "-" tra i punteggi */
+.separator {
+    font-size: 24px;
+    font-weight: bold;
+    align-self: center;
+    padding: 0 6px;
+}
+
+/* Riga data sotto, centrata */
+.dateRow {
+    display: flex;
+    justify-content: center;
+}
+
+/* Spazio tra la label della data ed il campo di input */
+.dateRow label {
+    margin-right: 10px;
+}
+
+/* Campo data più ordinato */
+.card input[type="date"] {
+    min-width: 170px;
+    text-align: center;
+}
+
+/* Pulsanti sempre in fondo */
+.actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}

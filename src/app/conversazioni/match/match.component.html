@@ -1,0 +1,73 @@
+<section class="container" *ngIf="matches.length > 0; else noMatchesMessage">
+    <h1 class="title">Elenco Matches ordinati decrescentemente per data</h1>
+    <div class="field">
+        <label for="range">Numero di Match da visualizzare:</label>
+        <div>
+            <input type="range" id="range" name="range" [(ngModel)]="maxMatches" step="1" min="0" [max]="matches.length">
+            <span>{{ maxMatches }} su {{ matches.length }}</span>
+        </div>
+    </div>
+    <article class="card" *ngFor="let match of matches | slice:0:maxMatches">
+        <div class="matchRow">
+            <div class="teamBlock casa">
+                <label [for]="'teamCasa_' + match.id_match">Team casa:</label>
+                <select [id]="'teamCasa_' + match.id_match" [name]="'teamCasa_' + match.id_match" [disabled]="!modifyState[match.id_match]" [(ngModel)]="match.team_casa">
+                    <option *ngFor="let team of allTeams" [ngValue]="team.id_team">{{ team.nome }}</option>
+                </select>
+            </div>
+            <input type="number" step="1" [id]="'teamCasaPoints_' + match.id_match" name="'teamCasaPoints_' + match.id_match" [disabled]="!modifyState[match.id_match]" min="0" max="150" [(ngModel)]="match.punti_casa">
+            <span class="separator">-</span>
+            <input type="number" step="1" [id]="'teamTrasfertaPoints_' + match.id_match" name="'teamTrasfertaPoints_' + match.id_match" [disabled]="!modifyState[match.id_match]" min="0" max="150" [(ngModel)]="match.punti_trasferta">
+            <div class="teamBlock trasferta">
+                <label [for]="'teamTrasferta_' + match.id_match">Team trasferta:</label>
+                <select [id]="'teamTrasferta_' + match.id_match" [name]="'teamTrasferta_' + match.id_match" [disabled]="!modifyState[match.id_match]" [(ngModel)]="match.team_trasferta">
+                    <option *ngFor="let team of allTeams" [ngValue]="team.id_team">{{ team.nome }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="dateRow">
+            <div class="fieldMatch">
+                <label [for]="'data_' + match.id_match">Data Match:</label>
+                <input type="date" [id]="'data_' + match.id_match" name="'data_' + match.id_match" [(ngModel)]="match.data" [disabled]="!modifyState[match.id_match]">
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn primary" *ngIf="modifyState[match.id_match]" (click)="editMatch(match)">Conferma</button>
+            <button class="btn danger" (click)="deleteMatch(match.id_match)">Elimina Match</button>
+            <button class="btn secondary" (click)="setModifyState(match.id_match)" [disabled]="modifyState[match.id_match]">Modifica Match</button>
+        </div>
+    </article>
+</section>
+<ng-template #noMatchesMessage>
+    <section class="container">
+        <h1 class="title">Elenco Matches</h1>
+        <h2 class="message">Nessun Match presente</h2>
+    </section>
+</ng-template>
+<button class="btn add" (click)="showForm= true" [disabled]="showForm">Aggiungi Match</button>
+<form #form="ngForm" *ngIf="showForm" (ngSubmit)="createMatch()">
+    <div class="fieldMatch">
+        <label for="teamCasa">Team casa:</label>
+        <select id="teamCasa" name="teamCasa" [(ngModel)]="newMatch.team_casa" required>
+            <option *ngFor="let team of allTeams" [ngValue]="team.id_team">{{ team.nome }}</option>
+        </select>
+    </div>
+    <input type="number" step="1" id="teamCasaPoints" name="teamCasaPoints" min="0" max="150" [(ngModel)]="newMatch.punti_casa" required>
+    -
+    <div class="fieldMatch">
+        <label for="teamTrasferta">Team trasferta:</label>
+        <select id="teamTrasferta" name="teamTrasferta" [(ngModel)]="newMatch.team_trasferta" required>
+            <option *ngFor="let team of allTeams" [ngValue]="team.id_team">{{ team.nome }}</option>
+        </select>
+    </div>
+    <input type="number" step="1" id="teamTrasfertaPoints" name="teamTrasfertaPoints" min="0" max="150" [(ngModel)]="newMatch.punti_trasferta" required>
+    <div class="field">
+        <label for="data">Data Match:</label>
+        <input type="date" id="data" name="data" [(ngModel)]="newMatch.data" required>
+    </div>
+    <div class="actions">
+        <button class="btn primary" type="submit" [disabled]="form.invalid">Conferma</button>
+        <button class="btn danger" type="reset" [disabled]="form.invalid">Cancella</button>
+    </div>
+</form>
+<button class="btn cancel" (click)="showForm= false" *ngIf="showForm">Annulla</button>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Player } from '../modelli/player.model';
-import { Train } from '../modelli/train.model'
+import { Train } from '../modelli/train.model';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {

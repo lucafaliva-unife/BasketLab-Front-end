@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Team } from '../modelli/team.model';
 import { Train } from '../modelli/train.model';
-import { Player } from '../modelli/player.model'
+import { Player } from '../modelli/player.model';
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
